@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+*, *::before, *::after {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+:root {
+    --background-primary: hsl(220, 5%, 8%);
+    --background-secondary: hsl(240, 3%, 13%);
+    --border-color: hsl(240, 2%, 19%);
+    --text-color-primary: hsl(0, 0%, 95%);
+    --text-color-secondary: hsl(220, 2%, 40%);
+
+    --color-danger-light: hsl(6, 86%, 65%);
+    --color-danger: hsl(6, 86%, 60%);
+    --color-danger-dark: hsl(6, 86%, 55%);
+
+    --color-warning-light: hsl(41, 100%, 65%);
+    --color-warning: hsl(41, 100%, 60%);
+    --color-warning-dark: hsl(41, 100%, 55%);
+
+    --color-success-light: hsl(120, 82%, 65%);
+    --color-success: hsl(120, 82%, 60%);
+    --color-success-dark: hsl(120, 82%, 55%);
+
+    --color-primary-light: hsl(222, 92%, 65%);
+    --color-primary: hsl(222, 92%, 60%);
+    --color-primary-dark: hsl(222, 92%, 55%);
+
+    --sidebar-width: 70px;
+}
+
+html { 
+    font-size: clamp(14px, 1.15vw, 25px); 
+}
+
+body {
+    background-color: var(--background-primary);
+    font-family: 'Lato', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color-primary);
+    font-size: 1rem;
+}

@@ -92,7 +92,7 @@
         z-index: 2;
         background-color: var(--background-primary);
         border: 1px solid var(--border-color);
-        color: var(--text-color-secondary) !important;
+        color: var(--text-color-primary) !important;
         padding: .5rem;
         padding-left: .6rem;
         border-radius: .5rem;

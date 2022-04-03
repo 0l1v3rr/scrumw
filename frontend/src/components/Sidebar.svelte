@@ -48,6 +48,7 @@
         height: 100vh;
         position: fixed;
         width: var(--sidebar-width);
+        z-index: 2;
     }
 
     .logo-container {

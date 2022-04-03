@@ -12,6 +12,7 @@
     --background-primary: hsl(220, 5%, 8%);
     --background-secondary: hsl(240, 3%, 13%);
     --border-color: hsl(240, 2%, 19%);
+    --border-color-light: hsl(240, 2%, 27%);
     --text-color-primary: hsl(0, 0%, 95%);
     --text-color-secondary: hsl(220, 2%, 40%);
 
@@ -23,9 +24,9 @@
     --color-warning: hsl(41, 100%, 60%);
     --color-warning-dark: hsl(41, 100%, 55%);
 
-    --color-success-light: hsl(120, 82%, 65%);
-    --color-success: hsl(120, 82%, 60%);
-    --color-success-dark: hsl(120, 82%, 55%);
+    --color-success-light: hsl(100, 71%, 40%);
+    --color-success: hsl(100, 71%, 35%);
+    --color-success-dark: hsl(100, 71%, 30%);
 
     --color-primary-light: hsl(222, 92%, 65%);
     --color-primary: hsl(222, 92%, 60%);
@@ -43,4 +44,53 @@ body {
     font-family: 'Lato', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--text-color-primary);
     font-size: 1rem;
+}
+
+.btn {
+    padding: .5rem 1rem;
+    border-radius: .4rem;
+    color: var(--text-color-primary);
+    line-height: 1;
+    cursor: pointer;
+    transition: .3s ease-in-out;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-success {
+    background-color: var(--color-success);
+    border: 1px solid var(--color-success-light);
+}
+.btn-success:active,
+.btn-success:focus,
+.btn-success:hover {
+    background-color: var(--color-success-light);
+}
+.btn-danger {
+    background-color: var(--color-danger);
+    border: 1px solid var(--color-danger-light);
+}
+.btn-danger:active,
+.btn-danger:focus,
+.btn-danger:hover {
+    background-color: var(--color-danger-light);
+}
+.btn-warning {
+    background-color: var(--color-warning);
+    border: 1px solid var(--color-warning-light);
+}
+.btn-warning:active,
+.btn-warning:focus,
+.btn-warning:hover {
+    background-color: var(--color-warning-light);
+}
+.btn-warning {
+    background-color: var(--color-warning);
+    border: 1px solid var(--color-warning-light);
+}
+.btn-warning:active,
+.btn-warning:focus,
+.btn-warning:hover {
+    background-color: var(--color-warning-light);
 }

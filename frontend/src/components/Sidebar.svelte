@@ -6,7 +6,7 @@
 <aside class="sidebar">
     <div class="logo">
         <div class="logo-container">
-            <div class="logo-img">SW</div>
+            <div class="logo-img">SW.</div>
         </div>
     </div>
     <a href="/" class="sidebar-item {$page.url.toString().endsWith('/') ? 'active' : ''}">
@@ -21,9 +21,9 @@
         <div class="sidebar-item-hover">Projects</div>
     </a>
 
-    <a href="tasks" class="sidebar-item {$page.url.toString().endsWith('/tasks') ? 'active' : ''}">
+    <a href="todo" class="sidebar-item {$page.url.toString().endsWith('/todo') ? 'active' : ''}">
         <ServerIcon size="24" />
-        <div class="sidebar-item-hover">Tasks</div>
+        <div class="sidebar-item-hover">To-Do</div>
     </a>
 
     <a href="settings" class="sidebar-item settings-icon {$page.url.toString().endsWith('/settings') ? 'active' : ''}">
@@ -60,7 +60,7 @@
     .logo-img {
         color: white;
         font-weight: bold;
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
     .sidebar-item {
         cursor: pointer;

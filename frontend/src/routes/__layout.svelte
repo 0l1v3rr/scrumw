@@ -4,9 +4,34 @@
     import RightSidebar from "../components/RightSidebar.svelte";
 </script>
 
-<div>
-    <Sidebar />
-    <Header />
-    <slot></slot>
+<Sidebar />
+<Header />
+<div class="wrapper">
+    <div class="slot">
+        <slot></slot>
+    </div>
     <RightSidebar />
 </div>
+
+<style>
+    .wrapper {
+        display: flex;
+        align-items: start;
+        padding-top: 4rem;
+    }
+    .slot {
+        padding-left: var(--sidebar-width);
+        padding-right: 22vw;
+    }
+
+    @media screen and (max-width: 922px) {
+        .slot {
+            padding-right: 0;
+        }
+    }
+    @media screen and (max-width: 576px) {
+        .slot {
+            padding-left: 0;
+        }
+    }
+</style>

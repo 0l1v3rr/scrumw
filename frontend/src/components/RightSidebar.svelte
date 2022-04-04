@@ -49,7 +49,7 @@
         right: 0;
     }
     .greeting {
-        padding: 2.5rem 1rem;
+        padding: 1rem;
         padding-bottom: 0;
         display: flex;
         align-items: center;

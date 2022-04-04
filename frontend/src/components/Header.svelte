@@ -75,7 +75,7 @@
         align-items: center;
         border-left: 1px solid var(--border-color);
         height: 100%;
-        width: 20vw;
+        width: 22vw;
     }
     .page-title {
         color: var(--text-color-primary);

@@ -1,4 +1,6 @@
 <script>
+    import ToDo from "../components/ToDo.svelte";
+
     let date = new Date();
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -31,13 +33,17 @@
 
     <div class="sidebar-divider"></div>
 
+    <div class="todo">
+        <ToDo />
+    </div>
+
 </section>
 
 <style>
     .right-sidebar {
         background-color: var(--background-primary);
         border-left: 1px solid var(--border-color);
-        width: 20vw;
+        width: 22vw;
         height: 100vh;
         position: fixed;
         right: 0;
@@ -60,7 +66,10 @@
         height: 1px;
         background-color: var(--border-color);
         margin-top: 1.2rem;
-        margin: 0 auto;
+        margin: 1rem auto;
+    }
+    .todo {
+        margin: .5rem 1rem;
     }
     @media screen and (max-width: 922px) {
         .right-sidebar {

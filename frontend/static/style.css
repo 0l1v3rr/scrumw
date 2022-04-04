@@ -6,6 +6,7 @@
     border: 0;
     text-decoration: none;
     box-sizing: border-box;
+    outline: none;
 }
 
 :root {
@@ -28,7 +29,7 @@
     --color-success: hsl(100, 71%, 35%);
     --color-success-dark: hsl(100, 71%, 30%);
 
-    --color-primary-light: hsl(222, 92%, 65%);
+    --color-primary-light: hsl(222, 92%, 63%);
     --color-primary: hsl(222, 92%, 60%);
     --color-primary-dark: hsl(222, 92%, 55%);
 
@@ -76,14 +77,14 @@ body {
 .btn-danger:hover {
     background-color: var(--color-danger-light);
 }
-.btn-warning {
-    background-color: var(--color-warning);
-    border: 1px solid var(--color-warning-light);
+.btn-primary {
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary-light);
 }
-.btn-warning:active,
-.btn-warning:focus,
-.btn-warning:hover {
-    background-color: var(--color-warning-light);
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary:hover {
+    background-color: var(--color-primary-light);
 }
 .btn-warning {
     background-color: var(--color-warning);

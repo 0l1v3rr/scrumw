@@ -1,6 +1,6 @@
 <script>
     import { page } from '$app/stores';
-    import { LayoutIcon, FolderMinusIcon, ServerIcon, SettingsIcon, LogOutIcon, AlertCircleIcon } from 'svelte-feather-icons';
+    import { LayoutIcon, FolderMinusIcon, ServerIcon, SettingsIcon, LogOutIcon, AlertCircleIcon, TrelloIcon } from 'svelte-feather-icons';
 </script>
 
 <aside class="sidebar">
@@ -21,6 +21,11 @@
         <div class="sidebar-item-hover">Projects</div>
     </a>
 
+    <a href="scrum-board" class="sidebar-item {$page.url.toString().endsWith('/scrum-board') ? 'active' : ''}">
+        <TrelloIcon size="24" />
+        <div class="sidebar-item-hover">Scrum Board</div>
+    </a>
+    
     <a href="issues" class="sidebar-item {$page.url.toString().endsWith('/issues') ? 'active' : ''}">
         <AlertCircleIcon size="24" />
         <div class="sidebar-item-hover">Issues</div>

@@ -24,6 +24,7 @@
     .slot {
         padding-left: var(--sidebar-width);
         padding-right: 22vw;
+        width: 100%;
     }
 
     @media screen and (max-width: 922px) {

@@ -67,6 +67,7 @@
         border: 1px solid var(--border-color);
         background-color: var(--background-primary);
         font-size: .95rem;
+        font-family: 'Lato', Tahoma, Geneva, Verdana, sans-serif;
     }
     #description:focus,
     #title:focus {

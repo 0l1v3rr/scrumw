@@ -2,12 +2,14 @@
     import Header from "../components/Header.svelte";
     import Sidebar from "../components/Sidebar.svelte";
     import RightSidebar from "../components/RightSidebar.svelte";
+    import DashboardPanel from "../components/DashboardPanel.svelte";
 </script>
 
 <Sidebar />
 <Header />
 <div class="wrapper">
     <div class="slot">
+        <DashboardPanel />
         <slot></slot>
     </div>
     <RightSidebar />

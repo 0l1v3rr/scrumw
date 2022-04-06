@@ -2,9 +2,13 @@
     <title>Dashboard | scrumw</title>
 </svelte:head>
 
+<script>
+    import ScrumCard from "../components/scrum/ScrumCard.svelte";
+</script>
+
 <main class="main">
     <div class="dashboard-header">
-        <div class="dashboard-title">Lates Scrums</div>
+        <div class="dashboard-title">Lates Activity</div>
     </div>
 
     <div class="scrums-container">
@@ -15,11 +19,12 @@
                 <div class="header-count">2</div>
             </div>
 
-            <div class="scrum-card">
-                <div class="scrum-card-project">0l1v3rr/test</div>
-                <div class="scrum-card-title">Scrum To Do</div>
-                <div class="scrum-card-description">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facere cum ullam tenetur eius, quo molestiae.</div>
-            </div>
+            <ScrumCard 
+                project="0l1v3rr/test"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
+                title="Test scrum"
+                assignedBy="John Doe"
+            />
 
         </div>
 
@@ -29,16 +34,12 @@
                 <div class="header-count">2</div>
             </div>
 
-            <div class="scrum-card">
-                <div class="scrum-card-project">0l1v3rr/test</div>
-                <div class="scrum-card-title">Scrum In Progress</div>
-                <div class="scrum-card-description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Asperiores minima odit accusantium inventore commodi qui vero doloribus pariatur expedita voluptatem!</div>
-                <div class="scrum-card-footer">
-                    <div class="footer-text">
-                        <div>Assigned by <span class="footer-text-bold">John Doe</span>.</div>
-                    </div>
-                </div>
-            </div>
+            <ScrumCard 
+                project="0l1v3rr/test"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
+                title="Test scrum"
+                assignedBy="John Doe"
+            />
         </div>
 
         <div class="scrum-section">
@@ -47,17 +48,13 @@
                 <div class="header-count">2</div>
             </div>
 
-            <div class="scrum-card">
-                <div class="scrum-card-project">0l1v3rr/test</div>
-                <div class="scrum-card-title">Scrum In Progress</div>
-                <div class="scrum-card-description">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facere cum ullam tenetur.</div>
-                <div class="scrum-card-footer">
-                    <div class="footer-text">
-                        <div>Sent by <span class="footer-text-bold">John Doe</span>.</div>
-                        <div>Approved by <span class="footer-text-bold">Tom Gregory</span>.</div>
-                    </div>
-                </div>
-            </div>
+            <ScrumCard 
+                project="0l1v3rr/test"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
+                title="Test scrum"
+                assignedBy="John Doe"
+                approvedBy="Tom Gregory"
+            />
         </div>
 
     </div>
@@ -118,43 +115,6 @@
     }
     .done > .header-count {
         background-color: var(--color-success);
-    }
-
-    .scrum-card {
-        margin-top: 1rem;
-        padding: 1rem;
-        background-color: var(--background-primary);
-        border-radius: .5rem;
-    }
-    .scrum-card-project {
-        color: var(--text-color-primary);
-        margin-bottom: .5rem;
-    }
-    .scrum-card-title {
-        color: var(--text-color-primary);
-        font-size: 1rem;
-        font-weight: bold;
-        margin-bottom: .5rem;
-    }
-    .scrum-card-description {
-        color: var(--text-color-secondary);
-        font-size: .95rem;
-        text-align: justify;
-    }
-    .scrum-card-footer {
-        margin-top: 1rem;
-        padding: .5rem 0;
-        padding-bottom: 0;
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        align-items: center;
-    }
-    .footer-text {
-        color: var(--text-color-secondary);
-        font-size: .95rem;
-    }
-    .footer-text-bold {
-        font-weight: bold;
     }
 
     @media screen and (max-width: 576px) {

@@ -3,7 +3,7 @@
 </svelte:head>
 
 <script>
-    import ScrumCard from "../components/scrum/ScrumCard.svelte";
+    import ScrumCard from "../components/cards/ScrumCard.svelte";
 </script>
 
 <main class="main">

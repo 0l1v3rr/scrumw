@@ -14,8 +14,10 @@
     --background-secondary: hsl(240, 3%, 10%);
     --border-color: hsl(240, 2%, 19%);
     --border-color-light: hsl(240, 2%, 27%);
+
     --text-color-primary: hsl(0, 0%, 90%);
     --text-color-secondary: hsl(220, 2%, 40%);
+    --link-color: hsl(222, 95%, 75%);
 
     --color-danger-light: hsl(6, 86%, 65%);
     --color-danger: hsl(6, 86%, 60%);
@@ -25,9 +27,9 @@
     --color-warning: hsl(41, 100%, 60%);
     --color-warning-dark: hsl(41, 100%, 55%);
 
-    --color-success-light: hsl(100, 71%, 40%);
-    --color-success: hsl(100, 71%, 35%);
-    --color-success-dark: hsl(100, 71%, 30%);
+    --color-success-light: hsl(100, 60%, 40%);
+    --color-success: hsl(100, 65%, 35%);
+    --color-success-dark: hsl(100, 65%, 30%);
 
     --color-primary-light: hsl(222, 92%, 63%);
     --color-primary: hsl(222, 92%, 60%);
@@ -37,11 +39,11 @@
 }
 
 html { 
-    font-size: clamp(14px, 1.15vw, 25px); 
+    font-size: clamp(14px, 1.15vw, 30px);
 }
 
 body {
-    background-color: var(--background-primary);
+    background-color: var(--background-secondary);
     font-family: 'Lato', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--text-color-primary);
     font-size: 1rem;

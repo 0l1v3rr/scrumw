@@ -53,6 +53,7 @@
         padding: 1rem;
         border-radius: .5rem;
         transition: .3s ease-in-out;
+        background-color: var(--background-primary);
     }
     .dashboard-title {
         display: flex;

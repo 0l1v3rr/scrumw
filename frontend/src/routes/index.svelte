@@ -23,7 +23,7 @@
                 project="0l1v3rr/test"
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
                 title="Test scrum"
-                assignedBy="John Doe"
+                assignedBy="j0hn"
             />
 
         </div>
@@ -38,7 +38,7 @@
                 project="0l1v3rr/test"
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
                 title="Test scrum"
-                assignedBy="John Doe"
+                assignedBy="j0hn"
             />
         </div>
 
@@ -52,8 +52,8 @@
                 project="0l1v3rr/test"
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
                 title="Test scrum"
-                assignedBy="John Doe"
-                approvedBy="Tom Gregory"
+                assignedBy="fr3dd1e"
+                approvedBy="thomas"
             />
         </div>
 
@@ -77,7 +77,6 @@
         padding: 1rem;
         gap: 1rem;
         height: 100%;
-        margin-top: 1rem;
     }
     .scrum-section {
         width: 33%;
@@ -86,10 +85,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: rgba(255,255,255,.025);
         border-radius: .5rem;
         width: fit-content;
         padding: .5rem 1rem;
+        border: 1px solid var(--border-color);
     }
     .header-count {
         margin-left: .6rem;

@@ -7,7 +7,7 @@
 </script>
 
 <div class="scrum-card">
-    <div class="scrum-card-project">{ project }</div>
+    <a href="/{project}" class="scrum-card-project">{ project }</a>
     <div class="scrum-card-title">{ title }</div>
     <div class="scrum-card-description">{ description }</div>
 
@@ -15,10 +15,10 @@
     <div class="scrum-card-footer">
         <div class="footer-text">
             { #if assignedBy != "" }
-                <div>Sent by <span class="footer-text-bold">{ assignedBy }</span>.</div>
+                <div>Sent by <a href="/{assignedBy}" class="footer-text-bold">{ assignedBy }</a>.</div>
             { /if }
             { #if approvedBy != "" }
-                <div>Approved by <span class="footer-text-bold">{ approvedBy }</span>.</div>
+                <div>Approved by <a href="/{approvedBy}" class="footer-text-bold">{ approvedBy }</a>.</div>
             { /if }
         </div>
     </div>
@@ -32,10 +32,17 @@
         padding: 1rem;
         background-color: var(--background-primary);
         border-radius: .5rem;
+        border: 1px solid var(--border-color);
     }
     .scrum-card-project {
-        color: var(--text-color-primary);
         margin-bottom: .5rem;
+        color: var(--link-color);
+        font-size: 1rem;
+        transition: .3s ease-in-out;
+        display: block;
+    }
+    .scrum-card-project:hover {
+        color: var(--color-primary-light);
     }
     .scrum-card-title {
         color: var(--text-color-primary);
@@ -62,5 +69,9 @@
     }
     .footer-text-bold {
         font-weight: bold;
+        color: var(--text-color-secondary);
+    }
+    .footer-text-bold:hover {
+        text-decoration: underline;
     }
 </style>

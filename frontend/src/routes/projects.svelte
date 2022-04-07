@@ -55,7 +55,6 @@
         padding: 1rem;
         gap: 1rem;
         height: 100%;
-        margin-top: 1rem;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
     }

@@ -3,12 +3,22 @@
 </script>
 
 <svelte:head>
-    <title>Dashboard | scrumw</title>
+    <title>Projects | scrumw</title>
 </svelte:head>
 
 <main class="main">
     <div class="dashboard-header">
         <div class="dashboard-title">Lates Activity</div>
+        <form class="header-form">
+            <div class="select">
+                <label for="select-project">Project: </label>
+                <select id="select-project">
+                    <option value="all" selected>All</option>
+                    <option value="project-1">0l1v3rr/project-1</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
     </div>
 
     <div class="scrums-container">
@@ -63,11 +73,45 @@
 <style>
     .dashboard-header {
         padding: 0 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
     .dashboard-title {
         color: var(--text-color-primary);
         font-weight: bold;
         font-size: 1.1rem;
+    }
+    .header-form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.2rem;
+        border: 1px solid var(--border-color);
+        padding: .25rem .5rem;
+        border-radius: .5rem;
+        background-color: var(--background-primary);
+    }
+    .select {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+    }
+    .select > label {
+        color: var(--text-color-secondary);
+        font-size: .95rem;
+    }
+    #select-project {
+        padding: .25rem .5rem;
+        background-color: var(--background-primary);
+        color: var(--text-color-secondary);
+        border-radius: .4rem;
+        border: 1px solid var(--border-color);
+        font-size: 1rem;
+        transition: .3s ease-in-out;
+    }
+    #select-project:focus {
+        border-color: var(--text-color-secondary);
     }
     .scrums-container {
         background-color: var(--background-secondary);

@@ -23,8 +23,8 @@
         {description}
     </div>
     <div class="project-footer">
-        <a href="/{owner}/{name}/issues" class="project-footer-icon pfi-issues"><AlertCircleIcon size="20" /> {issueCount}</a>
-        <a href="/{owner}/{name}/scrum" class="project-footer-icon pfi-scrums"><TrelloIcon size="20" /> {scrumCount}</a>
+        <a href="/{owner}/{name}/issues" class="project-footer-icon pfi-issues"><AlertCircleIcon size="20" /> <span>{issueCount}</span></a>
+        <a href="/{owner}/{name}/scrum" class="project-footer-icon pfi-scrums"><TrelloIcon size="20" /> <span>{scrumCount}</span></a>
     </div>
 </div>
 
@@ -79,14 +79,17 @@
         background-color: var(--background-secondary);
         color: var(--text-color-primary);
         border: 1px solid var(--border-color);
-        padding: .4rem .5rem;
+        padding: .4rem .6rem;
         border-radius: .4rem;
         font-size: .95rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: .75rem;
+        gap: .5rem;
         transition: .3s ease-in-out;
+    }
+    .project-footer-icon span {
+        color: var(--text-color-primary);
     }
     .pfi-issues {
         color: var(--color-warning-light);

@@ -6,7 +6,9 @@
     let pageTitle;
     if($page.url.toString().endsWith('/')) pageTitle = "Dashboard";
     else if($page.url.toString().endsWith('/projects')) pageTitle = "Projects";
-    else if($page.url.toString().endsWith('/tasks')) pageTitle = "Tasks";
+    else if($page.url.toString().endsWith('/scrum-board')) pageTitle = "Scrum Board";
+    else if($page.url.toString().endsWith('/issues')) pageTitle = "Issues";
+    else if($page.url.toString().endsWith('/todo')) pageTitle = "To-Do";
     else if($page.url.toString().endsWith('/settings')) pageTitle = "Settings";
 
     let messagesCount = 1;

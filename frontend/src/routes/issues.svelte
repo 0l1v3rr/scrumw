@@ -22,7 +22,7 @@
     </div>
 
     <div class="issues-container">
-        <div class="issues-section">
+        <div class="issues-section open">
             <div class="issues-section-header open">
                 <div class="header-title">Open</div>
                 <div class="header-count">13</div>
@@ -33,10 +33,11 @@
                 projectName="test-project"
                 issueTitle="Test issue"
                 issueDescription="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus, et?"
+                openedBy="j0hn-d03"
             />
         </div>
 
-        <div class="issues-section">
+        <div class="issues-section closed">
             <div class="issues-section-header closed">
                 <div class="header-title">Closed</div>
                 <div class="header-count">2</div>
@@ -48,6 +49,8 @@
                 issueTitle="Test issue"
                 issueDescription="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus, et?"
                 isOpen={false}
+                openedBy="j0hn-d03"
+                closedBy="tr3v0r"
             />
         </div>
     </div>
@@ -136,5 +139,13 @@
     }
     .closed > .header-count {
         background-color: var(--color-success);
+    }
+    @media screen and (max-width: 576px) {
+        .issues-section.closed {
+            display: none;
+        }
+        .issues-section {
+            width: 100%;
+        }
     }
 </style>

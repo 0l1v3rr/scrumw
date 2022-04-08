@@ -5,6 +5,8 @@
     export let projectName;
     export let issueTitle;
     export let issueDescription;
+    export let openedBy;
+    export let closedBy = "";
     export let isPublic = true;
     export let isOpen = true;
 </script>
@@ -19,13 +21,43 @@
             <div class="header-icon">Private</div>
         { /if }
     </div>
-    <a href="/{projectOwner}/{projectName}/issues" class="issue-main-title">{issueTitle}</a>
+    <div class="df">
+        <a href="/{projectOwner}/{projectName}/issues" class="issue-main-title">{issueTitle}</a>
+        <div class="issue-status-card">
+            { #if isOpen }
+                Open
+            { :else }
+                Closed
+            { /if }
+        </div>
+    </div>
     <div class="issue-description">
         {issueDescription}
+    </div>
+    <div class="issue-footer">
+        <div class="footer-text">
+            <div>Opened by <a href="/{openedBy}" class="footer-text-bold">{openedBy}</a>.</div>
+            { #if closedBy != "" }
+                <div>Closed by <a href="/{closedBy}" class="footer-text-bold">{closedBy}</a>.</div>
+            { /if }
+        </div>
     </div>
 </div>
 
 <style>
+    .df {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .issue-status-card {
+        background-color: var(--background-secondary);
+        color: var(--text-color-primary);
+        border: 1px solid var(--border-color);
+        padding: .25rem .5rem;
+        border-radius: .4rem;
+        font-size: .9rem;
+    }
     .issue-card {
         width: 100%;
         background-color: var(--background-primary);
@@ -74,8 +106,29 @@
         gap: .5rem;
         width: fit-content;
         color: var(--text-color-primary);
+        margin-bottom: .25rem;
     }
     .issue-main-title:hover {
+        text-decoration: underline;
+    }
+
+    .issue-footer {
+        margin-top: 1rem;
+        padding: .5rem 0;
+        padding-bottom: 0;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+    }
+    .footer-text {
+        color: var(--text-color-secondary);
+        font-size: .95rem;
+    }
+    .footer-text-bold {
+        font-weight: bold;
+        color: var(--text-color-secondary);
+    }
+    .footer-text-bold:hover {
         text-decoration: underline;
     }
 </style>

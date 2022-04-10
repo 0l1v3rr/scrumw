@@ -42,7 +42,7 @@
                     <SettingsIcon size="16" />
                     Settings
                 </a>
-                <a href="/logout" class="profile-dropdown-item">
+                <a href="/" class="profile-dropdown-item">
                     <LogOutIcon size="16" />
                     Log Out
                 </a>
@@ -193,7 +193,7 @@
         justify-content: center;
         align-items: center;
         gap: .5rem;
-        color: var(--text-color-primary);
+        color: var(--text-color-secondary);
         transition: .3s ease-in-out;
     }
     .profile-dropdown-item:hover {

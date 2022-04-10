@@ -1,6 +1,6 @@
 <script>
     import { page } from '$app/stores';
-    import { LayoutIcon, FolderMinusIcon, ServerIcon, SettingsIcon, LogOutIcon, AlertCircleIcon, TrelloIcon } from 'svelte-feather-icons';
+    import { LayoutIcon, FolderMinusIcon, SettingsIcon, LogOutIcon, AlertCircleIcon, TrelloIcon } from 'svelte-feather-icons';
 </script>
 
 <aside class="sidebar">
@@ -21,22 +21,17 @@
         <div class="sidebar-item-hover">Projects</div>
     </a>
 
-    <a href="scrum-board" class="sidebar-item {$page.url.toString().endsWith('/scrum-board') ? 'active' : ''}">
+    <a href="/scrum-board" class="sidebar-item {$page.url.toString().endsWith('/scrum-board') ? 'active' : ''}">
         <TrelloIcon size="24" />
         <div class="sidebar-item-hover">Scrum Board</div>
     </a>
     
-    <a href="issues" class="sidebar-item {$page.url.toString().endsWith('/issues') ? 'active' : ''}">
+    <a href="/issues" class="sidebar-item {$page.url.toString().endsWith('/issues') ? 'active' : ''}">
         <AlertCircleIcon size="24" />
         <div class="sidebar-item-hover">Issues</div>
     </a>
 
-    <a href="todo" class="sidebar-item {$page.url.toString().endsWith('/todo') ? 'active' : ''}">
-        <ServerIcon size="24" />
-        <div class="sidebar-item-hover">To-Do</div>
-    </a>
-
-    <a href="settings" class="sidebar-item settings-icon {$page.url.toString().endsWith('/settings') ? 'active' : ''}">
+    <a href="/settings" class="sidebar-item settings-icon {$page.url.toString().endsWith('/settings') ? 'active' : ''}">
         <SettingsIcon size="24" />
         <div class="sidebar-item-hover">Settings</div>
     </a>

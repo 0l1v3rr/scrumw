@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-    <title>Projects | scrumw</title>
+    <title>Scrum Board | scrumw</title>
 </svelte:head>
 
 <main class="main">

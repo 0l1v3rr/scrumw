@@ -10,10 +10,10 @@
 }
 
 :root {
-    --background-primary: hsl(220, 5%, 8%);
-    --background-secondary: hsl(220, 5%, 10%);
-    --border-color: hsl(220, 5%, 20%);
-    --border-color-light: hsl(220, 5%, 30%);
+    --background-primary: hsl(220, 10%, 8%);
+    --background-secondary: hsl(220, 10%, 10%);
+    --border-color: hsl(220, 10%, 20%);
+    --border-color-light: hsl(220, 10%, 30%);
 
     --text-color-primary: hsl(0, 0%, 90%);
     --text-color-secondary: hsl(220, 2%, 45%);

@@ -11,12 +11,12 @@
 
 :root {
     --background-primary: hsl(220, 5%, 8%);
-    --background-secondary: hsl(240, 3%, 10%);
-    --border-color: hsl(240, 2%, 19%);
-    --border-color-light: hsl(240, 2%, 27%);
+    --background-secondary: hsl(220, 5%, 10%);
+    --border-color: hsl(220, 5%, 20%);
+    --border-color-light: hsl(220, 5%, 30%);
 
     --text-color-primary: hsl(0, 0%, 90%);
-    --text-color-secondary: hsl(220, 2%, 40%);
+    --text-color-secondary: hsl(220, 2%, 45%);
     --link-color: hsl(222, 95%, 75%);
 
     --color-danger-light: hsl(6, 86%, 65%);

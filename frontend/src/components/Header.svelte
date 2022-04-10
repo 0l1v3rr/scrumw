@@ -1,15 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import { page } from '$app/stores';
     import { BellIcon, BookmarkIcon, SettingsIcon, UserIcon, LogOutIcon } from 'svelte-feather-icons';
-
-    let pageTitle;
-    if($page.url.toString().endsWith('/')) pageTitle = "Dashboard";
-    else if($page.url.toString().endsWith('/projects')) pageTitle = "Projects";
-    else if($page.url.toString().endsWith('/scrum-board')) pageTitle = "Scrum Board";
-    else if($page.url.toString().endsWith('/issues')) pageTitle = "Issues";
-    else if($page.url.toString().endsWith('/todo')) pageTitle = "To-Do";
-    else if($page.url.toString().endsWith('/settings')) pageTitle = "Settings";
 
     let messagesCount = 1;
 
@@ -24,9 +15,9 @@
 </script>
 
 <header class="header">
-    <div class="page-title">{pageTitle}</div>
+    <div class="page-title">scrumw</div>
 
-    <a href="/new" class="btn btn-success new-btn"><BookmarkIcon size="16" /> New Project</a>
+    <a href="/new/project" class="btn btn-success new-btn"><BookmarkIcon size="16" /> New Project</a>
 
     <div class="profile-section">
         <a href="/notifications" class="bell-icon">

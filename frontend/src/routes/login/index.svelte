@@ -1,3 +1,28 @@
+<script>
+    let isError = false;
+    let errorMsg;
+
+    const handleError = (errMsg) => {
+        errorMsg = errMsg;
+        isError = true;
+    };
+
+    let username;
+    let password;
+
+    const handleFormSubmit = () => {
+        if(username == "" || !username) {
+            handleError("Please provide a username.");
+            return;
+        }
+
+        if(password == "" || !password) {
+            handleError("Please provide a valid password.");
+            return;
+        }
+    };
+</script>
+
 <svelte:head>
     <title>Log In | scrumw</title>
 </svelte:head>
@@ -10,15 +35,15 @@
     
         <div class="section-divider"></div>
     
-        <form>
+        <form on:submit|preventDefault={handleFormSubmit}>
             <div class="form-section">
                 <label for="scrumw-username">Username</label>
-                <input type="text" class="input" id="scrumw-username" required>
+                <input type="text" class="input" id="scrumw-username" bind:value={username} required>
             </div>
         
             <div class="form-section mt-1">
                 <label for="scrumw-username">Password</label>
-                <input type="password" class="input" id="scrumw-username" required>
+                <input type="password" class="input" id="scrumw-username" bind:value={password} required>
             </div>
         
             <div class="section-divider"></div>
@@ -28,6 +53,13 @@
             </div>
     
             <div class="section-divider"></div>
+
+            {#if isError}
+                <div class="error">
+                    <div class="error-msg">{errorMsg}</div>
+                    <div class="section-divider"></div>
+                </div>
+            {/if}
         
             <button type="submit" class="btn btn-primary">Log In</button>
         </form>
@@ -89,12 +121,12 @@
     .register > a:hover {
         color: var(--color-primary-light);
     }
-    /*.error-msg {
+    .error-msg {
         border: 1px solid var(--color-danger);
         color: var(--color-danger-light);
         border-radius: .5rem;
         padding: .5rem 1rem;
-    }*/
+    }
     @media screen and (max-width: 576px) {
         .form {
             width: 100vw;

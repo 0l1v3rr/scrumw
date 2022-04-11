@@ -1,5 +1,5 @@
 <script>
-    import ToDo from "../components/ToDo.svelte";
+    import ScrumCard from "./ScrumCard.svelte";
 
     let date = new Date();
     let year = date.getFullYear();
@@ -34,7 +34,7 @@
     <div class="sidebar-divider"></div>
 
     <div class="todo">
-        <ToDo />
+        <ScrumCard />
     </div>
 
 </section>

@@ -8,8 +8,7 @@
             <div class="scrum-form-section">
                 <label for="project-select">Project</label>
                 <select id="project-select">
-                    <option value="all" selected>All</option>
-                    <option value="project-1">0l1v3rr/project-1</option>
+                    <option value="project-1" selected>0l1v3rr/project-1</option>
                 </select>
             </div>
             <div class="scrum-form-section">

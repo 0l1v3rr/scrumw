@@ -9,6 +9,8 @@
 
     let username;
     let password;
+    let passwordTwo;
+    let email;
 
     const handleFormSubmit = () => {
         if(username == "" || !username) {
@@ -17,7 +19,17 @@
         }
 
         if(password == "" || !password) {
-            handleError("Please provide a valid password.");
+            handleError("Please provide a password.");
+            return;
+        }
+
+        if(passwordTwo == "" || !passwordTwo) {
+            handleError("Please provide a password.");
+            return;
+        }
+
+        if(email == "" || !email) {
+            handleError("Please provide an email.");
             return;
         }
     };
@@ -30,7 +42,7 @@
 <main class="main">
     <div class="form">
         <div class="header">
-            <div class="title">Log In to scrumw</div>
+            <div class="title">Sign In to scrumw</div>
         </div>
     
         <div class="section-divider"></div>
@@ -40,16 +52,26 @@
                 <label for="scrumw-username">Username</label>
                 <input type="text" class="input" id="scrumw-username" bind:value={username} required>
             </div>
+
+            <div class="form-section mt-1">
+                <label for="scrumw-email">Email</label>
+                <input type="email" class="input" id="scrumw-email" bind:value={email} required>
+            </div>
         
             <div class="form-section mt-1">
                 <label for="scrumw-password">Password</label>
                 <input type="password" class="input" id="scrumw-password" bind:value={password} required>
             </div>
+
+            <div class="form-section mt-1">
+                <label for="scrumw-password2">Password repeat</label>
+                <input type="password" class="input" id="scrumw-password2" bind:value={passwordTwo} required>
+            </div>
         
             <div class="section-divider"></div>
     
             <div class="register">
-                Need an account? Register <a href="/register">here</a>!
+                Already have an account? Log In <a href="/login">here</a>!
             </div>
     
             <div class="section-divider"></div>
@@ -61,7 +83,7 @@
                 </div>
             {/if}
         
-            <button type="submit" class="btn btn-primary">Log In</button>
+            <button type="submit" class="btn btn-primary">Sign In</button>
         </form>
     </div>
 </main>

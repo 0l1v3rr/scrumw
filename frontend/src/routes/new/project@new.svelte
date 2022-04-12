@@ -42,7 +42,7 @@
     <title>New Project | scrumw</title>
 </svelte:head>
 
-<main class="main">
+<main class="main new">
     <div class="header">
         <div class="title">Create a new project</div>
     </div>

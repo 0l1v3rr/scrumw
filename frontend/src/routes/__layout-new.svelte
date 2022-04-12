@@ -1,7 +1,7 @@
 <script>
-    import Header from "../../components/Header.svelte";
-    import Sidebar from "../../components/Sidebar.svelte";
-    import RightSidebar from "../../components/RightSidebar.svelte";
+    import Header from "../components/Header.svelte";
+    import Sidebar from "../components/Sidebar.svelte";
+    import RightSidebar from "../components/RightSidebar.svelte";
 </script>
 
 <Sidebar />

@@ -32,11 +32,21 @@
             handleError("Please provide an email.");
             return;
         }
+
+        if(!email.match("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            handleError("Please provide a valid email.");
+            return;
+        }
+
+        if(password !== passwordTwo) {
+            handleError("The two passwords do not match.");
+            return;
+        }
     };
 </script>
 
 <svelte:head>
-    <title>Log In | scrumw</title>
+    <title>Sign In | scrumw</title>
 </svelte:head>
 
 <main class="main">

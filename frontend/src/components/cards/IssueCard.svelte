@@ -25,9 +25,9 @@
         <a href="/{projectOwner}/{projectName}/issues" class="issue-main-title">{issueTitle}</a>
         <div class="issue-status-card">
             { #if isOpen }
-                Open
+                <span class="text-color-danger">Open</span>
             { :else }
-                Closed
+                <span class="text-color-warning">Closed</span>
             { /if }
         </div>
     </div>
@@ -130,5 +130,12 @@
     }
     .footer-text-bold:hover {
         text-decoration: underline;
+    }
+
+    .text-color-warning {
+        color: var(--color-warning-light);
+    }
+    .text-color-danger {
+        color: var(--color-danger-light);
     }
 </style>

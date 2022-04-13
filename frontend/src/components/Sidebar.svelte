@@ -5,9 +5,9 @@
 
 <aside class="sidebar">
     <div class="logo">
-        <div class="logo-container">
+        <a href="/" class="logo-container">
             <div class="logo-img">SW.</div>
-        </div>
+        </a>
     </div>
     <a href="/" class="sidebar-item {$page.url.toString().endsWith('/') ? 'active' : ''}">
         <LayoutIcon size="24" />
@@ -58,14 +58,18 @@
 
     .logo-container {
         padding: 1rem .8rem;
-        background-color: var(--color-primary);
+        background-color: var(--background-secondary);
         border-radius: .5rem;
         cursor: pointer;
+        display: block;
     }
     .logo-img {
-        color: white;
+        color: var(--color-primary-light);
         font-weight: bold;
         font-size: 1rem;
+    }
+    .logo-container:hover > .logo-img {
+        text-decoration: underline;
     }
     .sidebar-item {
         cursor: pointer;

@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import { BellIcon, BookmarkIcon, SettingsIcon, UserIcon, LogOutIcon } from 'svelte-feather-icons';
+    import { BellIcon, BookmarkIcon, SettingsIcon, LogOutIcon } from 'svelte-feather-icons';
 
     let messagesCount = 1;
 
@@ -34,10 +34,6 @@
             </button>
 
             <div class="profile-dropdown {isActive ? 'active' : ''}">
-                <a href="/profile" class="profile-dropdown-item">
-                    <UserIcon size="16" />
-                    Profile
-                </a>
                 <a href="/settings" class="profile-dropdown-item">
                     <SettingsIcon size="16" />
                     Settings

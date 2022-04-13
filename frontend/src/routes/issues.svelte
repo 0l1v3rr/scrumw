@@ -135,10 +135,11 @@
         background-color: var(--color-danger);
     }
     .closed > .header-title {
-        color: var(--color-success-light);
+        color: var(--color-warning-light);
     }
     .closed > .header-count {
-        background-color: var(--color-success);
+        background-color: var(--color-warning);
+        color: var(--background-primary);
     }
     @media screen and (max-width: 576px) {
         .issues-section.closed {

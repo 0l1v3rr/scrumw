@@ -38,7 +38,7 @@
         <div class="footer-text">
             <div>Opened by <a href="/{openedBy}" class="footer-text-bold">{openedBy}</a>.</div>
             { #if closedBy != "" }
-                <div>Closed by <a href="/{closedBy}" class="footer-text-bold">{closedBy}</a>.</div>
+                <div style="margin-top: .4rem;">Closed by <a href="/{closedBy}" class="footer-text-bold">{closedBy}</a>.</div>
             { /if }
         </div>
     </div>

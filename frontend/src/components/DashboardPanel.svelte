@@ -1,5 +1,5 @@
 <script>
-    import {  FolderMinusIcon, ServerIcon, AlertCircleIcon } from 'svelte-feather-icons';
+    import {  FolderMinusIcon, TrelloIcon, AlertCircleIcon } from 'svelte-feather-icons';
 </script>
 
 <div class="dashboard-panel">
@@ -27,8 +27,8 @@
 
     <div class="dashboard-panel-item dpi-tasks">
         <div class="dashboard-title">
-            <div class="dashboard-icon" style="color: var(--color-success-light);"><ServerIcon size="24" /></div>
-            <div class="dashboard-title-text">Total Tasks</div>
+            <div class="dashboard-icon" style="color: var(--color-success-light);"><TrelloIcon size="24" /></div>
+            <div class="dashboard-title-text">Total Scrums</div>
         </div>
         <div class="dashboard-content">
             <div class="content-number">2</div>

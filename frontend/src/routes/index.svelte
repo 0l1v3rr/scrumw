@@ -1,5 +1,6 @@
 <script>
-    import ScrumCard from "../components/cards/ScrumCard.svelte";
+    import ProjectCard from "../components/cards/ProjectCard.svelte";
+    import IssueCard from "../components/cards/IssueCard.svelte";
 </script>
 
 <svelte:head>
@@ -8,52 +9,53 @@
 
 <main class="main">
     <div class="dashboard-header">
-        <div class="dashboard-title">Lates Activity</div>
+        <div class="dashboard-title">Dashboard</div>
     </div>
 
     <div class="scrums-container">
         
-        <div class="scrum-section">
-            <div class="scrum-section-header tasks">
-                <div class="header-title">Tasks</div>
-                <div class="header-count">2</div>
+        <div class="scrum-section project-section">
+            <div class="scrum-section-header">
+                <div class="header-title">Recent Projects</div>
             </div>
 
-            <ScrumCard 
-                project="0l1v3rr/test"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
-                title="Test scrum"
-                assignedBy="j0hn"
+            <ProjectCard 
+                owner="0l1v3rr"
+                name="test-project"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, iure. Similique odio totam consectetur maiores perspiciatis? Voluptas earum quasi expedita!"
+                isPublic={false}
+            />
+
+            <ProjectCard 
+                owner="D0e"
+                name="scrum-project"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, iure. Similique odio totam consectetur maiores perspiciatis?"
+                issueCount={12}
             />
 
         </div>
 
-        <div class="scrum-section in-progress-section">
-            <div class="scrum-section-header in-progress">
-                <div class="header-title">In Progress</div>
-                <div class="header-count">2</div>
-            </div>
-
-            <ScrumCard 
-                project="0l1v3rr/test"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
-                title="Test scrum"
-                assignedBy="j0hn"
-            />
-        </div>
-
         <div class="scrum-section">
-            <div class="scrum-section-header done">
-                <div class="header-title">Done</div>
-                <div class="header-count">2</div>
+            <div class="scrum-section-header">
+                <div class="header-title">Recent Issues</div>
             </div>
 
-            <ScrumCard 
-                project="0l1v3rr/test"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
-                title="Test scrum"
-                assignedBy="fr3dd1e"
-                approvedBy="thomas"
+            <IssueCard 
+                projectOwner="0l1v3rr"
+                projectName="test-project"
+                issueTitle="Test issue"
+                issueDescription="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus, et?"
+                openedBy="j0hn-d03"
+            />
+
+            <IssueCard 
+                projectOwner="0l1v3rr"
+                projectName="test-project"
+                issueTitle="Test issue"
+                issueDescription="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus, et?"
+                isOpen={false}
+                openedBy="j0hn-d03"
+                closedBy="tr3v0r"
             />
         </div>
 
@@ -79,7 +81,10 @@
         height: 100%;
     }
     .scrum-section {
-        width: 33%;
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
     .scrum-section-header {
         display: flex;
@@ -90,38 +95,15 @@
         padding: .5rem 1rem;
         border: 1px solid var(--border-color);
     }
-    .header-count {
-        margin-left: .6rem;
-        font-size: .9rem;
-        border-radius: 50%;
-        padding: .25rem .5rem;
+    .header-title {
+        color: var(--text-color-secondary);
     }
-    .tasks > .header-title {
-        color: var(--color-danger-light);
-    }
-    .tasks > .header-count {
-        background-color: var(--color-danger);
-    }
-    .in-progress > .header-title {
-        color: var(--color-warning-light);
-    }
-    .in-progress > .header-count {
-        background-color: var(--color-warning);
-        color: var(--background-primary);
-    }
-    .done > .header-title {
-        color: var(--color-success-light);
-    }
-    .done > .header-count {
-        background-color: var(--color-success);
-    }
-
     @media screen and (max-width: 576px) {
-        .in-progress-section {
+        .project-section {
             display: none;
         }
         .scrum-section {
-            width: 50%;
+            width: 100%;
         }
     }
 </style>

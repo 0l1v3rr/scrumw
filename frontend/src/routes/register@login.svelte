@@ -12,7 +12,7 @@
     let passwordTwo;
     let email;
 
-    const handleFormSubmit = () => {
+    const handleFormSubmit = async () => {
         if(username == "" || !username) {
             handleError("Please provide a username.");
             return;
@@ -42,6 +42,35 @@
             handleError("The two passwords do not match.");
             return;
         }
+
+		const newUser = {
+			username: username,
+			email: email,
+			password: password
+		};
+
+		const res = await fetch('http://localhost:8080/api/v1/users/new', {
+			method: 'POST',
+			body: JSON.stringify(newUser),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		});
+		
+		const resStatus = res.status;
+		if(resStatus == 400) {
+			handleError("The username or the email is already taken!");
+            return;
+		}
+		
+		if(resStatus == 500) {
+			handleError("An unknown error occurred!");
+            return;
+		}
+		
+		if(resStatus == 200) {
+			window.location.replace("/login");
+		}
     };
 </script>
 

@@ -13,6 +13,7 @@ public class UserController {
 
     private final UserDataAccessService userDataAccessService;
 
+    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping(path = "new")
     public void registerUser(@RequestBody User user) {
         if(userDataAccessService.findUserByUsername(user.getUsername()).isPresent()) {

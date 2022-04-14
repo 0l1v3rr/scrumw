@@ -1,6 +1,7 @@
 package com.oliverr.scrumw.user;
 
 import com.oliverr.scrumw.exceptions.StateAlreadyExistsException;
+import com.oliverr.scrumw.security.PasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserController {
 
     private final UserDataAccessService userDataAccessService;
+    private final PasswordEncoder encoder;
 
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping(path = "new")
@@ -25,6 +27,23 @@ public class UserController {
         }
 
         userDataAccessService.insertUser(user);
+    }
+
+    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
+    @PostMapping(path = "login")
+    public UserToken loginUser(@RequestBody User user) {
+        if(userDataAccessService.findUserByUsername(user.getUsername()).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Member with this username does not exist.", new RuntimeException());
+        }
+
+        if(userDataAccessService.findUserByUsernameAndPassword(user.getUsername(), user.getPassword()).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Wrong password.", new RuntimeException());
+        }
+
+        return new UserToken(
+                user.getUsername(),
+                userDataAccessService.getTokenByUsername(user.getUsername()).orElse("")
+        );
     }
 
 }

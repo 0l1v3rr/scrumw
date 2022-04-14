@@ -74,4 +74,28 @@ public class UserDataAccessService implements UserDao {
         return jdbcTemplate.query(sql, new UserRowMapper(), username).stream().findFirst();
     }
 
+    @Override
+    public Optional<User> findUserByUsernameAndPassword(String username, String password) {
+        var sql = """
+                SELECT *
+                FROM users
+                WHERE username = ?;
+                """;
+        return jdbcTemplate.query(sql, new UserRowMapper(), username)
+                .stream()
+                .filter(user -> encoder.bCryptPasswordEncoder().matches(password, user.getPassword()))
+                .findFirst();
+    }
+
+    @Override
+    public Optional<String> getTokenByUsername(String username) {
+        var sql = """
+                SELECT *
+                FROM users
+                WHERE username = ?;
+                """;
+        var result =  jdbcTemplate.query(sql, new UserRowMapper(), username).stream().findFirst();
+        return result.map(User::getToken);
+    }
+
 }

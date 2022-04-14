@@ -10,4 +10,6 @@ public interface UserDao {
     Optional<User> selectUserById(int id);
     Optional<User> findUserByEmail(String email);
     Optional<User> findUserByUsername(String username);
+    Optional<User> findUserByUsernameAndPassword(String username, String password);
+    Optional<String> getTokenByUsername(String username);
 }

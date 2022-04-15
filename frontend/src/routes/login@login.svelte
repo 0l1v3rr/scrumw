@@ -1,4 +1,12 @@
 <script>
+    /*import { onMount } from "svelte";
+    onMount(() => {
+        const token = document.cookie.match('(^|;)\\s*' + "token" + '\\s*=\\s*([^;]+)')?.pop() || '';
+        if(token) {
+            window.location.replace("/");
+        }
+    });*/
+
     let isError = false;
     let errorMsg;
 
@@ -10,7 +18,7 @@
     let username;
     let password;
 
-    const handleFormSubmit = () => {
+    const handleFormSubmit = async () => {
         if(username == "" || !username) {
             handleError("Please provide a username.");
             return;
@@ -20,6 +28,34 @@
             handleError("Please provide a valid password.");
             return;
         }
+
+        const loginUser = {
+			username: username,
+			password: password
+		};
+
+		const res = await fetch('http://localhost:8080/api/v1/users/login', {
+			method: 'POST',
+			body: JSON.stringify(loginUser),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		});
+
+        const resJson = await res.json();
+        if(res.status == 200) {
+			window.location.replace("/");
+
+            let now = new Date();
+            let time = now.getTime();
+            let expireTime = time + 24*60*60*30*1000;
+            now.setTime(expireTime);
+            document.cookie = `token=${resJson.token}; expires=${now.toUTCString()}; path=/`;
+
+            return;
+		}
+
+        handleError(resJson.message);
     };
 </script>
 

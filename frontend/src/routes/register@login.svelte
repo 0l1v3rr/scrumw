@@ -57,20 +57,13 @@
 			}
 		});
 		
-		const resStatus = res.status;
-		if(resStatus == 400) {
-			handleError("The username or the email is already taken!");
-            return;
-		}
-		
-		if(resStatus == 500) {
-			handleError("An unknown error occurred!");
-            return;
-		}
-		
-		if(resStatus == 200) {
+        if(res.status == 200) {
 			window.location.replace("/login");
+            return;
 		}
+
+        const resJson = await res.json();
+		handleError(resJson.message);
     };
 </script>
 

@@ -3,3 +3,6 @@ spring:
     url: jdbc:mysql://localhost:3306/scrumw?useSSL=false
     username: root
     password:
+server:
+  error:
+    include-message: always

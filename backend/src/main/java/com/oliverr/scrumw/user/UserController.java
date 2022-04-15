@@ -1,6 +1,5 @@
 package com.oliverr.scrumw.user;
 
-import com.oliverr.scrumw.exceptions.StateAlreadyExistsException;
 import com.oliverr.scrumw.security.PasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,11 +18,11 @@ public class UserController {
     @PostMapping(path = "new")
     public void registerUser(@RequestBody User user) {
         if(userDataAccessService.findUserByUsername(user.getUsername()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This username is already taken.", new StateAlreadyExistsException());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This username is already taken.", new RuntimeException());
         }
 
         if(userDataAccessService.findUserByEmail(user.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already taken.", new StateAlreadyExistsException());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already taken.", new RuntimeException());
         }
 
         userDataAccessService.insertUser(user);

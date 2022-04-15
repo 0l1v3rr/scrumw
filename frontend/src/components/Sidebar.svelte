@@ -1,6 +1,11 @@
 <script>
     import { page } from '$app/stores';
     import { LayoutIcon, FolderMinusIcon, SettingsIcon, LogOutIcon, AlertCircleIcon, TrelloIcon } from 'svelte-feather-icons';
+
+    const handleLogoutClick = () => {
+        window.location.replace("/login");
+        document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/`;
+    };
 </script>
 
 <aside class="sidebar">
@@ -36,10 +41,10 @@
         <div class="sidebar-item-hover">Settings</div>
     </a>
 
-    <a href="/" class="sidebar-item">
+    <span class="sidebar-item" on:click={handleLogoutClick}>
         <LogOutIcon size="24" />
         <div class="sidebar-item-hover">Log Out</div>
-    </a>
+    </span>
 </aside>
 
 <style>

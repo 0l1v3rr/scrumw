@@ -1,12 +1,4 @@
 <script>
-    /*import { onMount } from "svelte";
-    onMount(() => {
-        const token = document.cookie.match('(^|;)\\s*' + "token" + '\\s*=\\s*([^;]+)')?.pop() || '';
-        if(token) {
-            window.location.replace("/");
-        }
-    });*/
-
     let isError = false;
     let errorMsg;
 

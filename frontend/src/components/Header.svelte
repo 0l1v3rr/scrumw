@@ -12,6 +12,11 @@
             else isActive = true;
         });
     });
+
+    const handleLogoutClick = () => {
+        window.location.replace("/login");
+        document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/`;
+    };
 </script>
 
 <header class="header">
@@ -38,10 +43,10 @@
                     <SettingsIcon size="16" />
                     Settings
                 </a>
-                <a href="/" class="profile-dropdown-item">
+                <span class="profile-dropdown-item" on:click={handleLogoutClick}>
                     <LogOutIcon size="16" />
                     Log Out
-                </a>
+                </span>
             </div>
         </div>
     </div>
@@ -191,6 +196,7 @@
         gap: .5rem;
         color: var(--text-color-secondary);
         transition: .3s ease-in-out;
+        cursor: pointer;
     }
     .profile-dropdown-item:hover {
         color: var(--color-primary-light);

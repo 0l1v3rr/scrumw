@@ -7,7 +7,7 @@ import java.util.Random;
 @Configuration
 public class TokenGenerator {
 
-    private final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$_-.%#&@";
+    private final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     public String generateToken(int length) {
         StringBuilder sb = new StringBuilder();

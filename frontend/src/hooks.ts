@@ -21,6 +21,11 @@ export async function handle({ event, resolve }) {
     return response;
 }
 
+export async function getSession(event) {
+    const cookies = parse(event.request.headers.get('cookie') || '');
+    return { token: cookies['token'] };
+}
+
 function getNewUrl(origin, pathname) {
     return `${origin}${origin[origin.length - 1] == '/' ? '' : '/'}${pathname}`;
 }

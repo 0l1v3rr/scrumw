@@ -45,4 +45,10 @@ public class UserController {
         );
     }
 
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping(path = "token/{token}")
+    public User getUserByToken(@PathVariable("token") String token) {
+        return userDataAccessService.getUserByToken(token).orElse(new User());
+    }
+
 }

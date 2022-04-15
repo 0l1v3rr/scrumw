@@ -55,6 +55,18 @@ public class UserDataAccessService implements UserDao {
     }
 
     @Override
+    public Optional<User> getUserByToken(String token) {
+        var sql = """
+                SELECT *
+                FROM users
+                WHERE token = ?;
+                """;
+        Optional<User> result = jdbcTemplate.query(sql, new UserRowMapper(), token).stream().findFirst();
+        result.orElse(new User()).setPassword(null);
+        return result;
+    }
+
+    @Override
     public Optional<User> findUserByEmail(String email) {
         var sql = """
                 SELECT *

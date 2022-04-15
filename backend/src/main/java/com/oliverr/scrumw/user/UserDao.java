@@ -8,6 +8,7 @@ public interface UserDao {
     int insertUser(User user);
     int deleteUser(int id);
     Optional<User> selectUserById(int id);
+    Optional<User> getUserByToken(String token);
     Optional<User> findUserByEmail(String email);
     Optional<User> findUserByUsername(String username);
     Optional<User> findUserByUsernameAndPassword(String username, String password);

@@ -1,5 +1,18 @@
 <script>
     import ScrumCard from "./ScrumCard.svelte";
+    import { onMount } from "svelte";
+    import { parse } from "cookie";
+
+    
+    let username = "";
+    
+    onMount(async () => {
+        const cookies = parse(document.cookie);
+        const res = await fetch(`http://localhost:8080/api/v1/users/token/${cookies['token']}`);
+        const user = await res.json();
+        console.log(user);
+        username = user.username;
+    });
 
     let date = new Date();
     let year = date.getFullYear();
@@ -24,7 +37,7 @@
 
 <section class="right-sidebar">
     <div class="greeting">
-        Welcome,&nbsp;<span class="username">Username</span>! 👋
+        Welcome,&nbsp;<span class="username">{username}</span>! 👋
     </div>
 
     <div class="calendar">

@@ -8,7 +8,7 @@
 
 ## /api/v1/users
 
-```json
+```js
 // URL       : /api/v1/users/new
 // Method    : POST
 // Auth      : No
@@ -22,7 +22,7 @@
 }
 ```
 
-```json
+```js
 // URL       : /api/v1/users/login
 // Method    : POST
 // Auth      : No
@@ -41,7 +41,7 @@
 }
 ```
 
-```json
+```js
 // URL       : /api/v1/users/token/{token}
 // Method    : GET
 // Auth      : No
@@ -59,7 +59,7 @@
 <hr>
 
 ## /api/v1/projects
-```json
+```js
 // URL       : /api/v1/projects/{username}
 // Method    : GET
 // Auth      : Optional
@@ -84,7 +84,7 @@
 ]
 ```
 
-```json
+```js
 // URL       : /api/v1/projects
 // Method    : POST
 // Auth      : Yes
@@ -92,7 +92,6 @@
 
 // Req. body example: 
 {
-    "id": 1,
     "username": "test",
     "projectName": "project-1",
     "projectDescription": "This is a cool project.",
@@ -100,14 +99,14 @@
 }
 ```
 
-```json
+```js
 // URL       : /api/v1/projects/{id}
 // Method    : DELETE
 // Auth      : Yes
 // Response  : -
 ```
 
-```json
+```js
 // URL       : /api/v1/projects/{username}/{projectName}
 // Method    : GET
 // Auth      : Optional

@@ -1,4 +1,22 @@
+<script context="module">
+    export async function load({ fetch, session }) {
+        const res = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
+        const user = await res.json();
+
+        if(res.ok) {
+            return {
+                props: { user }
+            };
+        }
+
+        return {
+            status: res.status
+        };
+    }
+</script>
+
 <script>
+    export let user;
     let isError = false;
     let errorMsg;
 
@@ -10,7 +28,7 @@
     let projectName;
     let description;
 
-    const handleButtonClick = () => {
+    const handleButtonClick = async () => {
         if(projectName == "" || !projectName) {
             handleError("Your project's name must not be empty.");
             return;
@@ -35,6 +53,30 @@
             handleError("Your project's name must be kebab-case!");
             return;
         }
+
+        const newProject = {
+            username: user.username,
+            projectName: projectName,
+            projectDescription: description,
+            isPublic: true
+        };
+
+        const res = await fetch('http://localhost:8080/api/v1/projects', {
+			method: 'POST',
+			body: JSON.stringify(newProject),
+			headers: {
+				"Content-Type": "application/json",
+                "token": user.token
+			}
+		});
+		
+        if(res.status == 200) {
+			window.location.replace("/projects");
+            return;
+		}
+
+        const resJson = await res.json();
+		handleError(resJson.message);
     };
 </script>
 
@@ -50,7 +92,7 @@
     <div class="section-divider"></div>
 
     <div class="project-name-section">
-        <div class="owner">0l1v3rr</div>
+        <div class="owner">{user.username}</div>
         <div class="slash">/</div>
         <div class="name-input">
             <input class="input" type="text" placeholder="Project name" bind:value={projectName}>

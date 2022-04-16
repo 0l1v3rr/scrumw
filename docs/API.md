@@ -9,12 +9,12 @@
 ## /api/v1/users
 
 ```json
-URL       : /api/v1/users/new
-Method    : POST
-Auth      : No
-Response  : -
+// URL       : /api/v1/users/new
+// Method    : POST
+// Auth      : No
+// Response  : -
 
-Req. body example:
+// Req. body example:
 {
     "username": "John",
     "email": "johndoe@gmail.com",
@@ -23,18 +23,18 @@ Req. body example:
 ```
 
 ```json
-URL       : /api/v1/users/login
-Method    : POST
-Auth      : No
-Response  : The users' token
+// URL       : /api/v1/users/login
+// Method    : POST
+// Auth      : No
+// Response  : The users' token
 
-Req. body example:
+// Req. body example:
 {
     "username": "John",
     "password": "johndoe"
 }
 
-Response example: 
+// Response example: 
 {
     "username": "johndoe",
     "token": "nh_u3xhI#UJFN$#37Fbn#jhb319p8n-FJNf$uhsf"
@@ -42,12 +42,12 @@ Response example:
 ```
 
 ```json
-URL       : /api/v1/users/token/{token}
-Method    : GET
-Auth      : No
-Response  : The user with the specified token
+// URL       : /api/v1/users/token/{token}
+// Method    : GET
+// Auth      : No
+// Response  : The user with the specified token
 
-Response example: 
+// Response example: 
 {
     "id": "1",
     "username": "johndoe",
@@ -60,12 +60,12 @@ Response example:
 
 ## /api/v1/projects
 ```json
-URL       : /api/v1/projects/{username}
-Method    : GET
-Auth      : Optional
-Response  : If authenticated, then all of the projects, else just the public ones
+// URL       : /api/v1/projects/{username}
+// Method    : GET
+// Auth      : Optional
+// Response  : If authenticated, then all of the projects, else just the public ones
 
-Response example: 
+// Response example: 
 [
     {
         "id": 1,
@@ -85,12 +85,12 @@ Response example:
 ```
 
 ```json
-URL       : /api/v1/projects
-Method    : POST
-Auth      : Yes
-Response  : -
+// URL       : /api/v1/projects
+// Method    : POST
+// Auth      : Yes
+// Response  : -
 
-Req. body example: 
+// Req. body example: 
 {
     "id": 1,
     "username": "test",
@@ -101,19 +101,19 @@ Req. body example:
 ```
 
 ```json
-URL       : /api/v1/projects/{id}
-Method    : DELETE
-Auth      : Yes
-Response  : -
+// URL       : /api/v1/projects/{id}
+// Method    : DELETE
+// Auth      : Yes
+// Response  : -
 ```
 
 ```json
-URL       : /api/v1/projects/{username}/{projectName}
-Method    : GET
-Auth      : Optional
-Response  : The project with the specified username and projectName.
+// URL       : /api/v1/projects/{username}/{projectName}
+// Method    : GET
+// Auth      : Optional
+// Response  : The project with the specified username and projectName.
 
-Response example: 
+// Response example: 
 {
     "id": 1,
     "username": "test",

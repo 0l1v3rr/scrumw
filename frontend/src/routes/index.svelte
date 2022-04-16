@@ -1,6 +1,33 @@
+<script context="module">
+    export async function load({ fetch, session }) {
+        const userRes = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
+        const user = await userRes.json();
+
+        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}`, {
+            method: 'GET',
+            headers: {
+                'token': session.token,
+            }
+        });
+        const projects = await res.json();
+
+        if(res.ok) {
+            return {
+                props: { projects }
+            };
+        }
+
+        return {
+            status: res.status
+        };
+    }
+</script>
+
 <script>
     import ProjectCard from "../components/cards/ProjectCard.svelte";
     import IssueCard from "../components/cards/IssueCard.svelte";
+
+    export let projects;
 </script>
 
 <svelte:head>
@@ -19,19 +46,14 @@
                 <div class="header-title">Recent Projects</div>
             </div>
 
-            <ProjectCard 
-                owner="0l1v3rr"
-                name="test-project"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, iure. Similique odio totam consectetur maiores perspiciatis? Voluptas earum quasi expedita!"
-                isPublic={false}
-            />
-
-            <ProjectCard 
-                owner="D0e"
-                name="scrum-project"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, iure. Similique odio totam consectetur maiores perspiciatis?"
-                issueCount={12}
-            />
+            {#each projects as project}
+                <ProjectCard 
+                    owner={project.username}
+                    name={project.projectName}
+                    description={project.projectDescription}
+                    isPublic={project.isPublic}
+                />
+            {/each}
 
         </div>
 

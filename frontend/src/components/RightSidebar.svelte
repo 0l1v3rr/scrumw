@@ -10,7 +10,6 @@
         const cookies = parse(document.cookie);
         const res = await fetch(`http://localhost:8080/api/v1/users/token/${cookies['token']}`);
         const user = await res.json();
-        console.log(user);
         username = user.username;
     });
 

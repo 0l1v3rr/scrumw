@@ -6,3 +6,11 @@ CREATE TABLE users(
     token VARCHAR(255) NOT NULL,
     reg_date DATE
 );
+
+CREATE TABLE projects(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	username VARCHAR(32) NOT NULL,
+	name VARCHAR(128) NOT NULL,
+	description VARCHAR(255),
+	public INT(1) NOT NULL
+);

@@ -32,7 +32,14 @@ public class UserDataAccessService implements UserDao {
                 """;
         String token = tokenGenerator.generateToken(128);
         String encryptedPassword = encoder.bCryptPasswordEncoder().encode(user.getPassword());
-        return jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), encryptedPassword, token, LocalDate.now());
+        return jdbcTemplate.update(
+                sql,
+                user.getUsername(),
+                user.getEmail(),
+                encryptedPassword,
+                token,
+                LocalDate.now()
+        );
     }
 
     @Override

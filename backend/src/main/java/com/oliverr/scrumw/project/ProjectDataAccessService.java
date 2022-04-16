@@ -18,7 +18,20 @@ public class ProjectDataAccessService implements ProjectDAO {
         var sql = """
                 SELECT *
                 FROM projects
-                WHERE username = ?;
+                WHERE username = ?
+                ORDER BY id DESC;
+                """;
+        return jdbcTemplate.query(sql, new ProjectRowMapper(), username);
+    }
+
+    @Override
+    public List<Project> getLatestThreeProject(String username) {
+        var sql = """
+                SELECT *
+                FROM projects
+                WHERE username = ?
+                ORDER BY id DESC
+                LIMIT 3;
                 """;
         return jdbcTemplate.query(sql, new ProjectRowMapper(), username);
     }
@@ -28,7 +41,8 @@ public class ProjectDataAccessService implements ProjectDAO {
         var sql = """
                 SELECT *
                 FROM projects
-                WHERE username = ? AND public = 1;
+                WHERE username = ? AND public = 1
+                ORDER BY id DESC;
                 """;
         return jdbcTemplate.query(sql, new ProjectRowMapper(), username);
     }
@@ -38,7 +52,8 @@ public class ProjectDataAccessService implements ProjectDAO {
         var sql = """
                 SELECT *
                 FROM projects
-                WHERE username = ? AND public <> 1;
+                WHERE username = ? AND public <> 1
+                ORDER BY id DESC;
                 """;
         return jdbcTemplate.query(sql, new ProjectRowMapper(), username);
     }

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 public interface ProjectDAO {
     List<Project> getProjectsByUsername(String username);
+    List<Project> getLatestThreeProject(String username);
     List<Project> getPublicProjectsByUsername(String username);
     List<Project> getPrivateProjectsByUsername(String username);
     void addProject(Project project);

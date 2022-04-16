@@ -37,6 +37,26 @@ public class ProjectController {
         return projectDataAccessService.getProjectsByUsername(username);
     }
 
+    @GetMapping(path = "{username}/latest")
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    public List<Project> getLatestThreeProjects(@PathVariable("username") String username, HttpEntity<byte[]> requestEntity) {
+        String token = requestEntity.getHeaders().getFirst("token");
+        if(token == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        }
+
+        var userByToken = userDataAccessService.getUserByToken(token);
+        if(userByToken.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        }
+
+        if(!userByToken.get().getUsername().equalsIgnoreCase(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        }
+
+        return projectDataAccessService.getLatestThreeProject(username);
+    }
+
     @PostMapping
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     public void addProject(@RequestBody Project project, HttpEntity<byte[]> requestEntity) {

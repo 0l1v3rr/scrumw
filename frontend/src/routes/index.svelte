@@ -3,7 +3,7 @@
         const userRes = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
         const user = await userRes.json();
 
-        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}`, {
+        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}/latest`, {
             method: 'GET',
             headers: {
                 'token': session.token,

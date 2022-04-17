@@ -121,3 +121,27 @@
     "isPublic": true
 }
 ```
+
+```js
+// URL       : /api/v1/projects/{username}/count
+// Method    : GET
+// Auth      : Yes
+// Response  : The amount of the projects the provided username has.
+
+// Response example: 
+{
+    "count": 7,
+}
+```
+
+```js
+// URL       : /api/v1/projects/{username}/count/private
+// Method    : GET
+// Auth      : Yes
+// Response  : The amount of the private projects the provided username has.
+
+// Response example: 
+{
+    "count": 3,
+}
+```

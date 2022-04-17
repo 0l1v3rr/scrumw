@@ -1,6 +1,7 @@
 package com.oliverr.scrumw.project;
 
 import com.oliverr.scrumw.user.UserDataAccessService;
+import com.oliverr.scrumw.util.Count;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -130,6 +131,46 @@ public class ProjectController {
         }
 
         return project.get();
+    }
+
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping(value = "{username}/count")
+    public Count getProjectCountByUsername(@PathVariable("username") String username, HttpEntity<byte[]> requestEntity) {
+        String token = requestEntity.getHeaders().getFirst("token");
+        if(token == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You did not provide any token.", new RuntimeException());
+        }
+
+        var userByToken = userDataAccessService.getUserByToken(token);
+        if(userByToken.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        }
+
+        if(!userByToken.get().getUsername().equalsIgnoreCase(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        }
+
+        return new Count(projectDataAccessService.getProjectCount(username));
+    }
+
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping(value = "{username}/count/private")
+    public Count getPrivateProjectCountByUsername(@PathVariable("username") String username, HttpEntity<byte[]> requestEntity) {
+        String token = requestEntity.getHeaders().getFirst("token");
+        if(token == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You did not provide any token.", new RuntimeException());
+        }
+
+        var userByToken = userDataAccessService.getUserByToken(token);
+        if(userByToken.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        }
+
+        if(!userByToken.get().getUsername().equalsIgnoreCase(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        }
+
+        return new Count(projectDataAccessService.getPrivateProjectCount(username));
     }
 
 }

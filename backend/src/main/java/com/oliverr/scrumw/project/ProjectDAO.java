@@ -12,4 +12,6 @@ public interface ProjectDAO {
     void deleteProject(int id);
     Optional<Project> getProjectById(int id);
     Optional<Project> getProjectByUsernameAndProjectName(String username, String projectName);
+    int getProjectCount(String username);
+    int getPrivateProjectCount(String username);
 }

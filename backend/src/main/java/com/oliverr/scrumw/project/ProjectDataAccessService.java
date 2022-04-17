@@ -103,4 +103,16 @@ public class ProjectDataAccessService implements ProjectDAO {
         return jdbcTemplate.query(sql, new ProjectRowMapper(), username, projectName).stream().findFirst();
     }
 
+    @Override
+    public int getProjectCount(String username) {
+        var res = getProjectsByUsername(username);
+        return res.size();
+    }
+
+    @Override
+    public int getPrivateProjectCount(String username) {
+        var res = getPrivateProjectsByUsername(username);
+        return res.size();
+    }
+
 }

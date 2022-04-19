@@ -75,6 +75,11 @@ public class ProjectController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
         }
 
+        var currentProject = projectDataAccessService.getProjectByUsernameAndProjectName(project.getUsername(), project.getProjectName());
+        if(currentProject.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project with this name already exists.", new RuntimeException());
+        }
+
         projectDataAccessService.addProject(project);
     }
 

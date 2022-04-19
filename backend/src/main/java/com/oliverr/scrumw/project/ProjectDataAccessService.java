@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
-public class ProjectDataAccessService implements ProjectDAO {
+public class ProjectDataAccessService implements ProjectDao {
 
     private final JdbcTemplate jdbcTemplate;
 

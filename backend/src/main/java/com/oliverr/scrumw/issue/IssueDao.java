@@ -11,9 +11,9 @@ public interface IssueDao {
     void deleteIssue(int id);
     Optional<Issue> getIssueByIssueTitle(String username, String projectName, String issueTitle);
     int getUsernameIssueCount(String username);
-    int getUsernameClosedIssueCount(String username);
-    int getUsernameOpenIssueCount(String username);
+    long getUsernameClosedIssueCount(String username);
+    long getUsernameOpenIssueCount(String username);
     int getProjectIssueCount(String username, String projectName);
-    int getProjectClosedIssueCount(String username, String projectName);
-    int getProjectOpenIssueCount(String username, String projectName);
+    long getProjectClosedIssueCount(String username, String projectName);
+    long getProjectOpenIssueCount(String username, String projectName);
 }

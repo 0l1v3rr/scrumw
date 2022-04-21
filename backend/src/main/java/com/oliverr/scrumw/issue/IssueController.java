@@ -70,8 +70,33 @@ public class IssueController {
 
     @PostMapping
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
-    public void addIssue(@RequestBody Issue issue, HttpEntity<byte[]> requestEntity) {
-        // TODO: handle
+    public void addIssue(@RequestBody Issue issue) {
+        issueDataAccessService.addIssue(issue);
+    }
+
+    @DeleteMapping("{id}")
+    @CrossOrigin(origins = "*", methods = RequestMethod.DELETE)
+    public void deleteIssue(@PathVariable("id") String id, HttpEntity<byte[]> requestEntity) {
+        String token = requestEntity.getHeaders().getFirst("token");
+        if(token == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You did not provide any token.", new RuntimeException());
+        }
+
+        var userByToken = userDataAccessService.getUserByToken(token);
+        if(userByToken.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        }
+
+        var issue = issueDataAccessService.getIssueById(Integer.parseInt(id));
+        if(issue.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Issue with this ID does not exist.", new RuntimeException());
+        }
+
+        if(!issue.get().getOpenedBy().equalsIgnoreCase(userByToken.get().getUsername())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        }
+
+        issueDataAccessService.deleteIssue(Integer.parseInt(id));
     }
 
 }

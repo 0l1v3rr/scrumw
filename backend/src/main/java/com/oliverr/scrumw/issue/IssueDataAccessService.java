@@ -30,7 +30,7 @@ public class IssueDataAccessService implements IssueDao {
                 SELECT *
                 FROM issues
                 WHERE project_owner = ?
-                ORDER BY id DESC
+                ORDER BY opened DESC
                 LIMIT 3;
                 """;
         return jdbcTemplate.query(sql, new IssueRowMapper(), username);
@@ -95,6 +95,16 @@ public class IssueDataAccessService implements IssueDao {
                 WHERE project_owner = ? AND project_name = ? AND issue_title = ?;
                 """;
         return jdbcTemplate.query(sql, new IssueRowMapper(), username, projectName, issueTitle).stream().findFirst();
+    }
+
+    @Override
+    public Optional<Issue> getIssueById(int id) {
+        var sql = """
+                SELECT *
+                FROM issues
+                WHERE id = ?;
+                """;
+        return jdbcTemplate.query(sql, new IssueRowMapper(), id).stream().findFirst();
     }
 
     @Override

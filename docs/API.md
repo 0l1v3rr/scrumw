@@ -3,6 +3,7 @@
 - [Rest API Documentation](#rest-api-documentation)
   - [/api/v1/users](#apiv1users)
   - [/api/v1/projects](#apiv1projects)
+  - [/api/v1/issues](#apiv1issues)
 
 <hr>
 
@@ -145,3 +146,5 @@
     "count": 3,
 }
 ```
+
+## /api/v1/issues

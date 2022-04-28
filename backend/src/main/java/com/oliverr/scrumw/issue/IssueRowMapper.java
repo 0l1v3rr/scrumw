@@ -11,6 +11,12 @@ public class IssueRowMapper implements RowMapper<Issue> {
 
     @Override
     public Issue mapRow(ResultSet resultSet, int i) throws SQLException {
+        String closedDate = resultSet.getString("closed");
+        LocalDate date = null;
+        if(closedDate != null) {
+            date = LocalDate.parse(closedDate);
+        }
+
         return new Issue(
             resultSet.getLong("id"),
             resultSet.getString("project_owner"),
@@ -21,7 +27,7 @@ public class IssueRowMapper implements RowMapper<Issue> {
             resultSet.getString("opened_by"),
             resultSet.getString("closed_by"),
             LocalDate.parse(resultSet.getString("opened")),
-            LocalDate.parse(resultSet.getString("closed"))
+            date
         );
     }
 

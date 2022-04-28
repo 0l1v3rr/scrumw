@@ -106,13 +106,13 @@ public class ProjectDataAccessService implements ProjectDao {
     @Override
     public int getProjectCount(String username) {
         var res = getProjectsByUsername(username);
-        return res.size();
+        return Integer.parseInt(res.size()+"");
     }
 
     @Override
     public int getPrivateProjectCount(String username) {
         var res = getPrivateProjectsByUsername(username);
-        return res.size();
+        return Integer.parseInt(res.size()+"");
     }
 
 }

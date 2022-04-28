@@ -1,177 +1,270 @@
 # Rest API Documentation
 
 - [Rest API Documentation](#rest-api-documentation)
-  - [/api/v1/users](#apiv1users)
-  - [/api/v1/projects](#apiv1projects)
-  - [/api/v1/issues](#apiv1issues)
+  - [Users](#users)
+    - [/api/v1/users/new](#apiv1usersnew)
+    - [/api/v1/users/login](#apiv1userslogin)
+    - [/api/v1/users/token/{token}](#apiv1userstokentoken)
+  - [Projects](#projects)
+    - [/api/v1/projects/{username}](#apiv1projectsusername)
+    - [/api/v1/projects/{username}/latest](#apiv1projectsusernamelatest)
+    - [/api/v1/projects](#apiv1projects)
+    - [/api/v1/projects/{id}](#apiv1projectsid)
+    - [/api/v1/projects/{username}/{projectName}](#apiv1projectsusernameprojectname)
+    - [/api/v1/projects/{username}/count](#apiv1projectsusernamecount)
+    - [/api/v1/projects/{username}/count/private](#apiv1projectsusernamecountprivate)
+  - [Issues](#issues)
+    - [/api/v1/issues/{username}/latest](#apiv1issuesusernamelatest)
+    - [/api/v1/issues/{username}/{projectName}](#apiv1issuesusernameprojectname)
+    - [/api/v1/issues](#apiv1issues)
+    - [/api/v1/issues/{id}](#apiv1issuesid)
 
 <hr>
 
-## /api/v1/users
+## Users
 
-```js
-// URL       : /api/v1/users/new
-// Method    : POST
-// Auth      : No
-// Response  : -
+### /api/v1/users/new
+Adds a new user to the databse. (registration)  
+If the username or the email is taken, throws and error. (409)
+- **Method:** POST
+- **Request:** A user object, see below.
+  - ```json
+    {
+        "username": "John",
+        "email": "johndoe@gmail.com",
+        "password": "johndoe"
+    }
+    ```
+- **Response:** -
 
-// Req. body example:
-{
-    "username": "John",
-    "email": "johndoe@gmail.com",
-    "password": "johndoe"
-}
-```
+### /api/v1/users/login
+Check if the user is in the database, if so, checks if the given password is corrent.  
+If the user with the given ID does not exist, throws an error. (404)  
+If the user exists, and the password is incorrenct, throws an error. (401)
+- **Method:** POST
+- **Request:** A username and a password
+  - ```json
+    {
+        "username": "John",
+        "password": "johndoe"
+    }
+    ```
+- **Response:** The token
+  - ```json
+    {
+        "username": "johndoe",
+        "token": "nh_u3xhI#UJFN$#37Fbn#jhb319p8n-FJNf$uhsf"
+    }
+    ```
 
-```js
-// URL       : /api/v1/users/login
-// Method    : POST
-// Auth      : No
-// Response  : The users' token
-
-// Req. body example:
-{
-    "username": "John",
-    "password": "johndoe"
-}
-
-// Response example: 
-{
-    "username": "johndoe",
-    "token": "nh_u3xhI#UJFN$#37Fbn#jhb319p8n-FJNf$uhsf"
-}
-```
-
-```js
-// URL       : /api/v1/users/token/{token}
-// Method    : GET
-// Auth      : No
-// Response  : The user with the specified token
-
-// Response example: 
-{
-    "id": "1",
-    "username": "johndoe",
-    "email": "johndoe@gmail.com",
-    "reg_date": "2022-04-15"
-}
-```
+### /api/v1/users/token/{token}
+Returns a user with the given token.
+- **Method:** GET
+- **Response:** The user with the specified token
+  - ```json
+    {
+        "id": "1",
+        "username": "johndoe",
+        "email": "johndoe@gmail.com",
+        "reg_date": "2022-04-15"
+    }
+    ```
 
 <hr>
 
-## /api/v1/projects
-```js
-// URL       : /api/v1/projects/{username}
-// Method    : GET
-// Auth      : Optional
-// Response  : If authenticated, then all of the projects, else just the public ones
+## Projects
 
-// Response example: 
-[
+### /api/v1/projects/{username}
+Returns the project this user has.  
+If the user is not authenticated, it will return the public projects.  
+If the user is authenticated, it will return all of the projects.
+- **Method:** GET
+- **Response:** If authenticated, then all of the projects, else just the public ones
+  - ```json
+    [
+        {
+            "id": 1,
+            "username": "test",
+            "projectName": "project-1",
+            "projectDescription": "This is a cool project.",
+            "isPublic": true
+        },
+        {
+            "id": 2,
+            "username": "test",
+            "projectName": "project-2",
+            "projectDescription": "This is a cool project 2.",
+            "isPublic": false
+        }
+    ]
+    ```
+
+### /api/v1/projects/{username}/latest
+Returns the lates three project the user has.
+- **Method:** GET
+- **Auth:** Yes
+- **Response:** 
+  - ```json
+    [
+        {
+            "id": 1,
+            "username": "test",
+            "projectName": "project-1",
+            "projectDescription": "This is a cool project.",
+            "isPublic": true
+        },
+        ...
+    ]
+    ```
+
+### /api/v1/projects
+Adds a project to the database.
+- **Method:** POST
+- **Auth:** Yes
+- **Request:** A project object
+  - ```json
+    {
+        "username": "test",
+        "projectName": "project-1",
+        "projectDescription": "This is a cool project.",
+        "isPublic": true
+    }
+    ```
+- **Response:** -
+
+### /api/v1/projects/{id}
+Deletes a project from the database.  
+Only the owner of the project can delete it.
+- **Method:** DELETE
+- **Auth:** Yes
+- **Response:** -
+
+### /api/v1/projects/{username}/{projectName}
+Returns a project from the database.  
+If the project is public, then authenticaion is not required. Else it is.
+- **Method:** GET
+- **Response:** The project with the specified username and projectName.
+  - ```json
     {
         "id": 1,
         "username": "test",
         "projectName": "project-1",
         "projectDescription": "This is a cool project.",
         "isPublic": true
-    },
+    }
+    ```
+
+### /api/v1/projects/{username}/count
+Returns the number of project the given username has.
+- **Method:** GET
+- **Response:** 
+  - ```json
+    {
+        "count": 7,
+    }
+    ```
+
+### /api/v1/projects/{username}/count/private
+Returns the number of private project the given username has.  
+- **Method:** GET
+- **Auth:** Yes
+- **Response:** 
+  - ```json
+    {
+        "count": 3,
+    }
+    ```
+
+
+## Issues
+
+### /api/v1/issues/{username}/latest
+Returns the latest 3 issues this user has.
+- **Method:** GET
+- **Auth:** Yes
+- **Response:** 
+  - ```json
+    [
+        {
+            "id": 1,
+            "projectOwner": "test",
+            "projectName": "test",
+            "issueTitle": "Test issue",
+            "issueDescription": "Issue description",
+            "isOpen": true,
+            "openedBy": "test",
+            "opened": "2022-02-02"
+        },
+        {
+            "id": 2,
+            "projectOwner": "test",
+            "projectName": "test",
+            "issueTitle": "Test issue",
+            "issueDescription": "Issue description",
+            "isOpen": false,
+            "openedBy": "test",
+            "closedBy": "john",
+            "opened": "2022-02-02",
+            "closed": "2022-02-03"
+        }
+    ]
+    ```
+
+### /api/v1/issues/{username}/{projectName}
+- **Method:** GET
+- **Auth:** If the project is private, the auth is needed.
+- **Response:** The issues the project has.
+  - ```json
+    [
+        {
+            "id": 1,
+            "projectOwner": "test",
+            "projectName": "test",
+            "issueTitle": "Test issue",
+            "issueDescription": "Issue description",
+            "isOpen": true,
+            "openedBy": "test",
+            "opened": "2022-02-02"
+        },
+        {
+            "id": 2,
+            "projectOwner": "test",
+            "projectName": "test",
+            "issueTitle": "Test issue",
+            "issueDescription": "Issue description",
+            "isOpen": false,
+            "openedBy": "test",
+            "closedBy": "john",
+            "opened": "2022-02-02",
+            "closed": "2022-02-03"
+        }
+    ]
+    ```
+
+### /api/v1/issues
+Adds a new issue to the database.  
+If the project is private, auth is needed.
+- **Method:** POST
+- **Auth:** Only if the project is private
+- **Request:** An issue object.
+  - ```json
     {
         "id": 2,
-        "username": "test",
-        "projectName": "project-2",
-        "projectDescription": "This is a cool project 2.",
-        "isPublic": false
+        "projectOwner": "test",
+        "projectName": "test",
+        "issueTitle": "Test issue",
+        "issueDescription": "Issue description",
+        "isOpen": false,
+        "openedBy": "test",
+        "closedBy": "john",
+        "opened": "2022-02-02",
+        "closed": "2022-02-03"
     }
-]
-```
+    ```
+- **Response:** -
 
-```js
-// URL       : /api/v1/projects
-// Method    : POST
-// Auth      : Yes
-// Response  : -
-
-// Req. body example: 
-{
-    "username": "test",
-    "projectName": "project-1",
-    "projectDescription": "This is a cool project.",
-    "isPublic": true
-}
-```
-
-```js
-// URL       : /api/v1/projects/{id}
-// Method    : DELETE
-// Auth      : Yes
-// Response  : -
-```
-
-```js
-// URL       : /api/v1/projects/{username}/{projectName}
-// Method    : GET
-// Auth      : Optional
-// Response  : The project with the specified username and projectName.
-
-// Response example: 
-{
-    "id": 1,
-    "username": "test",
-    "projectName": "project-1",
-    "projectDescription": "This is a cool project.",
-    "isPublic": true
-}
-```
-
-```js
-// URL       : /api/v1/projects/{username}/count
-// Method    : GET
-// Auth      : Yes
-// Response  : The amount of the projects the provided username has.
-
-// Response example: 
-{
-    "count": 7,
-}
-```
-
-```js
-// URL       : /api/v1/projects/{username}/count/private
-// Method    : GET
-// Auth      : Yes
-// Response  : The amount of the private projects the provided username has.
-
-// Response example: 
-{
-    "count": 3,
-}
-```
-
-## /api/v1/issues
-
-```js
-// URL       : /api/v1/issues/{username}/latest
-// Method    : GET
-// Auth      : Yes
-// Response  : The latest 3 issues the user has.
-```
-
-```js
-// URL       : /api/v1/issues/{username}/{projectName}
-// Method    : GET
-// Auth      : If the project is empty, no auth.
-// Response  : The latest issues the project has.
-```
-
-```js
-// URL       : /api/v1/issues/
-// Method    : POST
-// Auth      : No
-// Req body  : An Issue object.
-```
-
-```js
-// URL       : /api/v1/issues/{id}
-// Method    : DELETE
-// Auth      : Yes
-```
+### /api/v1/issues/{id}
+Deletes an issue from the database.
+- **Method:** DELETE
+- **Auth:** Yes4
+- **Response:** -

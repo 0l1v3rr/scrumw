@@ -148,3 +148,30 @@
 ```
 
 ## /api/v1/issues
+
+```js
+// URL       : /api/v1/issues/{username}/latest
+// Method    : GET
+// Auth      : Yes
+// Response  : The latest 3 issues the user has.
+```
+
+```js
+// URL       : /api/v1/issues/{username}/{projectName}
+// Method    : GET
+// Auth      : If the project is empty, no auth.
+// Response  : The latest issues the project has.
+```
+
+```js
+// URL       : /api/v1/issues/
+// Method    : POST
+// Auth      : No
+// Req body  : An Issue object.
+```
+
+```js
+// URL       : /api/v1/issues/{id}
+// Method    : DELETE
+// Auth      : Yes
+```

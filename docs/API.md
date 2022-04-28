@@ -175,6 +175,7 @@ Returns the number of private project the given username has.
     }
     ```
 
+<hr>
 
 ## Issues
 

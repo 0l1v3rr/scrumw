@@ -54,12 +54,11 @@ public class ProjectController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
         }
 
-        var userByToken = userDataAccessService.getUserByToken(token);
-        if(userByToken.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
-        }
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
 
-        if(!userByToken.get().getUsername().equalsIgnoreCase(username)) {
+        if(!userByToken.getUsername().equalsIgnoreCase(username)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
         }
 
@@ -74,18 +73,18 @@ public class ProjectController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
         }
 
-        var userByToken = userDataAccessService.getUserByToken(token);
-        if(userByToken.isEmpty()) {
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
+
+        if(!project.getUsername().equalsIgnoreCase(userByToken.getUsername())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
         }
 
-        if(!project.getUsername().equalsIgnoreCase(userByToken.get().getUsername())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
-        }
-
-        var currentProject = projectDataAccessService.getProjectByUsernameAndProjectName(project.getUsername(), project.getProjectName());
+        var currentProject = projectDataAccessService
+                .getProjectByUsernameAndProjectName(project.getUsername(), project.getProjectName());
         if(currentProject.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Project with this name already exists.", new RuntimeException());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Project with this name already exists.", new RuntimeException());
         }
 
         projectDataAccessService.addProject(project);
@@ -99,17 +98,15 @@ public class ProjectController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
         }
 
-        var userByToken = userDataAccessService.getUserByToken(token);
-        if(userByToken.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
-        }
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
 
-        var project = projectDataAccessService.getProjectById(Integer.parseInt(id));
-        if(project.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project with this id does not exist.", new RuntimeException());
-        }
+        var project = projectDataAccessService
+                .getProjectById(Integer.parseInt(id))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project with this id does not exist.", new RuntimeException()));
 
-        if(!project.get().getUsername().equalsIgnoreCase(userByToken.get().getUsername())) {
+        if(!project.getUsername().equalsIgnoreCase(userByToken.getUsername())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
         }
 
@@ -117,16 +114,14 @@ public class ProjectController {
     }
 
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
-    @GetMapping(value = "{username}/{projectname}")
-    public Project getProjectByUsernameAndProjectName(@PathVariable("username") String username, @PathVariable("projectname") String projectName, HttpEntity<byte[]> requestEntity) {
-        var project = projectDataAccessService.getProjectByUsernameAndProjectName(username, projectName);
+    @GetMapping(value = "{username}/{projectName}")
+    public Project getProjectByUsernameAndProjectName(@PathVariable("username") String username, @PathVariable("projectName") String projectName, HttpEntity<byte[]> requestEntity) {
+        var project = projectDataAccessService
+                .getProjectByUsernameAndProjectName(username, projectName)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This project does not exist.", new RuntimeException()));
 
-        if(project.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This project does not exist.", new RuntimeException());
-        }
-
-        if(project.get().getIsPublic()) {
-            return project.get();
+        if(project.getIsPublic()) {
+            return project;
         }
 
         String token = requestEntity.getHeaders().getFirst("token");
@@ -134,16 +129,15 @@ public class ProjectController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You did not provide any token.", new RuntimeException());
         }
 
-        var userByToken = userDataAccessService.getUserByToken(token);
-        if(userByToken.isEmpty()) {
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException()));
+
+        if(!userByToken.getUsername().equalsIgnoreCase(username)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
         }
 
-        if(!userByToken.get().getUsername().equalsIgnoreCase(username)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
-        }
-
-        return project.get();
+        return project;
     }
 
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
@@ -160,12 +154,11 @@ public class ProjectController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You did not provide any token.", new RuntimeException());
         }
 
-        var userByToken = userDataAccessService.getUserByToken(token);
-        if(userByToken.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
-        }
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException()));
 
-        if(!userByToken.get().getUsername().equalsIgnoreCase(username)) {
+        if(!userByToken.getUsername().equalsIgnoreCase(username)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
         }
 

@@ -16,8 +16,9 @@
   - [Issues](#issues)
     - [/api/v1/issues/{username}/latest](#apiv1issuesusernamelatest)
     - [/api/v1/issues/{username}/{projectName}](#apiv1issuesusernameprojectname)
-    - [/api/v1/issues](#apiv1issues)
     - [/api/v1/issues/{id}](#apiv1issuesid)
+    - [/api/v1/issues](#apiv1issues)
+    - [/api/v1/issues/{id}](#apiv1issuesid-1)
 
 <hr>
 
@@ -241,6 +242,25 @@ Returns the latest 3 issues this user has.
         }
     ]
     ```
+
+### /api/v1/issues/{id}
+Returns the issue with the given id.  
+If the project the issue belongs to is private, auth is needed.
+- **Method:** GET
+- **Auth:** If the project is private, the auth is needed.
+- **Response:** The requested issue
+  - ```json
+    {
+        "id": 1,
+        "projectOwner": "test",
+        "projectName": "test",
+        "issueTitle": "Test issue",
+        "issueDescription": "Issue description",
+        "isOpen": true,
+        "openedBy": "test",
+        "opened": "2022-02-02"
+    }
+  ```
 
 ### /api/v1/issues
 Adds a new issue to the database.  

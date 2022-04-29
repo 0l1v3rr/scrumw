@@ -35,12 +35,11 @@ public class IssueController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
         }
 
-        var userByToken = userDataAccessService.getUserByToken(token);
-        if(userByToken.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
-        }
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
 
-        if(!userByToken.get().getUsername().equalsIgnoreCase(username)) {
+        if(!userByToken.getUsername().equalsIgnoreCase(username)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
         }
 
@@ -50,12 +49,11 @@ public class IssueController {
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping(path = "{username}/{projectName}")
     public List<Issue> getIssuesByProject(@PathVariable("username") String username, @PathVariable("projectName") String projectName, HttpEntity<byte[]> requestEntity) {
-        var project = projectDataAccessService.getProjectByUsernameAndProjectName(username, projectName);
-        if(project.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This project does not exist.", new RuntimeException());
-        }
+        var project = projectDataAccessService
+                .getProjectByUsernameAndProjectName(username, projectName)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This project does not exist.", new RuntimeException()));
 
-        if(project.get().getIsPublic()) {
+        if(project.getIsPublic()) {
             return issueDataAccessService.getIssuesByProject(username, projectName);
         }
 
@@ -64,31 +62,56 @@ public class IssueController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
         }
 
-        var userByToken = userDataAccessService.getUserByToken(token);
-        if(userByToken.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
-        }
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
 
-        if(!userByToken.get().getUsername().equalsIgnoreCase(username)) {
+        if(!userByToken.getUsername().equalsIgnoreCase(username)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
         }
 
         return issueDataAccessService.getIssuesByProject(username, projectName);
     }
 
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping(path = "{id}")
+    public Issue getIssueByTitle(@PathVariable("id") Integer id, HttpEntity<byte[]> requestEntity) {
+        var issue = issueDataAccessService
+                .getIssueById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Issue with this name does not exist."));
+
+        var project = projectDataAccessService
+                .getProjectByUsernameAndProjectName(issue.getProjectOwner(), issue.getProjectName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This project does not exist.", new RuntimeException()));
+
+        if(project.getIsPublic()) {
+            return issue;
+        }
+
+        String token = requestEntity.getHeaders().getFirst("token");
+        if(token == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+        }
+
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
+
+        if(!userByToken.getUsername().equalsIgnoreCase(issue.getOpenedBy())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
+        }
+
+        return issue;
+    }
+
     @PostMapping
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     public void addIssue(@RequestBody Issue issue, HttpEntity<byte[]> requestEntity) {
-        var project = projectDataAccessService.getProjectByUsernameAndProjectName(
-                issue.getProjectOwner(),
-                issue.getProjectName()
-        );
+        var project = projectDataAccessService
+                .getProjectByUsernameAndProjectName(issue.getProjectOwner(), issue.getProjectName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This project does not exist.", new RuntimeException()));
 
-        if(project.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This project does not exist.", new RuntimeException());
-        }
-
-        if(project.get().getIsPublic()) {
+        if(project.getIsPublic()) {
             issueDataAccessService.addIssue(issue);
             return;
         }
@@ -98,10 +121,9 @@ public class IssueController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
         }
 
-        var userByToken = userDataAccessService.getUserByToken(token);
-        if(userByToken.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
-        }
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
 
         issueDataAccessService.addIssue(issue);
     }
@@ -114,17 +136,15 @@ public class IssueController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
         }
 
-        var userByToken = userDataAccessService.getUserByToken(token);
-        if(userByToken.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
-        }
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
 
-        var issue = issueDataAccessService.getIssueById(Integer.parseInt(id));
-        if(issue.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Issue with this ID does not exist.", new RuntimeException());
-        }
+        var issue = issueDataAccessService
+                .getIssueById(Integer.parseInt(id))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Issue with this ID does not exist.", new RuntimeException()));
 
-        if(!issue.get().getOpenedBy().equalsIgnoreCase(userByToken.get().getUsername())) {
+        if(!issue.getOpenedBy().equalsIgnoreCase(userByToken.getUsername())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not have permission to delete it.", new RuntimeException());
         }
 

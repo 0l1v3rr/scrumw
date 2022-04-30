@@ -13,6 +13,10 @@ public class Count {
         this.count = count;
     }
 
+    public Count(long count) {
+        this.count = Integer.valueOf(count+"");
+    }
+
     public Count() {
         this.count = 0;
     }

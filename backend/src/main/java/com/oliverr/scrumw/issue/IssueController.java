@@ -2,6 +2,7 @@ package com.oliverr.scrumw.issue;
 
 import com.oliverr.scrumw.project.ProjectDataAccessService;
 import com.oliverr.scrumw.user.UserDataAccessService;
+import com.oliverr.scrumw.util.Count;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -149,6 +150,33 @@ public class IssueController {
         }
 
         issueDataAccessService.deleteIssue(Integer.parseInt(id));
+    }
+
+    @GetMapping("{username}/count")
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    public Count getUsernameIssueCount(@PathVariable("username") String username) {
+        var user = userDataAccessService
+                .findUserByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with this username does not exist.", new RuntimeException()));
+        return new Count(issueDataAccessService.getUsernameIssueCount(username));
+    }
+
+    @GetMapping("{username}/count/closed")
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    public Count getUsernameClosedIssueCount(@PathVariable("username") String username) {
+        var user = userDataAccessService
+                .findUserByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with this username does not exist.", new RuntimeException()));
+        return new Count(issueDataAccessService.getUsernameClosedIssueCount(username));
+    }
+
+    @GetMapping("{username}/count/open")
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    public Count getUsernameOpenIssueCount(@PathVariable("username") String username) {
+        var user = userDataAccessService
+                .findUserByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with this username does not exist.", new RuntimeException()));
+        return new Count(issueDataAccessService.getUsernameOpenIssueCount(username));
     }
 
 }

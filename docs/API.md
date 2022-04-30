@@ -19,6 +19,9 @@
     - [/api/v1/issues/{id}](#apiv1issuesid)
     - [/api/v1/issues](#apiv1issues)
     - [/api/v1/issues/{id}](#apiv1issuesid-1)
+    - [/api/v1/issues/{username}/count](#apiv1issuesusernamecount)
+    - [/api/v1/issues/{username}/count/closed](#apiv1issuesusernamecountclosed)
+    - [/api/v1/issues/{username}/count/open](#apiv1issuesusernamecountopen)
 
 <hr>
 
@@ -287,5 +290,37 @@ If the project is private, auth is needed.
 ### /api/v1/issues/{id}
 Deletes an issue from the database.
 - **Method:** DELETE
-- **Auth:** Yes4
+- **Auth:** Yes
 - **Response:** -
+
+### /api/v1/issues/{username}/count
+Returns the amount of issues the user has ever opened
+- **Method:** GET
+- **Auth:** No
+- **Response:** Count object
+  - ```json
+    {
+        "count": 12,
+    }
+    ```
+### /api/v1/issues/{username}/count/closed
+Returns the amount of closed issues the user has.
+- **Method:** GET
+- **Auth:** No
+- **Response:** Count object
+  - ```json
+    {
+        "count": 8,
+    }
+    ```
+
+### /api/v1/issues/{username}/count/open
+Returns the amount of open issues the user has.
+- **Method:** GET
+- **Auth:** No
+- **Response:** Count object
+  - ```json
+    {
+        "count": 4,
+    }
+    ```

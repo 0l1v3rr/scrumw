@@ -57,9 +57,9 @@
         background-color: var(--background-primary);
         border-left: 1px solid var(--border-color);
         width: 22vw;
-        height: 100vh;
-        position: fixed;
+        min-height: 100vh;
         right: 0;
+        position: fixed;
     }
     .greeting {
         padding: 1rem;

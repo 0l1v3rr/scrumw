@@ -1,16 +1,13 @@
 <script>
     import ScrumCard from "./ScrumCard.svelte";
     import { onMount } from "svelte";
-    import { parse } from "cookie";
 
-    
+    let isLoading = true;
     let username = "";
     
     onMount(async () => {
-        const cookies = parse(document.cookie);
-        const res = await fetch(`http://localhost:8080/api/v1/users/token/${cookies['token']}`);
-        const user = await res.json();
-        username = user.username;
+        username = localStorage.getItem('username');
+        isLoading = false;
     });
 
     let date = new Date();
@@ -36,7 +33,11 @@
 
 <section class="right-sidebar">
     <div class="greeting">
-        Welcome,&nbsp;<span class="username">{username}</span>! 👋
+        { #if isLoading }
+            Loading username...
+        { :else }
+            Welcome,&nbsp;<span class="username">{username}</span>! 👋
+        { /if }
     </div>
 
     <div class="calendar">

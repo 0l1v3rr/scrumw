@@ -1,5 +1,44 @@
 <script>
     import {  FolderMinusIcon, TrelloIcon, AlertCircleIcon } from 'svelte-feather-icons';
+    import { onMount } from "svelte";
+
+    let projectCount = 0;
+    let privateProjectCount = 0;
+    let totalIssues = 0;
+    let openIssues = 0;
+
+    const getProjectCount = async (username) => {
+        const res = await fetch(`http://localhost:8080/api/v1/projects/${username}/count`);
+        const json = await res.json();
+        return json.count;
+    };
+
+    const getPrivateProjectCount = async (username) => {
+        const res = await fetch(`http://localhost:8080/api/v1/projects/${username}/count/private`);
+        const json = await res.json();
+        return json.count;
+    };
+
+    const getTotalIssues = async (username) => {
+        const res = await fetch(`http://localhost:8080/api/v1/issues/${username}/count`);
+        const json = await res.json();
+        return json.count;
+    };
+
+    const getOpenIssues = async (username) => {
+        const res = await fetch(`http://localhost:8080/api/v1/issues/${username}/count/open`);
+        const json = await res.json();
+        return json.count;
+    };
+
+    onMount(async () => {
+        const username = localStorage.getItem('username');
+
+        projectCount = await getProjectCount(username);
+        privateProjectCount = await getPrivateProjectCount(username);
+        totalIssues = await getTotalIssues(username);
+        openIssues = await getOpenIssues(username);
+    });
 </script>
 
 <div class="dashboard-panel">
@@ -9,8 +48,8 @@
             <div class="dashboard-title-text">Projects</div>
         </div>
         <div class="dashboard-content">
-            <div class="content-number">9</div>
-            <div class="content-subtitle"><span class="content-subnumber">0</span> public</div>
+            <div class="content-number">{projectCount}</div>
+            <div class="content-subtitle"><span class="content-subnumber">{privateProjectCount}</span> private</div>
         </div>
     </div>
 
@@ -20,8 +59,8 @@
             <div class="dashboard-title-text">Total Issues</div>
         </div>
         <div class="dashboard-content">
-            <div class="content-number">11</div>
-            <div class="content-subtitle"><span class="content-subnumber">2</span> done</div>
+            <div class="content-number">{totalIssues}</div>
+            <div class="content-subtitle"><span class="content-subnumber">{openIssues}</span> open</div>
         </div>
     </div>
 

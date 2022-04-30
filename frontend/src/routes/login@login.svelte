@@ -43,6 +43,7 @@
             let expireTime = time + 24*60*60*30*1000;
             now.setTime(expireTime);
             document.cookie = `token=${resJson.token}; expires=${now.toUTCString()}; path=/`;
+            localStorage.setItem('username', resJson.username);
 
             return;
 		}

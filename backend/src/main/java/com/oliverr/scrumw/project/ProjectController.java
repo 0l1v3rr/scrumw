@@ -148,20 +148,7 @@ public class ProjectController {
 
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping(value = "{username}/count/private")
-    public Count getPrivateProjectCountByUsername(@PathVariable("username") String username, HttpEntity<byte[]> requestEntity) {
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You did not provide any token.", new RuntimeException());
-        }
-
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException()));
-
-        if(!userByToken.getUsername().equalsIgnoreCase(username)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
-        }
-
+    public Count getPrivateProjectCountByUsername(@PathVariable("username") String username) {
         return new Count(projectDataAccessService.getPrivateProjectCount(username));
     }
 

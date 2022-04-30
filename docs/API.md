@@ -171,7 +171,6 @@ Returns the number of project the given username has.
 ### /api/v1/projects/{username}/count/private
 Returns the number of private project the given username has.  
 - **Method:** GET
-- **Auth:** Yes
 - **Response:** 
   - ```json
     {

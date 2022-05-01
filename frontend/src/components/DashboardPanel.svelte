@@ -48,8 +48,8 @@
             <div class="dashboard-title-text">Projects</div>
         </div>
         <div class="dashboard-content">
-            <div class="content-number">{projectCount}</div>
-            <div class="content-subtitle"><span class="content-subnumber">{privateProjectCount}</span> private</div>
+            <div class="content-number">{projectCount ? projectCount : 0}</div>
+            <div class="content-subtitle"><span class="content-subnumber">{privateProjectCount ? privateProjectCount : 0}</span> private</div>
         </div>
     </div>
 
@@ -59,8 +59,8 @@
             <div class="dashboard-title-text">Total Issues</div>
         </div>
         <div class="dashboard-content">
-            <div class="content-number">{totalIssues}</div>
-            <div class="content-subtitle"><span class="content-subnumber">{openIssues}</span> open</div>
+            <div class="content-number">{totalIssues ? totalIssues : 0}</div>
+            <div class="content-subtitle"><span class="content-subnumber">{openIssues ? openIssues : 0}</span> open</div>
         </div>
     </div>
 

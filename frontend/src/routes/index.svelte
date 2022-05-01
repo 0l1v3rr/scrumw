@@ -11,14 +11,19 @@
         });
         const projects = await res.json();
 
-        if(res.ok) {
-            return {
-                props: { projects }
-            };
-        }
+        const issueRes = await fetch(`http://localhost:8080/api/v1/issues/${user.username}/latest`, {
+            method: 'GET',
+            headers: {
+                'token': session.token,
+            }
+        });
+        const issues = await issueRes.json();
 
         return {
-            status: res.status
+            props: { 
+                projects,
+                issues
+            }
         };
     }
 </script>
@@ -28,6 +33,7 @@
     import IssueCard from "../components/cards/IssueCard.svelte";
 
     export let projects;
+    export let issues;
 </script>
 
 <svelte:head>
@@ -62,23 +68,28 @@
                 <div class="header-title">Recent Issues</div>
             </div>
 
-            <IssueCard 
-                projectOwner="0l1v3rr"
-                projectName="test-project"
-                issueTitle="Test issue"
-                issueDescription="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus, et?"
-                openedBy="j0hn-d03"
-            />
-
-            <IssueCard 
-                projectOwner="0l1v3rr"
-                projectName="test-project"
-                issueTitle="Test issue"
-                issueDescription="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus, et?"
-                isOpen={false}
-                openedBy="j0hn-d03"
-                closedBy="tr3v0r"
-            />
+            {#each issues as issue}
+                {#if issue.closedBy}
+                    <IssueCard 
+                        projectOwner={issue.projectOwner}
+                        projectName={issue.projectName}
+                        issueTitle={issue.issueTitle}
+                        issueDescription={issue.issueDescription}
+                        isOpen={issue.isOpen}
+                        openedBy={issue.openedBy}
+                        closedBy={issue.closedBy}
+                    />
+                {:else}
+                    <IssueCard 
+                        projectOwner={issue.projectOwner}
+                        projectName={issue.projectName}
+                        issueTitle={issue.issueTitle}
+                        issueDescription={issue.issueDescription}
+                        isOpen={issue.isOpen}
+                        openedBy={issue.openedBy}
+                    />
+                {/if}
+            {/each}
         </div>
 
     </div>

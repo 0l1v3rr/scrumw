@@ -1,5 +1,58 @@
+<script context="module">
+    export async function load({ fetch, session }) {
+        const userRes = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
+        const user = await userRes.json();
+
+        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}`, {
+            method: 'GET',
+            headers: {
+                'token': session.token,
+            }
+        });
+        const projects = await res.json();
+
+        const issueRes = await fetch(`http://localhost:8080/api/v1/issues/user/${user.username}`, {
+            method: 'GET',
+            headers: {
+                'token': session.token,
+            }
+        });
+        const issues = await issueRes.json();
+
+        return {
+            props: { 
+                projects,
+                issues
+            }
+        };
+    }
+</script>
+
 <script>
     import IssueCard from "../components/cards/IssueCard.svelte";
+
+    export let projects;
+    export let issues;
+    let currentIssues = [...issues];
+
+    let openIssues = currentIssues.filter(i => i.isOpen).length;
+    let closedIssues = currentIssues.filter(i => !i.isOpen).length;
+
+    let selectValue;
+
+    const handleFilterClick = () => {
+        if(selectValue == "all") {
+            currentIssues = [...issues];
+            openIssues = currentIssues.filter(i => i.isOpen).length;
+            closedIssues = currentIssues.filter(i => !i.isOpen).length;
+            return;
+        }
+        
+        const splitted = selectValue.split('/');
+        currentIssues = [...issues].filter(i => i.projectOwner == splitted[0] && i.projectName == splitted[1]);
+        openIssues = currentIssues.filter(i => i.isOpen).length;
+        closedIssues = currentIssues.filter(i => !i.isOpen).length;
+    };
 </script>
 
 <svelte:head>
@@ -12,12 +65,14 @@
         <form class="header-form">
             <div class="select">
                 <label for="select-project">Project: </label>
-                <select id="select-project">
+                <select bind:value={selectValue} id="select-project">
                     <option value="all" selected>All</option>
-                    <option value="project-1">0l1v3rr/project-1</option>
+                    {#each projects as project}
+                        <option value={project.username+"/"+project.projectName}>{project.username}/{project.projectName}</option>
+                    {/each}
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary" on:click={handleFilterClick}>Save</button>
         </form>
     </div>
 
@@ -25,33 +80,61 @@
         <div class="issues-section open">
             <div class="issues-section-header open">
                 <div class="header-title">Open</div>
-                <div class="header-count">13</div>
+                <div class="header-count">{openIssues}</div>
             </div>
 
-            <IssueCard 
-                projectOwner="0l1v3rr"
-                projectName="test-project"
-                issueTitle="Test issue"
-                issueDescription="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus, et?"
-                openedBy="j0hn-d03"
-            />
+            {#each currentIssues.filter(i => i.isOpen) as issue}
+                {#if issue.closedBy}
+                    <IssueCard 
+                        projectOwner={issue.projectOwner}
+                        projectName={issue.projectName}
+                        issueTitle={issue.issueTitle}
+                        issueDescription={issue.issueDescription}
+                        isOpen={issue.isOpen}
+                        openedBy={issue.openedBy}
+                        closedBy={issue.closedBy}
+                    />
+                {:else}
+                    <IssueCard 
+                        projectOwner={issue.projectOwner}
+                        projectName={issue.projectName}
+                        issueTitle={issue.issueTitle}
+                        issueDescription={issue.issueDescription}
+                        isOpen={issue.isOpen}
+                        openedBy={issue.openedBy}
+                    />
+                {/if}
+            {/each}
         </div>
 
         <div class="issues-section closed">
             <div class="issues-section-header closed">
                 <div class="header-title">Closed</div>
-                <div class="header-count">2</div>
+                <div class="header-count">{closedIssues}</div>
             </div>
 
-            <IssueCard 
-                projectOwner="0l1v3rr"
-                projectName="test-project"
-                issueTitle="Test issue"
-                issueDescription="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus, et?"
-                isOpen={false}
-                openedBy="j0hn-d03"
-                closedBy="tr3v0r"
-            />
+            {#each currentIssues.filter(i => !i.isOpen) as issue}
+                {#if issue.closedBy}
+                    <IssueCard 
+                        projectOwner={issue.projectOwner}
+                        projectName={issue.projectName}
+                        issueTitle={issue.issueTitle}
+                        issueDescription={issue.issueDescription}
+                        isOpen={issue.isOpen}
+                        openedBy={issue.openedBy}
+                        closedBy={issue.closedBy}
+                    />
+                {:else}
+                    <IssueCard 
+                        projectOwner={issue.projectOwner}
+                        projectName={issue.projectName}
+                        issueTitle={issue.issueTitle}
+                        issueDescription={issue.issueDescription}
+                        isOpen={issue.isOpen}
+                        openedBy={issue.openedBy}
+                    />
+                {/if}
+            {/each}
         </div>
     </div>
 </main>
@@ -111,6 +194,9 @@
     }
     .issues-section {
         width: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
     .issues-section-header {
         display: flex;
@@ -120,7 +206,6 @@
         width: fit-content;
         padding: .5rem 1rem;
         border: 1px solid var(--border-color);
-        margin-bottom: 1rem;
     }
     .header-count {
         margin-left: .6rem;

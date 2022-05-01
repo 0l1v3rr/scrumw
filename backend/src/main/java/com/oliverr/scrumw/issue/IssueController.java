@@ -29,6 +29,25 @@ public class IssueController {
     private final ProjectDataAccessService projectDataAccessService;
 
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping(path = "/user/{username}")
+    public List<Issue> getIssuesByUsername(@PathVariable("username") String username, HttpEntity<byte[]> requestEntity) {
+        String token = requestEntity.getHeaders().getFirst("token");
+        if(token == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+        }
+
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
+
+        if(!userByToken.getUsername().equalsIgnoreCase(username)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
+        }
+
+        return issueDataAccessService.getIssuesByUsername(username);
+    }
+
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping(path = "{username}/latest")
     public List<Issue> getLatestIssues(@PathVariable("username") String username, HttpEntity<byte[]> requestEntity) {
         String token = requestEntity.getHeaders().getFirst("token");

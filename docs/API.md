@@ -14,6 +14,7 @@
     - [/api/v1/projects/{username}/count](#apiv1projectsusernamecount)
     - [/api/v1/projects/{username}/count/private](#apiv1projectsusernamecountprivate)
   - [Issues](#issues)
+    - [/api/v1/issues/{username}](#apiv1issuesusername)
     - [/api/v1/issues/{username}/latest](#apiv1issuesusernamelatest)
     - [/api/v1/issues/{username}/{projectName}](#apiv1issuesusernameprojectname)
     - [/api/v1/issues/{id}](#apiv1issuesid)
@@ -181,6 +182,38 @@ Returns the number of private project the given username has.
 <hr>
 
 ## Issues
+
+### /api/v1/issues/{username}
+Returns the issues the specified user has ever interacted with.
+- **Method:** GET
+- **Auth:** Yes
+- **Response:** 
+  - ```json
+    [
+        {
+            "id": 1,
+            "projectOwner": "test",
+            "projectName": "test",
+            "issueTitle": "Test issue",
+            "issueDescription": "Issue description",
+            "isOpen": true,
+            "openedBy": "test",
+            "opened": "2022-02-02"
+        },
+        {
+            "id": 2,
+            "projectOwner": "test",
+            "projectName": "test",
+            "issueTitle": "Test issue",
+            "issueDescription": "Issue description",
+            "isOpen": false,
+            "openedBy": "test",
+            "closedBy": "john",
+            "opened": "2022-02-02",
+            "closed": "2022-02-03"
+        }
+    ]
+    ```
 
 ### /api/v1/issues/{username}/latest
 Returns the latest 3 issues this user has.

@@ -1,5 +1,28 @@
+<script context="module">
+    export async function load({ fetch, session }) {
+        const userRes = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
+        const user = await userRes.json();
+
+        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}`, {
+            method: 'GET',
+            headers: {
+                'token': session.token,
+            }
+        });
+        const projects = await res.json();
+
+        return {
+            props: { 
+                projects
+            }
+        };
+    }
+</script>
+
 <script>
     import ScrumCard from "../components/cards/ScrumCard.svelte";
+
+    export let projects;
 </script>
 
 <svelte:head>
@@ -14,7 +37,9 @@
                 <label for="select-project">Project: </label>
                 <select id="select-project">
                     <option value="all" selected>All</option>
-                    <option value="project-1">0l1v3rr/project-1</option>
+                    {#each projects as project}
+                        <option value={project.username+"/"+project.projectName}>{project.username}/{project.projectName}</option>
+                    {/each}
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Save</button>

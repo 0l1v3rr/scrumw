@@ -30,6 +30,7 @@
 
 <script>
     import IssueCard from "../components/cards/IssueCard.svelte";
+    import NotFound from "../components/cards/NotFound.svelte";
 
     export let projects;
     export let issues;
@@ -40,14 +41,14 @@
 
     let selectValue;
 
-    const handleFilterClick = () => {
+    const handleFilterOptionsChange = () => {
         if(selectValue == "all") {
             currentIssues = [...issues];
             openIssues = currentIssues.filter(i => i.isOpen).length;
             closedIssues = currentIssues.filter(i => !i.isOpen).length;
             return;
         }
-        
+
         const splitted = selectValue.split('/');
         currentIssues = [...issues].filter(i => i.projectOwner == splitted[0] && i.projectName == splitted[1]);
         openIssues = currentIssues.filter(i => i.isOpen).length;
@@ -65,14 +66,13 @@
         <form class="header-form">
             <div class="select">
                 <label for="select-project">Project: </label>
-                <select bind:value={selectValue} id="select-project">
+                <select bind:value={selectValue} on:change={handleFilterOptionsChange} id="select-project">
                     <option value="all" selected>All</option>
                     {#each projects as project}
                         <option value={project.username+"/"+project.projectName}>{project.username}/{project.projectName}</option>
                     {/each}
                 </select>
             </div>
-            <button type="button" class="btn btn-primary" on:click={handleFilterClick}>Save</button>
         </form>
     </div>
 
@@ -83,28 +83,32 @@
                 <div class="header-count">{openIssues}</div>
             </div>
 
-            {#each currentIssues.filter(i => i.isOpen) as issue}
-                {#if issue.closedBy}
-                    <IssueCard 
-                        projectOwner={issue.projectOwner}
-                        projectName={issue.projectName}
-                        issueTitle={issue.issueTitle}
-                        issueDescription={issue.issueDescription}
-                        isOpen={issue.isOpen}
-                        openedBy={issue.openedBy}
-                        closedBy={issue.closedBy}
-                    />
-                {:else}
-                    <IssueCard 
-                        projectOwner={issue.projectOwner}
-                        projectName={issue.projectName}
-                        issueTitle={issue.issueTitle}
-                        issueDescription={issue.issueDescription}
-                        isOpen={issue.isOpen}
-                        openedBy={issue.openedBy}
-                    />
-                {/if}
-            {/each}
+            {#if openIssues == 0}
+                <NotFound searchQuery="open issues" />
+            {:else}
+                {#each currentIssues.filter(i => i.isOpen) as issue}
+                    {#if issue.closedBy}
+                        <IssueCard 
+                            projectOwner={issue.projectOwner}
+                            projectName={issue.projectName}
+                            issueTitle={issue.issueTitle}
+                            issueDescription={issue.issueDescription}
+                            isOpen={issue.isOpen}
+                            openedBy={issue.openedBy}
+                            closedBy={issue.closedBy}
+                        />
+                    {:else}
+                        <IssueCard 
+                            projectOwner={issue.projectOwner}
+                            projectName={issue.projectName}
+                            issueTitle={issue.issueTitle}
+                            issueDescription={issue.issueDescription}
+                            isOpen={issue.isOpen}
+                            openedBy={issue.openedBy}
+                        />
+                    {/if}
+                {/each}
+            {/if}
         </div>
 
         <div class="issues-section closed">
@@ -113,28 +117,32 @@
                 <div class="header-count">{closedIssues}</div>
             </div>
 
-            {#each currentIssues.filter(i => !i.isOpen) as issue}
-                {#if issue.closedBy}
-                    <IssueCard 
-                        projectOwner={issue.projectOwner}
-                        projectName={issue.projectName}
-                        issueTitle={issue.issueTitle}
-                        issueDescription={issue.issueDescription}
-                        isOpen={issue.isOpen}
-                        openedBy={issue.openedBy}
-                        closedBy={issue.closedBy}
-                    />
-                {:else}
-                    <IssueCard 
-                        projectOwner={issue.projectOwner}
-                        projectName={issue.projectName}
-                        issueTitle={issue.issueTitle}
-                        issueDescription={issue.issueDescription}
-                        isOpen={issue.isOpen}
-                        openedBy={issue.openedBy}
-                    />
-                {/if}
-            {/each}
+            {#if closedIssues == 0}
+                <NotFound searchQuery="closed issues" />
+            {:else}
+                {#each currentIssues.filter(i => !i.isOpen) as issue}
+                    {#if issue.closedBy}
+                        <IssueCard 
+                            projectOwner={issue.projectOwner}
+                            projectName={issue.projectName}
+                            issueTitle={issue.issueTitle}
+                            issueDescription={issue.issueDescription}
+                            isOpen={issue.isOpen}
+                            openedBy={issue.openedBy}
+                            closedBy={issue.closedBy}
+                        />
+                    {:else}
+                        <IssueCard 
+                            projectOwner={issue.projectOwner}
+                            projectName={issue.projectName}
+                            issueTitle={issue.issueTitle}
+                            issueDescription={issue.issueDescription}
+                            isOpen={issue.isOpen}
+                            openedBy={issue.openedBy}
+                        />
+                    {/if}
+                {/each}
+            {/if}
         </div>
     </div>
 </main>

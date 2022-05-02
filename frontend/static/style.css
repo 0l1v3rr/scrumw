@@ -73,6 +73,7 @@ body::-webkit-scrollbar-thumb {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: normal;
 }
 .btn-success {
     background-color: var(--color-success);

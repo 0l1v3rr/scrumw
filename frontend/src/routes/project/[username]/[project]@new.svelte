@@ -11,9 +11,20 @@
         });
 
         if(res.ok) {
+            const issuesRes = await fetch(`http://localhost:8080/api/v1/issues/${params.username}/${params.project}`, {
+                method: 'GET',
+                headers: {
+                    'token': session.token,
+                }
+            });
+
             const project = await res.json();
+            const issues = await issuesRes.json();
             return {
-                props: { givenProject: project, status: res.status }
+                props: { givenProject: project, 
+                    issues: issues, 
+                    status: res.status 
+                }
             };
         }
 
@@ -25,12 +36,55 @@
 
 <script>
     import { FolderMinusIcon, AlertCircleIcon, TrelloIcon } from 'svelte-feather-icons';
+    import IssueCard from "../../../components/cards/IssueCard.svelte";
+    import NotFound from "../../../components/cards/NotFound.svelte";
 
     import { page } from '$app/stores';
     const { username, project } = $page.params;
 
     export let givenProject;
+    export let issues;
     export let status;
+
+    let currentIssues;
+    let openIssues = issues.filter(i => i.isOpen).length;
+    let closedIssues = issues.filter(i => !i.isOpen).length;
+
+    let isOpenSelected = true;
+    let isClosedSelected = false;
+
+    const getCurrentIssues = () => {
+        if(isOpenSelected && isClosedSelected) {
+            currentIssues = [...issues];
+            console.log(currentIssues);
+            return;
+        }
+
+        if(isOpenSelected) {
+            currentIssues =  [...issues].filter(i => i.isOpen);
+            console.log(currentIssues);
+            return;
+        }
+
+        if(isClosedSelected) {
+            currentIssues =  [...issues].filter(i => !i.isOpen);
+            console.log(currentIssues);
+            return;
+        }
+
+        currentIssues = [];
+    };
+    getCurrentIssues();
+
+    const handleOpenClick = () => {
+        isOpenSelected = !isOpenSelected;
+        getCurrentIssues();
+    };
+
+    const handleClosedClick = () => {
+        isClosedSelected = !isClosedSelected;
+        getCurrentIssues();
+    };
 </script>
 
 <svelte:head>
@@ -64,13 +118,13 @@
                 <div class="about-d-flex">
                     <div class="about-icon"><AlertCircleIcon size="18" /></div>
                     <span>Open Issues: </span>
-                    <b>0</b>
+                    <b>{openIssues}</b>
                 </div>
 
                 <div class="about-d-flex">
                     <div class="about-icon"><AlertCircleIcon size="18" /></div>
                     <span>Closed Issues: </span>
-                    <b>0</b>
+                    <b>{closedIssues}</b>
                 </div>
 
                 <div class="about-d-flex">
@@ -81,7 +135,6 @@
             </div>
 
             <div class="divider"></div>
-
             
             <div class="d-flex-collab" style="align-items: flex-start;">
                 <div style="width: 50%;">
@@ -112,16 +165,58 @@
                 <button class="btn btn-danger">Delete Project</button>
             </div>
         </div>
+
         <div class="issues">
-            asd
+            <div class="subtitle">
+                <div>Issues</div>
+                <a href="/new/issue" class="btn btn-primary">New Issue</a>
+            </div>
+            <div class="issues-d-flex">
+                <div on:click={handleOpenClick} class="issues-section-header open {isOpenSelected ? 'active' : ''}">
+                    <div class="header-title">Open</div>
+                </div>
+                <div on:click={handleClosedClick} class="issues-section-header closed {isClosedSelected ? 'active' : ''}">
+                    <div class="header-title">Closed</div >
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="issues-cards">
+                {#if currentIssues.length == 0}
+                    <NotFound searchQuery="open issues" />
+                {:else}
+                    {#each currentIssues as issue}
+                        {#if issue.closedBy}
+                            <IssueCard 
+                                projectOwner={issue.projectOwner}
+                                projectName={issue.projectName}
+                                issueTitle={issue.issueTitle}
+                                issueDescription={issue.issueDescription}
+                                isOpen={issue.isOpen}
+                                openedBy={issue.openedBy}
+                                closedBy={issue.closedBy}
+                            />
+                        {:else}
+                            <IssueCard 
+                                projectOwner={issue.projectOwner}
+                                projectName={issue.projectName}
+                                issueTitle={issue.issueTitle}
+                                issueDescription={issue.issueDescription}
+                                isOpen={issue.isOpen}
+                                openedBy={issue.openedBy}
+                            />
+                        {/if}
+                    {/each}
+                {/if}
+            </div>
         </div>
     </div>
 </div>
 
 <style>
     .project {
-        padding: 1rem;
-        padding-top: 0;
+        padding: 1.5rem;
     }
     .project-title {
         color: var(--link-color);
@@ -158,7 +253,7 @@
     }
     .about {
         display: flex;
-        justify-content: center;
+        justify-content: start;
         flex-direction: column;
         gap: .25rem;
         margin-top: .5rem;
@@ -236,10 +331,9 @@
         border-radius: .4rem;
         border: 1px solid var(--border-color);
         font-size: .95rem;
-        transition: .3s ease-in-out;
     }
     #add-collab:focus {
-        border-color: var(--text-color-secondary);
+        border-color: var(--color-primary);
     }
     .d-flex-collab > button {
         font-size: .9rem;
@@ -252,5 +346,54 @@
         align-items: start;
         justify-content: start;
         margin-top: .5rem;
+    }
+    .issues-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: .5rem;
+        width: fit-content;
+        padding: .25rem .75rem;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: .1s ease-in-out;
+    }
+    .issues-section-header.active {
+        border-color: var(--text-color-secondary);
+        transition: .1s ease-in-out;
+    }
+    .open > .header-title {
+        color: var(--color-danger-light);
+    }
+    .closed > .header-title {
+        color: var(--color-warning-light);
+    }
+    .issues-d-flex {
+        display: flex;
+        gap: .5rem;
+        margin-top: .5rem;
+        font-size: .95rem;
+        margin-bottom: 1rem;
+    }
+
+    .issues {
+        width: calc(50% - 1rem);
+    }
+    .issues-cards {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        align-items: flex-start;
+        justify-content: start;
+        margin-top: 1rem;
+    }
+
+    @media screen and (max-width: 768px) {
+        .issues {
+            display: none;
+        }
+        .about {
+            width: 100%;
+        } 
     }
 </style>

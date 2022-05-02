@@ -19,6 +19,7 @@
         justify-content: center;
         flex-direction: column;
         gap: .35rem;
+        width: 100%;
     }
     .not-found-title {
         font-weight: 700;

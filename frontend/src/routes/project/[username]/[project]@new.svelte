@@ -21,9 +21,11 @@
             const project = await res.json();
             const issues = await issuesRes.json();
             return {
-                props: { givenProject: project, 
+                props: { 
+                    givenProject: project, 
                     issues: issues, 
-                    status: res.status 
+                    status: res.status,
+                    user: user
                 }
             };
         }
@@ -44,6 +46,7 @@
 
     export let givenProject;
     export let issues;
+    export let user;
     export let status;
 
     let currentIssues;
@@ -56,19 +59,16 @@
     const getCurrentIssues = () => {
         if(isOpenSelected && isClosedSelected) {
             currentIssues = [...issues];
-            console.log(currentIssues);
             return;
         }
 
         if(isOpenSelected) {
             currentIssues =  [...issues].filter(i => i.isOpen);
-            console.log(currentIssues);
             return;
         }
 
         if(isClosedSelected) {
             currentIssues =  [...issues].filter(i => !i.isOpen);
-            console.log(currentIssues);
             return;
         }
 
@@ -85,6 +85,17 @@
         isClosedSelected = !isClosedSelected;
         getCurrentIssues();
     };
+
+    const handleDeleteClick = async () => {
+        // TODO verify the delete
+        await fetch(`http://localhost:8080/api/v1/projects/${givenProject.id}`, {
+            method: 'DELETE',
+            headers: {
+                'token': user.token,
+            }
+        });
+        window.location = "/";
+    };
 </script>
 
 <svelte:head>
@@ -92,126 +103,134 @@
 </svelte:head>
 
 <div class="project">
-    <div class="project-header">
-        <FolderMinusIcon size="24" />
-        <a href="/project/{username}/{project}" class="project-title">{username}<span class="text-muted">/</span>{project}</a>
-        { #if givenProject.isPublic }
-            <div class="header-icon">Public</div>
-        { :else }
-            <div class="header-icon">Private</div>
-        { /if }
-    </div>
-
-    <div class="d-flex">
-        <div class="about">
-            <div class="subtitle">
-                <div>About</div>
-                <button class="btn btn-primary">Edit</button>
-            </div>
-            <p class="description">
-                {givenProject.projectDescription}
-            </p>
-
-            <div class="divider"></div>
-
-            <div class="fdc">
-                <div class="about-d-flex">
-                    <div class="about-icon"><AlertCircleIcon size="18" /></div>
-                    <span>Open Issues: </span>
-                    <b>{openIssues}</b>
-                </div>
-
-                <div class="about-d-flex">
-                    <div class="about-icon"><AlertCircleIcon size="18" /></div>
-                    <span>Closed Issues: </span>
-                    <b>{closedIssues}</b>
-                </div>
-
-                <div class="about-d-flex">
-                    <div class="about-icon"><TrelloIcon size="18" /></div>
-                    <span>Scrums: </span>
-                    <b>0</b>
-                </div>
-            </div>
-
-            <div class="divider"></div>
-            
-            <div class="d-flex-collab" style="align-items: flex-start;">
-                <div style="width: 50%;">
-                    <div class="subtitle">
-                        <div>Collaborators</div>
-                    </div>
-                    <div class="collaborator-list">
-                        <a href="/user/{username}" class="collaborator">{username},</a>
-                    </div>
-                </div>
-                <div class="add-collab">
-                    <label for="add-collab">Add Collaborator</label>
-                    <div class="d-flex-collab">
-                        <input type="text" id="add-collab" placeholder="Username">
-                        <button class="btn btn-success">Add</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="subtitle">
-                <div>Danger Zone</div>
-            </div>
-
-            <div class="danger-zone">
-                <button class="btn btn-warning">Change to {givenProject.isPublic ? 'Private' : 'Public'}</button>
-                <button class="btn btn-danger">Delete Project</button>
-            </div>
+    {#if status == 200}
+        <div class="project-header">
+            <FolderMinusIcon size="24" />
+            <a href="/project/{username}/{project}" class="project-title">{username}<span class="text-muted">/</span>{project}</a>
+            { #if givenProject.isPublic }
+                <div class="header-icon">Public</div>
+            { :else }
+                <div class="header-icon">Private</div>
+            { /if }
         </div>
 
-        <div class="issues">
-            <div class="subtitle">
-                <div>Issues</div>
-                <a href="/new/issue" class="btn btn-primary">New Issue</a>
-            </div>
-            <div class="issues-d-flex">
-                <div on:click={handleOpenClick} class="issues-section-header open {isOpenSelected ? 'active' : ''}">
-                    <div class="header-title">Open</div>
+        <div class="d-flex">
+            <div class="about">
+                <div class="subtitle">
+                    <div>About</div>
+                    {#if username == user.username}
+                        <button class="btn btn-primary">Edit</button>
+                    {/if}
                 </div>
-                <div on:click={handleClosedClick} class="issues-section-header closed {isClosedSelected ? 'active' : ''}">
-                    <div class="header-title">Closed</div >
+                <p class="description">
+                    {givenProject.projectDescription}
+                </p>
+
+                <div class="divider"></div>
+
+                <div class="fdc">
+                    <div class="about-d-flex">
+                        <div class="about-icon"><AlertCircleIcon size="18" /></div>
+                        <span>Open Issues: </span>
+                        <b>{openIssues}</b>
+                    </div>
+
+                    <div class="about-d-flex">
+                        <div class="about-icon"><AlertCircleIcon size="18" /></div>
+                        <span>Closed Issues: </span>
+                        <b>{closedIssues}</b>
+                    </div>
+
+                    <div class="about-d-flex">
+                        <div class="about-icon"><TrelloIcon size="18" /></div>
+                        <span>Scrums: </span>
+                        <b>0</b>
+                    </div>
                 </div>
-            </div>
 
-            <div class="divider"></div>
+                <div class="divider"></div>
+                
+                <div class="d-flex-collab" style="align-items: flex-start;">
+                    <div style="width: 50%;">
+                        <div class="subtitle">
+                            <div>Collaborators</div>
+                        </div>
+                        <div class="collaborator-list">
+                            <a href="/user/{username}" class="collaborator">{username},</a>
+                        </div>
+                    </div>
+                    <div class="add-collab">
+                        <label for="add-collab">Add Collaborator</label>
+                        <div class="d-flex-collab">
+                            <input type="text" id="add-collab" placeholder="Username">
+                            <button class="btn btn-success">Add</button>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="issues-cards">
-                {#if currentIssues.length == 0}
-                    <NotFound searchQuery="open issues" />
-                {:else}
-                    {#each currentIssues as issue}
-                        {#if issue.closedBy}
-                            <IssueCard 
-                                projectOwner={issue.projectOwner}
-                                projectName={issue.projectName}
-                                issueTitle={issue.issueTitle}
-                                issueDescription={issue.issueDescription}
-                                isOpen={issue.isOpen}
-                                openedBy={issue.openedBy}
-                                closedBy={issue.closedBy}
-                            />
-                        {:else}
-                            <IssueCard 
-                                projectOwner={issue.projectOwner}
-                                projectName={issue.projectName}
-                                issueTitle={issue.issueTitle}
-                                issueDescription={issue.issueDescription}
-                                isOpen={issue.isOpen}
-                                openedBy={issue.openedBy}
-                            />
-                        {/if}
-                    {/each}
+                {#if username == user.username}
+                    <div class="divider"></div>
+
+                    <div class="subtitle">
+                        <div>Danger Zone</div>
+                    </div>
+
+                    <div class="danger-zone">
+                        <button class="btn btn-warning">Change to {givenProject.isPublic ? 'Private' : 'Public'}</button>
+                        <button class="btn btn-danger" on:click={handleDeleteClick}>Delete Project</button>
+                    </div>
                 {/if}
             </div>
+
+            <div class="issues">
+                <div class="subtitle">
+                    <div>Issues</div>
+                    <a href="/new/issue" class="btn btn-primary">New Issue</a>
+                </div>
+                <div class="issues-d-flex">
+                    <div on:click={handleOpenClick} class="issues-section-header open {isOpenSelected ? 'active' : ''}">
+                        <div class="header-title">Open</div>
+                    </div>
+                    <div on:click={handleClosedClick} class="issues-section-header closed {isClosedSelected ? 'active' : ''}">
+                        <div class="header-title">Closed</div >
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="issues-cards">
+                    {#if currentIssues.length == 0}
+                        <NotFound searchQuery="issues" />
+                    {:else}
+                        {#each currentIssues as issue}
+                            {#if issue.closedBy}
+                                <IssueCard 
+                                    projectOwner={issue.projectOwner}
+                                    projectName={issue.projectName}
+                                    issueTitle={issue.issueTitle}
+                                    issueDescription={issue.issueDescription}
+                                    isOpen={issue.isOpen}
+                                    openedBy={issue.openedBy}
+                                    closedBy={issue.closedBy}
+                                />
+                            {:else}
+                                <IssueCard 
+                                    projectOwner={issue.projectOwner}
+                                    projectName={issue.projectName}
+                                    issueTitle={issue.issueTitle}
+                                    issueDescription={issue.issueDescription}
+                                    isOpen={issue.isOpen}
+                                    openedBy={issue.openedBy}
+                                />
+                            {/if}
+                        {/each}
+                    {/if}
+                </div>
+            </div>
         </div>
-    </div>
+    {:else}
+        <NotFound searchQuery="project {username}/{project}" />
+    {/if}
 </div>
 
 <style>

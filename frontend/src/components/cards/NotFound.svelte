@@ -1,11 +1,15 @@
 <script>
     export let searchQuery;
+    export let backToHomeBtn = false;
 </script>
 
 <div class="not-found-card">
     <h1 class="not-found-title">OOPS!</h1>
     <p class="not-found-description-main">There's <span class="nothing-span">NOTHING</span> here...</p>
     <p class="not-found-description-sub">No result for <b>{searchQuery}</b>.</p>
+    {#if backToHomeBtn}
+        <a href="/" class="btn btn-danger" style="margin-top: 1rem;">Back to Home</a>
+    {/if}
 </div>
 
 <style>

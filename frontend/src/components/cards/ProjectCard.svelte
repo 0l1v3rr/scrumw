@@ -12,7 +12,7 @@
 <div class="project-card">
     <div class="project-header">
         <FolderMinusIcon size="20" />
-        <a href="/{owner}/{name}" class="project-title">{owner}<span class="text-muted">/</span>{name}</a>
+        <a href="/project/{owner}/{name}" class="project-title">{owner}<span class="text-muted">/</span>{name}</a>
         { #if isPublic }
             <div class="header-icon">Public</div>
         { :else }
@@ -23,8 +23,8 @@
         {description}
     </div>
     <div class="project-footer">
-        <a href="/{owner}/{name}/issues" class="project-footer-icon pfi-issues"><AlertCircleIcon size="18" /> <span>{issueCount}</span></a>
-        <a href="/{owner}/{name}/scrum" class="project-footer-icon pfi-scrums"><TrelloIcon size="18" /> <span>{scrumCount}</span></a>
+        <a href="/issues/{owner}/{name}" class="project-footer-icon pfi-issues"><AlertCircleIcon size="18" /> <span>{issueCount}</span></a>
+        <a href="/scrum/{owner}/{name}" class="project-footer-icon pfi-scrums"><TrelloIcon size="18" /> <span>{scrumCount}</span></a>
     </div>
 </div>
 

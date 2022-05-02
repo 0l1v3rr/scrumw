@@ -14,7 +14,7 @@
 <div class="issue-card">
     <div class="issue-header">
         <FolderMinusIcon size="20" />
-        <a href="/{projectOwner}/{projectName}" class="issue-title">{projectOwner}<span class="text-muted">/</span>{projectName}</a>
+        <a href="/project/{projectOwner}/{projectName}" class="issue-title">{projectOwner}<span class="text-muted">/</span>{projectName}</a>
         { #if isPublic }
             <div class="header-icon">Public</div>
         { :else }
@@ -22,7 +22,7 @@
         { /if }
     </div>
     <div class="df">
-        <a href="/{projectOwner}/{projectName}/issues" class="issue-main-title">{issueTitle}</a>
+        <a href="/issues/{projectOwner}/{projectName}" class="issue-main-title">{issueTitle}</a>
         <div class="issue-status-card">
             { #if isOpen }
                 <span class="text-color-danger">Open</span>

@@ -1,14 +1,8 @@
 <script>
-    import ScrumCard from "./ScrumCard.svelte";
-    import { onMount } from "svelte";
+    import ScrumSidebar from "./ScrumSidebar.svelte";
 
-    let isLoading = true;
-    let username = "";
-    
-    onMount(async () => {
-        username = localStorage.getItem('username');
-        isLoading = false;
-    });
+    export let projects;
+    export let user;
 
     let date = new Date();
     let year = date.getFullYear();
@@ -33,11 +27,7 @@
 
 <section class="right-sidebar">
     <div class="greeting">
-        { #if isLoading }
-            Loading username...
-        { :else }
-            Welcome,&nbsp;<span class="username">{username}</span>! 👋
-        { /if }
+        Welcome,&nbsp;<span class="username">{user.username}</span>! 👋
     </div>
 
     <div class="calendar">
@@ -47,7 +37,7 @@
     <div class="sidebar-divider"></div>
 
     <div class="todo">
-        <ScrumCard />
+        <ScrumSidebar projects={projects} />
     </div>
 
 </section>

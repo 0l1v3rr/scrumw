@@ -55,6 +55,7 @@
 
     let isOpenSelected = true;
     let isClosedSelected = false;
+    let isDeletePopupOpen = false;
 
     const getCurrentIssues = () => {
         if(isOpenSelected && isClosedSelected) {
@@ -86,8 +87,15 @@
         getCurrentIssues();
     };
 
-    const handleDeleteClick = async () => {
-        // TODO verify the delete
+    const handleDeleteClick = () => {
+        isDeletePopupOpen = true;
+    };
+
+    const handleDeletePopupClose = () => {
+        isDeletePopupOpen = false;
+    };
+
+    const deleteProject = async () => {
         await fetch(`http://localhost:8080/api/v1/projects/${givenProject.id}`, {
             method: 'DELETE',
             headers: {
@@ -96,146 +104,210 @@
         });
         window.location = "/";
     };
+
+    const handleChangeVisibility = async () => {
+        await fetch(`http://localhost:8080/api/v1/projects/${givenProject.id}`, {
+            method: 'PATCH',
+            headers: {
+                'token': user.token,
+            }
+        });
+        givenProject.isPublic = !givenProject.isPublic;
+    };
 </script>
 
 <svelte:head>
     <title>{username}/{project} | scrumw</title>
 </svelte:head>
 
-<div class="project">
-    {#if status == 200}
-        <div class="project-header">
-            <FolderMinusIcon size="24" />
-            <a href="/project/{username}/{project}" class="project-title">{username}<span class="text-muted">/</span>{project}</a>
-            { #if givenProject.isPublic }
-                <div class="header-icon">Public</div>
-            { :else }
-                <div class="header-icon">Private</div>
-            { /if }
+<div style="position: relative;">
+    {#if isDeletePopupOpen}
+        <div class="popup">
+            <div class="popup-title">{username}/{project}</div>
+            <div class="popup-desc">Are sure you want to delete this project?</div>
+            <div class="popup-footer">
+                <button class="btn btn-primary" on:click={handleDeletePopupClose}>Cancel</button>
+                <button class="btn btn-danger" on:click={deleteProject}>Delete</button>
+            </div>
         </div>
+    {/if}
 
-        <div class="d-flex">
-            <div class="about">
-                <div class="subtitle">
-                    <div>About</div>
-                    {#if username == user.username}
-                        <button class="btn btn-primary">Edit</button>
-                    {/if}
-                </div>
-                <p class="description">
-                    {givenProject.projectDescription}
-                </p>
+    <div class="project {isDeletePopupOpen ? 'blur' : ''}">
+        {#if status == 200}
+            <div class="project-header">
+                <FolderMinusIcon size="24" />
+                <a href="/project/{username}/{project}" class="project-title">{username}<span class="text-muted">/</span>{project}</a>
+                { #if givenProject.isPublic }
+                    <div class="header-icon">Public</div>
+                { :else }
+                    <div class="header-icon">Private</div>
+                { /if }
+            </div>
 
-                <div class="divider"></div>
-
-                <div class="fdc">
-                    <div class="about-d-flex">
-                        <div class="about-icon"><AlertCircleIcon size="18" /></div>
-                        <span>Open Issues: </span>
-                        <b>{openIssues}</b>
+            <div class="d-flex">
+                <div class="about">
+                    <div class="subtitle">
+                        <div>About</div>
+                        {#if username == user.username}
+                            <button class="btn btn-primary">Edit</button>
+                        {/if}
                     </div>
+                    <p class="description">
+                        {givenProject.projectDescription}
+                    </p>
 
-                    <div class="about-d-flex">
-                        <div class="about-icon"><AlertCircleIcon size="18" /></div>
-                        <span>Closed Issues: </span>
-                        <b>{closedIssues}</b>
-                    </div>
-
-                    <div class="about-d-flex">
-                        <div class="about-icon"><TrelloIcon size="18" /></div>
-                        <span>Scrums: </span>
-                        <b>0</b>
-                    </div>
-                </div>
-
-                <div class="divider"></div>
-                
-                <div class="d-flex-collab" style="align-items: flex-start;">
-                    <div style="width: 50%;">
-                        <div class="subtitle">
-                            <div>Collaborators</div>
-                        </div>
-                        <div class="collaborator-list">
-                            <a href="/user/{username}" class="collaborator">{username},</a>
-                        </div>
-                    </div>
-                    <div class="add-collab">
-                        <label for="add-collab">Add Collaborator</label>
-                        <div class="d-flex-collab">
-                            <input type="text" id="add-collab" placeholder="Username">
-                            <button class="btn btn-success">Add</button>
-                        </div>
-                    </div>
-                </div>
-
-                {#if username == user.username}
                     <div class="divider"></div>
 
-                    <div class="subtitle">
-                        <div>Danger Zone</div>
+                    <div class="fdc">
+                        <div class="about-d-flex">
+                            <div class="about-icon"><AlertCircleIcon size="18" /></div>
+                            <span>Open Issues: </span>
+                            <b>{openIssues}</b>
+                        </div>
+
+                        <div class="about-d-flex">
+                            <div class="about-icon"><AlertCircleIcon size="18" /></div>
+                            <span>Closed Issues: </span>
+                            <b>{closedIssues}</b>
+                        </div>
+
+                        <div class="about-d-flex">
+                            <div class="about-icon"><TrelloIcon size="18" /></div>
+                            <span>Scrums: </span>
+                            <b>0</b>
+                        </div>
                     </div>
 
-                    <div class="danger-zone">
-                        <button class="btn btn-warning">Change to {givenProject.isPublic ? 'Private' : 'Public'}</button>
-                        <button class="btn btn-danger" on:click={handleDeleteClick}>Delete Project</button>
+                    <div class="divider"></div>
+                    
+                    <div class="d-flex-collab" style="align-items: flex-start;">
+                        <div style="width: 50%;">
+                            <div class="subtitle">
+                                <div>Collaborators</div>
+                            </div>
+                            <div class="collaborator-list">
+                                <a href="/user/{username}" class="collaborator">{username},</a>
+                            </div>
+                        </div>
+                        {#if username == user.username}
+                            <div class="add-collab">
+                                <label for="add-collab">Add Collaborator</label>
+                                <div class="d-flex-collab">
+                                    <input type="text" id="add-collab" placeholder="Username">
+                                    <button class="btn btn-success">Add</button>
+                                </div>
+                            </div>
+                        {/if}
                     </div>
-                {/if}
-            </div>
 
-            <div class="issues">
-                <div class="subtitle">
-                    <div>Issues</div>
-                    <a href="/new/issue" class="btn btn-primary">New Issue</a>
-                </div>
-                <div class="issues-d-flex">
-                    <div on:click={handleOpenClick} class="issues-section-header open {isOpenSelected ? 'active' : ''}">
-                        <div class="header-title">Open</div>
-                    </div>
-                    <div on:click={handleClosedClick} class="issues-section-header closed {isClosedSelected ? 'active' : ''}">
-                        <div class="header-title">Closed</div >
-                    </div>
-                </div>
+                    {#if username == user.username}
+                        <div class="divider"></div>
 
-                <div class="divider"></div>
+                        <div class="subtitle">
+                            <div>Danger Zone</div>
+                        </div>
 
-                <div class="issues-cards">
-                    {#if currentIssues.length == 0}
-                        <NotFound searchQuery="issues" />
-                    {:else}
-                        {#each currentIssues as issue}
-                            {#if issue.closedBy}
-                                <IssueCard 
-                                    projectOwner={issue.projectOwner}
-                                    projectName={issue.projectName}
-                                    issueTitle={issue.issueTitle}
-                                    issueDescription={issue.issueDescription}
-                                    isOpen={issue.isOpen}
-                                    openedBy={issue.openedBy}
-                                    closedBy={issue.closedBy}
-                                />
-                            {:else}
-                                <IssueCard 
-                                    projectOwner={issue.projectOwner}
-                                    projectName={issue.projectName}
-                                    issueTitle={issue.issueTitle}
-                                    issueDescription={issue.issueDescription}
-                                    isOpen={issue.isOpen}
-                                    openedBy={issue.openedBy}
-                                />
-                            {/if}
-                        {/each}
+                        <div class="danger-zone">
+                            <button class="btn btn-warning" on:click={handleChangeVisibility}>Change to {givenProject.isPublic ? 'Private' : 'Public'}</button>
+                            <button class="btn btn-danger" on:click={handleDeleteClick}>Delete Project</button>
+                        </div>
                     {/if}
                 </div>
+
+                <div class="issues">
+                    <div class="subtitle">
+                        <div>Issues</div>
+                        <a href="/new/issue" class="btn btn-primary">New Issue</a>
+                    </div>
+                    <div class="issues-d-flex">
+                        <div on:click={handleOpenClick} class="issues-section-header open {isOpenSelected ? 'active' : ''}">
+                            <div class="header-title">Open</div>
+                        </div>
+                        <div on:click={handleClosedClick} class="issues-section-header closed {isClosedSelected ? 'active' : ''}">
+                            <div class="header-title">Closed</div >
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="issues-cards">
+                        {#if currentIssues.length == 0}
+                            <NotFound searchQuery="issues" />
+                        {:else}
+                            {#each currentIssues as issue}
+                                {#if issue.closedBy}
+                                    <IssueCard 
+                                        projectOwner={issue.projectOwner}
+                                        projectName={issue.projectName}
+                                        issueTitle={issue.issueTitle}
+                                        issueDescription={issue.issueDescription}
+                                        isOpen={issue.isOpen}
+                                        openedBy={issue.openedBy}
+                                        closedBy={issue.closedBy}
+                                    />
+                                {:else}
+                                    <IssueCard 
+                                        projectOwner={issue.projectOwner}
+                                        projectName={issue.projectName}
+                                        issueTitle={issue.issueTitle}
+                                        issueDescription={issue.issueDescription}
+                                        isOpen={issue.isOpen}
+                                        openedBy={issue.openedBy}
+                                    />
+                                {/if}
+                            {/each}
+                        {/if}
+                    </div>
+                </div>
             </div>
-        </div>
-    {:else}
-        <NotFound searchQuery="project {username}/{project}" />
-    {/if}
+        {:else}
+            <NotFound searchQuery="project {username}/{project}" />
+        {/if}
+    </div>
 </div>
 
 <style>
+    .blur {
+        filter: blur(.35rem);
+        user-select: none;
+        pointer-events: none;
+        transition: .2s ease-in-out;
+    }
+    .popup {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 5;
+        background-color: var(--background-primary);
+        border: 1px solid var(--border-color);
+        border-radius: .4rem;
+        box-shadow: 0 0 1.25rem rgba(0,0,0,.7);
+        transition: .2s ease-in-out;
+    }
+    .popup-title {
+        padding: 1rem;
+        font-size: 1.1rem;
+        color: var(--text-color-primary);
+        font-weight: bold;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .popup-desc {
+        padding: 1rem;
+        color: var(--text-color-secondary);
+    }
+    .popup-footer {
+        padding: 1rem;
+        font-size: .9rem;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     .project {
         padding: 1.5rem;
+        transition: .2s ease-in-out;
     }
     .project-title {
         color: var(--link-color);
@@ -372,10 +444,11 @@
         justify-content: center;
         border-radius: .5rem;
         width: fit-content;
-        padding: .25rem .75rem;
+        padding: .4rem .75rem;
         border: 1px solid var(--border-color);
         cursor: pointer;
         transition: .1s ease-in-out;
+        line-height: 1;
     }
     .issues-section-header.active {
         border-color: var(--text-color-secondary);

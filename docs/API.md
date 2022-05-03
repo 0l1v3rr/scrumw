@@ -9,7 +9,8 @@
     - [/api/v1/projects/{username}](#apiv1projectsusername)
     - [/api/v1/projects/{username}/latest](#apiv1projectsusernamelatest)
     - [/api/v1/projects](#apiv1projects)
-    - [/api/v1/projects/{id}](#apiv1projectsid)
+    - [/api/v1/projects/{id} (Delete)](#apiv1projectsid-delete)
+    - [/api/v1/projects/{id} (Patch)](#apiv1projectsid-patch)
     - [/api/v1/projects/{username}/{projectName}](#apiv1projectsusernameprojectname)
     - [/api/v1/projects/{username}/count](#apiv1projectsusernamecount)
     - [/api/v1/projects/{username}/count/private](#apiv1projectsusernamecountprivate)
@@ -137,10 +138,17 @@ Adds a project to the database.
     ```
 - **Response:** -
 
-### /api/v1/projects/{id}
+### /api/v1/projects/{id} (Delete)
 Deletes a project from the database.  
 Only the owner of the project can delete it.
 - **Method:** DELETE
+- **Auth:** Yes
+- **Response:** -
+
+### /api/v1/projects/{id} (Patch)
+Changes the visibility of the project.  
+Only the owner of the project can do it.
+- **Method:** PATCH
 - **Auth:** Yes
 - **Response:** -
 

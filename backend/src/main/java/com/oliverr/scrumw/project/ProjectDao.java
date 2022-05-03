@@ -14,4 +14,5 @@ public interface ProjectDao {
     Optional<Project> getProjectByUsernameAndProjectName(String username, String projectName);
     int getProjectCount(String username);
     int getPrivateProjectCount(String username);
+    void changeVisibility(int id);
 }

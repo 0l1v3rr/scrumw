@@ -1,3 +1,7 @@
+<script>
+    export let projects;
+</script>
+
 <div>
     <div class="scrum-heading">
         <div class="scrum-header">Add Scrum</div>
@@ -8,7 +12,9 @@
             <div class="scrum-form-section">
                 <label for="project-select">Project</label>
                 <select id="project-select">
-                    <option value="project-1" selected>0l1v3rr/project-1</option>
+                    {#each projects as project}
+                        <option value="{project.username}/{project.projectName}" selected>{project.username}/{project.projectName}</option>
+                    {/each}
                 </select>
             </div>
             <div class="scrum-form-section">

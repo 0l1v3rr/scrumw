@@ -1,44 +1,43 @@
 <script>
     import {  FolderMinusIcon, TrelloIcon, AlertCircleIcon } from 'svelte-feather-icons';
-    import { onMount } from "svelte";
 
-    let projectCount = 0;
-    let privateProjectCount = 0;
-    let totalIssues = 0;
-    let openIssues = 0;
+    export let user;
 
-    const getProjectCount = async (username) => {
-        const res = await fetch(`http://localhost:8080/api/v1/projects/${username}/count`);
+    const getProjectCount = async () => {
+        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}/count`);
         const json = await res.json();
         return json.count;
     };
 
-    const getPrivateProjectCount = async (username) => {
-        const res = await fetch(`http://localhost:8080/api/v1/projects/${username}/count/private`);
+    const getPrivateProjectCount = async () => {
+        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}/count/private`);
         const json = await res.json();
         return json.count;
     };
 
-    const getTotalIssues = async (username) => {
-        const res = await fetch(`http://localhost:8080/api/v1/issues/${username}/count`);
+    const getTotalIssues = async () => {
+        const res = await fetch(`http://localhost:8080/api/v1/issues/${user.username}/count`);
         const json = await res.json();
         return json.count;
     };
 
-    const getOpenIssues = async (username) => {
-        const res = await fetch(`http://localhost:8080/api/v1/issues/${username}/count/open`);
+    const getOpenIssues = async () => {
+        const res = await fetch(`http://localhost:8080/api/v1/issues/${user.username}/count/open`);
         const json = await res.json();
         return json.count;
     };
 
-    onMount(async () => {
-        const username = localStorage.getItem('username');
+    let projectCount;
+    let privateProjectCount;
+    let totalIssues;
+    let openIssues;
+    (async () => {
+        projectCount = await getProjectCount();
+        privateProjectCount = await getPrivateProjectCount();
+        totalIssues = await getTotalIssues();
+        openIssues = await getOpenIssues();
+    })();
 
-        projectCount = await getProjectCount(username);
-        privateProjectCount = await getPrivateProjectCount(username);
-        totalIssues = await getTotalIssues(username);
-        openIssues = await getOpenIssues(username);
-    });
 </script>
 
 <div class="dashboard-panel">

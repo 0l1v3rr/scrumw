@@ -1,18 +1,48 @@
+<script context="module">
+    export async function load({ fetch, session }) {
+        const userRes = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
+        const user = await userRes.json();
+
+        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}`, {
+            method: 'GET',
+            headers: {
+                'token': session.token,
+            }
+        });
+        const projects = await res.json();
+        if(res.ok) {
+            return {
+                props: { 
+                    projects: projects,
+                    user: user
+                }
+            };
+        }
+
+        return {
+            status: res.status
+        };
+    }
+</script>
+
 <script>
     import Header from "../components/Header.svelte";
     import Sidebar from "../components/Sidebar.svelte";
     import RightSidebar from "../components/RightSidebar.svelte";
     import DashboardPanel from "../components/DashboardPanel.svelte";
+
+    export let projects;
+    export let user;
 </script>
 
 <Sidebar />
 <Header />
 <div class="wrapper">
     <div class="slot">
-        <DashboardPanel />
+        <DashboardPanel user={user} />
         <slot></slot>
     </div>
-    <RightSidebar />
+    <RightSidebar projects={projects} user={user} />
 </div>
 
 <style>

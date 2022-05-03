@@ -115,4 +115,14 @@ public class ProjectDataAccessService implements ProjectDao {
         return Integer.parseInt(res.size()+"");
     }
 
+    @Override
+    public void changeVisibility(int id) {
+        var sql = """
+                UPDATE projects 
+                SET public = NOT public 
+                WHERE id = ?;
+                """;
+        jdbcTemplate.update(sql, id);
+    }
+
 }

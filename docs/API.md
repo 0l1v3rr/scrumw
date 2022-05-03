@@ -5,6 +5,7 @@
     - [/api/v1/users/new](#apiv1usersnew)
     - [/api/v1/users/login](#apiv1userslogin)
     - [/api/v1/users/token/{token}](#apiv1userstokentoken)
+    - [/api/v1/users/{username}](#apiv1usersusername)
   - [Projects](#projects)
     - [/api/v1/projects/{username}](#apiv1projectsusername)
     - [/api/v1/projects/{username}/latest](#apiv1projectsusernamelatest)
@@ -19,9 +20,9 @@
     - [/api/v1/issues/{username}](#apiv1issuesusername)
     - [/api/v1/issues/{username}/latest](#apiv1issuesusernamelatest)
     - [/api/v1/issues/{username}/{projectName}](#apiv1issuesusernameprojectname)
-    - [/api/v1/issues/{id}](#apiv1issuesid)
+    - [/api/v1/issues/{id} (Get)](#apiv1issuesid-get)
+    - [/api/v1/issues/{id} (Delete)](#apiv1issuesid-delete)
     - [/api/v1/issues](#apiv1issues)
-    - [/api/v1/issues/{id}](#apiv1issuesid-1)
     - [/api/v1/issues/{username}/count](#apiv1issuesusernamecount)
     - [/api/v1/issues/{username}/count/closed](#apiv1issuesusernamecountclosed)
     - [/api/v1/issues/{username}/count/open](#apiv1issuesusernamecountopen)
@@ -68,6 +69,19 @@ If the user exists, and the password is incorrenct, throws an error. (401)
 Returns a user with the given token.
 - **Method:** GET
 - **Response:** The user with the specified token
+  - ```json
+    {
+        "id": "1",
+        "username": "johndoe",
+        "email": "johndoe@gmail.com",
+        "reg_date": "2022-04-15"
+    }
+    ```
+
+### /api/v1/users/{username}
+Returns a user with the given username.
+- **Method:** GET
+- **Response:** The user with the specified username
   - ```json
     {
         "id": "1",
@@ -304,7 +318,7 @@ Returns the latest 3 issues this user has.
     ]
     ```
 
-### /api/v1/issues/{id}
+### /api/v1/issues/{id} (Get)
 Returns the issue with the given id.  
 If the project the issue belongs to is private, auth is needed.
 - **Method:** GET
@@ -322,6 +336,12 @@ If the project the issue belongs to is private, auth is needed.
         "opened": "2022-02-02"
     }
   ```
+
+### /api/v1/issues/{id} (Delete)
+Deletes an issue from the database.
+- **Method:** DELETE
+- **Auth:** Yes
+- **Response:** -
 
 ### /api/v1/issues
 Adds a new issue to the database.  
@@ -343,12 +363,6 @@ If the project is private, auth is needed.
         "closed": "2022-02-03"
     }
     ```
-- **Response:** -
-
-### /api/v1/issues/{id}
-Deletes an issue from the database.
-- **Method:** DELETE
-- **Auth:** Yes
 - **Response:** -
 
 ### /api/v1/issues/{username}/count

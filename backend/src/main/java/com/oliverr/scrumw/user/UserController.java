@@ -57,8 +57,18 @@ public class UserController {
     public User getUserByToken(@PathVariable("token") String token) {
         return userDataAccessService
                 .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with this token does not exist.", new RuntimeException())
-        );
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with this token does not exist.", new RuntimeException()));
+    }
+
+    @GetMapping(path = "{username}")
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    public User getUserByUsername(@PathVariable("username") String username) {
+        var user = userDataAccessService
+                .findUserByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with this token does not exist.", new RuntimeException()));
+        user.setPassword(null);
+        user.setToken(null);
+        return user;
     }
 
 }

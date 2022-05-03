@@ -1,12 +1,11 @@
 <script>
-    import { FolderMinusIcon, AlertCircleIcon, TrelloIcon } from 'svelte-feather-icons';
+    import { FolderMinusIcon } from 'svelte-feather-icons';
 
     export let owner;
     export let name;
     export let description;
     export let isPublic = true;
-    export let scrumCount = 0;
-    export let issueCount = 0;
+    export let created = "2022 02 02";
 </script>
 
 <div class="project-card">
@@ -22,13 +21,24 @@
     <div class="project-description">
         {description}
     </div>
-    <div class="project-footer">
-        <a href="/issues/{owner}/{name}" class="project-footer-icon pfi-issues"><AlertCircleIcon size="18" /> <span>{issueCount}</span></a>
-        <a href="/scrum/{owner}/{name}" class="project-footer-icon pfi-scrums"><TrelloIcon size="18" /> <span>{scrumCount}</span></a>
+    <div class="divider"></div>
+    <div class="created">
+        Created <b>{created}</b>
     </div>
 </div>
 
 <style>
+    .divider {
+        width: 100%;
+        height: 1px;
+        background-color: var(--border-color);
+        margin-top: .75rem;
+        margin-bottom: .5rem;
+    }
+    .created {
+        color: var(--text-color-secondary);
+        font-size: .9rem;
+    }
     .project-card {
         width: 100%;
         background-color: var(--background-primary);
@@ -68,36 +78,5 @@
         border-radius: .4rem;
         font-size: .9rem;
         margin-left: auto;
-    }
-    .project-footer {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-    .project-footer-icon {
-        background-color: var(--background-secondary);
-        color: var(--text-color-primary);
-        border: 1px solid var(--border-color);
-        padding: .25rem .5rem;
-        border-radius: .4rem;
-        font-size: .9rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: .5rem;
-        transition: .3s ease-in-out;
-    }
-    .project-footer-icon span {
-        color: var(--text-color-primary);
-    }
-    .pfi-issues {
-        color: var(--color-warning-light);
-    }
-    .pfi-scrums {
-        color: var(--color-success-light);
-    }
-    .project-footer-icon:hover {
-        border: 1px solid var(--text-color-secondary);
     }
 </style>

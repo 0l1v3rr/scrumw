@@ -38,9 +38,9 @@
     </div>
     <div class="issue-footer">
         <div class="footer-text">
-            <div>Opened by <a href="/{openedBy}" class="footer-text-bold">{openedBy}</a>. ({opened})</div>
+            <div>Opened by <a href="/user/{openedBy}" class="footer-text-bold">{openedBy}</a>. ({opened})</div>
             { #if closedBy != "" }
-                <div style="margin-top: .4rem;">Closed by <a href="/{closedBy}" class="footer-text-bold">{closedBy}</a>. ({closed})</div>
+                <div style="margin-top: .4rem;">Closed by <a href="/user/{closedBy}" class="footer-text-bold">{closedBy}</a>. ({closed})</div>
             { /if }
         </div>
     </div>

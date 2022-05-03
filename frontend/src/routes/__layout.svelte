@@ -36,7 +36,7 @@
 </script>
 
 <Sidebar />
-<Header />
+<Header user={user} />
 <div class="wrapper">
     <div class="slot">
         <DashboardPanel user={user} />

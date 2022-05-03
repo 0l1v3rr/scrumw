@@ -1,8 +1,9 @@
 <script>
     import { onMount } from "svelte";
-    import { BellIcon, BookmarkIcon, SettingsIcon, LogOutIcon } from 'svelte-feather-icons';
+    import { BellIcon, BookmarkIcon, UserIcon, LogOutIcon } from 'svelte-feather-icons';
 
     let messagesCount = 1;
+    export let user;
 
     let userBtn;
     let isActive = false;
@@ -39,9 +40,9 @@
             </button>
 
             <div class="profile-dropdown {isActive ? 'active' : ''}">
-                <a href="/settings" class="profile-dropdown-item">
-                    <SettingsIcon size="16" />
-                    Settings
+                <a href="/user/{user.username}" class="profile-dropdown-item">
+                    <UserIcon size="16" />
+                    Profile
                 </a>
                 <span class="profile-dropdown-item" on:click={handleLogoutClick}>
                     <LogOutIcon size="16" />
@@ -197,6 +198,8 @@
         color: var(--text-color-secondary);
         transition: .3s ease-in-out;
         cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
     }
     .profile-dropdown-item:hover {
         color: var(--color-primary-light);

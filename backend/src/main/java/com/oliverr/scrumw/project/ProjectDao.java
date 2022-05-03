@@ -9,6 +9,7 @@ public interface ProjectDao {
     List<Project> getPublicProjectsByUsername(String username);
     List<Project> getPrivateProjectsByUsername(String username);
     void addProject(Project project);
+    void updateProject(Project project, int id);
     void deleteProject(int id);
     Optional<Project> getProjectById(int id);
     Optional<Project> getProjectByUsernameAndProjectName(String username, String projectName);

@@ -56,6 +56,7 @@
     let isOpenSelected = true;
     let isClosedSelected = false;
     let isDeletePopupOpen = false;
+    let isUpdateModeOn = false;
 
     const getCurrentIssues = () => {
         if(isOpenSelected && isClosedSelected) {
@@ -87,14 +88,6 @@
         getCurrentIssues();
     };
 
-    const handleDeleteClick = () => {
-        isDeletePopupOpen = true;
-    };
-
-    const handleDeletePopupClose = () => {
-        isDeletePopupOpen = false;
-    };
-
     const deleteProject = async () => {
         await fetch(`http://localhost:8080/api/v1/projects/${givenProject.id}`, {
             method: 'DELETE',
@@ -106,13 +99,25 @@
     };
 
     const handleChangeVisibility = async () => {
+        givenProject.isPublic = !givenProject.isPublic;
         await fetch(`http://localhost:8080/api/v1/projects/${givenProject.id}`, {
             method: 'PATCH',
             headers: {
                 'token': user.token,
             }
         });
-        givenProject.isPublic = !givenProject.isPublic;
+    };
+
+    const handleSave = async () => {
+        isUpdateModeOn = false;
+        await fetch(`http://localhost:8080/api/v1/projects/${givenProject.id}`, {
+            method: 'PUT',
+            headers: {
+                'token': user.token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(givenProject)
+        });
     };
 </script>
 
@@ -126,7 +131,7 @@
             <div class="popup-title">{username}/{project}</div>
             <div class="popup-desc">Are sure you want to delete this project?</div>
             <div class="popup-footer">
-                <button class="btn btn-primary" on:click={handleDeletePopupClose}>Cancel</button>
+                <button class="btn btn-primary" on:click={() => isDeletePopupOpen = false}>Cancel</button>
                 <button class="btn btn-danger" on:click={deleteProject}>Delete</button>
             </div>
         </div>
@@ -149,11 +154,19 @@
                     <div class="subtitle">
                         <div>About</div>
                         {#if username == user.username}
-                            <button class="btn btn-primary">Edit</button>
+                            {#if isUpdateModeOn}
+                                <button class="btn btn-success" on:click={handleSave}>Save</button>
+                            {:else}
+                                <button class="btn btn-primary" on:click={() => isUpdateModeOn = true}>Edit</button>
+                            {/if}
                         {/if}
                     </div>
                     <p class="description">
-                        {givenProject.projectDescription}
+                        {#if isUpdateModeOn}
+                            <input class="edit-input" type="text" placeholder="Description" bind:value={givenProject.projectDescription}>
+                        {:else}
+                            {givenProject.projectDescription}
+                        {/if}
                     </p>
 
                     <div class="divider"></div>
@@ -209,7 +222,7 @@
 
                         <div class="danger-zone">
                             <button class="btn btn-warning" on:click={handleChangeVisibility}>Change to {givenProject.isPublic ? 'Private' : 'Public'}</button>
-                            <button class="btn btn-danger" on:click={handleDeleteClick}>Delete Project</button>
+                            <button class="btn btn-danger" on:click={() => isDeletePopupOpen = true}>Delete Project</button>
                         </div>
                     {/if}
                 </div>
@@ -244,6 +257,8 @@
                                         isOpen={issue.isOpen}
                                         openedBy={issue.openedBy}
                                         closedBy={issue.closedBy}
+                                        opened={issue.opened}
+                                        closed={issue.closed}
                                     />
                                 {:else}
                                     <IssueCard 
@@ -253,6 +268,7 @@
                                         issueDescription={issue.issueDescription}
                                         isOpen={issue.isOpen}
                                         openedBy={issue.openedBy}
+                                        opened={issue.opened}
                                     />
                                 {/if}
                             {/each}
@@ -415,14 +431,19 @@
         margin-bottom: .25rem;
         display: block;
     }
+    .edit-input,
     #add-collab {
-        padding: .25rem .5rem;
+        padding: .4rem .5rem;
         background-color: var(--background-primary);
         color: var(--text-color-secondary);
         border-radius: .4rem;
         border: 1px solid var(--border-color);
         font-size: .95rem;
     }
+    .edit-input {
+        width: 100%;
+    }
+    .edit-input:focus,
     #add-collab:focus {
         border-color: var(--color-primary);
     }

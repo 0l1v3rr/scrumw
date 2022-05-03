@@ -78,6 +78,8 @@
                         isOpen={issue.isOpen}
                         openedBy={issue.openedBy}
                         closedBy={issue.closedBy}
+                        opened={issue.opened}
+                        closed={issue.closed}
                     />
                 {:else}
                     <IssueCard 
@@ -87,6 +89,7 @@
                         issueDescription={issue.issueDescription}
                         isOpen={issue.isOpen}
                         openedBy={issue.openedBy}
+                        opened={issue.opened}
                     />
                 {/if}
             {/each}

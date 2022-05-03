@@ -128,6 +128,29 @@ public class ProjectController {
         projectDataAccessService.changeVisibility(Integer.parseInt(id));
     }
 
+    @PutMapping(value = "{id}")
+    @CrossOrigin(origins = "*", methods = RequestMethod.PUT)
+    public void updateProject(@PathVariable("id") String id, @RequestBody Project project, HttpEntity<byte[]> requestEntity) {
+        String token = requestEntity.getHeaders().getFirst("token");
+        if(token == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+        }
+
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
+
+        var foundProject = projectDataAccessService
+                .getProjectById(Integer.parseInt(id))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project with this id does not exist.", new RuntimeException()));
+
+        if(!foundProject.getUsername().equalsIgnoreCase(userByToken.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        }
+
+        projectDataAccessService.updateProject(project, Integer.parseInt(id));
+    }
+
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping(value = "{username}/{projectName}")
     public Project getProjectByUsernameAndProjectName(@PathVariable("username") String username, @PathVariable("projectName") String projectName, HttpEntity<byte[]> requestEntity) {

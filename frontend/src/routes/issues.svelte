@@ -54,6 +54,15 @@
         openIssues = currentIssues.filter(i => i.isOpen).length;
         closedIssues = currentIssues.filter(i => !i.isOpen).length;
     };
+
+    function doesProjectHasIssue(username, projectName) {
+        for(let i of issues) {
+            if(i.projectOwner == username && i.projectName == projectName) {
+                return true;
+            }
+        }
+        return false;
+    }
 </script>
 
 <svelte:head>
@@ -68,7 +77,7 @@
                 <label for="select-project">Project: </label>
                 <select bind:value={selectValue} on:change={handleFilterOptionsChange} id="select-project">
                     <option value="all" selected>All</option>
-                    {#each projects as project}
+                    {#each projects.filter(p => doesProjectHasIssue(p.username, p.projectName)) as project}
                         <option value={project.username+"/"+project.projectName}>{project.username}/{project.projectName}</option>
                     {/each}
                 </select>
@@ -96,6 +105,8 @@
                             isOpen={issue.isOpen}
                             openedBy={issue.openedBy}
                             closedBy={issue.closedBy}
+                            opened={issue.opened}
+                            closed={issue.closed}
                         />
                     {:else}
                         <IssueCard 
@@ -105,6 +116,7 @@
                             issueDescription={issue.issueDescription}
                             isOpen={issue.isOpen}
                             openedBy={issue.openedBy}
+                            opened={issue.opened}
                         />
                     {/if}
                 {/each}
@@ -130,6 +142,8 @@
                             isOpen={issue.isOpen}
                             openedBy={issue.openedBy}
                             closedBy={issue.closedBy}
+                            opened={issue.opened}
+                            closed={issue.closed}
                         />
                     {:else}
                         <IssueCard 
@@ -139,6 +153,7 @@
                             issueDescription={issue.issueDescription}
                             isOpen={issue.isOpen}
                             openedBy={issue.openedBy}
+                            opened={issue.opened}
                         />
                     {/if}
                 {/each}

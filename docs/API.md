@@ -11,6 +11,7 @@
     - [/api/v1/projects](#apiv1projects)
     - [/api/v1/projects/{id} (Delete)](#apiv1projectsid-delete)
     - [/api/v1/projects/{id} (Patch)](#apiv1projectsid-patch)
+    - [/api/v1/projects/{id} (Put)](#apiv1projectsid-put)
     - [/api/v1/projects/{username}/{projectName}](#apiv1projectsusernameprojectname)
     - [/api/v1/projects/{username}/count](#apiv1projectsusernamecount)
     - [/api/v1/projects/{username}/count/private](#apiv1projectsusernamecountprivate)
@@ -150,6 +151,23 @@ Changes the visibility of the project.
 Only the owner of the project can do it.
 - **Method:** PATCH
 - **Auth:** Yes
+- **Response:** -
+
+### /api/v1/projects/{id} (Put)
+Updates the project.  
+Only the owner of the project can do it.
+- **Method:** PUT
+- **Auth:** Yes
+- **Request:** A project object:
+  - ```json
+    {
+        "id": 1,
+        "username": "test",
+        "projectName": "project-1",
+        "projectDescription": "This is a cool project.",
+        "isPublic": true
+    }
+    ```
 - **Response:** -
 
 ### /api/v1/projects/{username}/{projectName}

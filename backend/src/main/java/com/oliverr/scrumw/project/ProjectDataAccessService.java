@@ -74,6 +74,23 @@ public class ProjectDataAccessService implements ProjectDao {
     }
 
     @Override
+    public void updateProject(Project project, int id) {
+        var sql = """
+                UPDATE projects
+                SET username = ?, name = ?, description = ?, public = ?
+                WHERE id = ?;
+                """;
+        jdbcTemplate.update(
+                sql,
+                project.getUsername(),
+                project.getProjectName(),
+                project.getProjectDescription(),
+                project.getIsPublic() ? 1 : 0,
+                id
+        );
+    }
+
+    @Override
     public void deleteProject(int id) {
         var sql = """
                 DELETE 

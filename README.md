@@ -37,6 +37,7 @@ You can create private projects, if you only want to work with yourself, as well
 - User management
 - Dark mode
 - Notifications
+- Responsive Web Design
 
 <hr>
 

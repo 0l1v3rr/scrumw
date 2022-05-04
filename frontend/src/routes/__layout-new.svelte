@@ -63,6 +63,7 @@
     @media screen and (max-width: 576px) {
         .slot {
             padding-left: 0;
+            margin-bottom: 5rem;
         }
     }
 </style>

@@ -48,6 +48,7 @@
 <script>
     import {  TrelloIcon, AlertCircleIcon, EyeIcon } from 'svelte-feather-icons';
     import ProjectCard from '../../components/cards/ProjectCard.svelte';
+    import NotFound from '../../components/cards/NotFound.svelte';
     import { page } from '$app/stores';
 
     const { username } = $page.params;
@@ -56,6 +57,39 @@
     export let searchedUser;
     export let projects;
     export let issueCount;
+
+    let currentProjects = [...projects].sort((a,b) => (a.created < b.created) ? 1 : ((b.created < a.created) ? -1 : 0));
+
+    let selectValue;
+
+    const handleFilterOptionsChange = () => {
+        if(selectValue == "latest-created") {
+            currentProjects = [...projects].sort((a,b) => (a.created < b.created) ? 1 : ((b.created < a.created) ? -1 : 0));
+            return;
+        }
+
+        if(selectValue == "earliest-created") {
+            currentProjects = [...projects].sort((a,b) => (a.created > b.created) ? 1 : ((b.created > a.created) ? -1 : 0));
+            return;
+        }
+
+        if(selectValue == "project") {
+            currentProjects = [...projects].sort((a,b) => (a.projectName > b.projectName) ? 1 : ((b.projectName > a.projectName) ? -1 : 0));
+            return;
+        }
+
+        if(selectValue == "public") {
+            currentProjects = [...projects].sort((a,b) => (a.created < b.created) ? 1 : ((b.created < a.created) ? -1 : 0));
+            currentProjects = currentProjects.filter(p => p.isPublic);
+            return;
+        }
+
+        if(selectValue == "private") {
+            currentProjects = [...projects].sort((a,b) => (a.created < b.created) ? 1 : ((b.created < a.created) ? -1 : 0));
+            currentProjects = currentProjects.filter(p => !p.isPublic);
+            return;
+        }
+    };
 </script>
 
 <svelte:head>
@@ -92,22 +126,75 @@
 
     <div class="right-section">
         <div class="rs-subtitle">
-            <span>Projects</span>
-            <div class="project-count">{projects.length}</div>
+            <div>Projects</div>
+            <div class="project-count">{currentProjects.length}</div>
+            <form class="header-form">
+                <div class="select">
+                    <label for="filter-by">Filter By: </label>
+                    <select bind:value={selectValue} on:change={handleFilterOptionsChange} id="filter-by">
+                        <option value="latest-created" selected>Latest Created</option>
+                        <option value="earliest-created">Earliest Created</option>
+                        <option value="project">Project name</option>
+                        {#if user.username == searchedUser.username}
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                        {/if}
+                    </select>
+                </div>
+            </form>
         </div>
-        {#each projects as project}
-            <ProjectCard 
-                owner={project.username}
-                name={project.projectName}
-                description={project.projectDescription}
-                isPublic={project.isPublic}
-                created={project.created}
-            />
-        {/each}
+        {#if currentProjects.length == 0}
+            <NotFound searchQuery="project" />
+        {:else}
+            {#each currentProjects as project}
+                <ProjectCard 
+                    owner={project.username}
+                    name={project.projectName}
+                    description={project.projectDescription}
+                    isPublic={project.isPublic}
+                    created={project.created}
+                />
+            {/each}
+        {/if}
     </div>
 </div>
 
 <style>
+    .header-form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.2rem;
+        border: 1px solid var(--border-color);
+        padding: .25rem .5rem;
+        border-radius: .5rem;
+        background-color: var(--background-primary);
+        font-size: 1rem;
+        margin-left: auto;
+    }
+    .select {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+        font-size: 1rem;
+    }
+    .select > label {
+        color: var(--text-color-secondary);
+        font-size: .95rem;
+    }
+    #filter-by {
+        padding: .25rem .5rem;
+        background-color: var(--background-primary);
+        color: var(--text-color-secondary);
+        border-radius: .4rem;
+        border: 1px solid var(--border-color);
+        font-size: 1rem;
+        transition: .3s ease-in-out;
+        font-size: 1rem;
+    }
+    #filter-by:focus {
+        border-color: var(--text-color-secondary);
+    }
     .user-page {
         padding: 1rem;
         padding-top: 0;
@@ -164,7 +251,9 @@
         font-size: 1.5rem;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: .75rem;
+        width: 100%;
     }
     .project-count {
         font-size: 1rem;
@@ -173,5 +262,17 @@
         line-height: 1;
         border: 1px solid var(--border-color);
         color: var(--text-color-secondary);
+    }
+
+    @media screen and (max-width: 576px) {
+        .user-page {
+            flex-direction: column;
+        }
+        .right-section {
+            width: 100%;
+        }
+        .left-section {
+            width: 100%;
+        }
     }
 </style>

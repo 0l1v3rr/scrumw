@@ -5,7 +5,7 @@
     export let name;
     export let description;
     export let isPublic = true;
-    export let created = "2022 02 02";
+    export let created;
 </script>
 
 <div class="project-card">

@@ -45,6 +45,7 @@
                 name={project.projectName}
                 description={project.projectDescription}
                 isPublic={project.isPublic}
+                created={project.created}
             />
         {/each}
     </div>

@@ -12,7 +12,8 @@ CREATE TABLE projects(
     username VARCHAR(32) NOT NULL,
     name VARCHAR(128) NOT NULL,
     description VARCHAR(255),
-    public INT(1) NOT NULL
+    public INT(1) NOT NULL,
+    created DATE NOT NULL
 );
 
 CREATE TABLE issues(

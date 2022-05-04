@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class ProjectRowMapper implements RowMapper<Project> {
 
@@ -14,7 +15,8 @@ public class ProjectRowMapper implements RowMapper<Project> {
             resultSet.getString("username"),
             resultSet.getString("name"),
             resultSet.getString("description"),
-            resultSet.getInt("public") == 1
+            resultSet.getInt("public") == 1,
+            LocalDate.parse(resultSet.getString("created"))
         );
     }
 

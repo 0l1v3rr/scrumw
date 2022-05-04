@@ -1,9 +1,10 @@
 - [What is scrumw?](#what-is-scrumw)
+- [Tech stack](#tech-stack)
 - [Features](#features)
-- [Installation](#installation)
+- [Building from source](#building-from-source)
   - [Requirements](#requirements)
-  - [Creating the database](#creating-the-database)
   - [Cloning the project](#cloning-the-project)
+  - [Creating the database](#creating-the-database)
   - [Running the backend](#running-the-backend)
   - [Running the frontend](#running-the-frontend)
 - [License](#license)
@@ -20,6 +21,12 @@ You can create private projects, if you only want to work with yourself, as well
 
 <hr>
 
+## Tech stack
+- **Database:** MySQL
+- **Backend:** Java, Spring, Spring Boot, Spring Security, Lombok
+- **Frontend:** Svelte, SvelteKit, TypeScript
+- **Testing:** JUnit
+
 ## Features
 - Create public or private projects
 - Track and maange bugs, issues and scrums
@@ -33,17 +40,12 @@ You can create private projects, if you only want to work with yourself, as well
 
 <hr>
 
-## Installation
+## Building from source
 ### Requirements
 - Java 16+
 - MySQL server
 - NodeJS
 - Git (optional)
-
-### Creating the database
-First, create a database named `scrumw`. [(for example here)](./db/database.sql)  
-If it's done, import the [tables](./db/tables.sql), or load the [mysqldump](./db/scrumw_backup.sql). (the database-dump comes with some sample data)  
-Also, feel free to make the necessary changes [here](./backend/src/main/resources/application.yml).
 
 ### Cloning the project
 When it comes to cloning the project, you have 2 options:
@@ -52,6 +54,11 @@ When it comes to cloning the project, you have 2 options:
   - ```
     git clone https://github.com/0l1v3rr/scrumw.git
     ```
+
+### Creating the database
+First, create a database named `scrumw`. [(for example here)](./db/database.sql)  
+If it's done, import the [tables](./db/tables.sql), or load the [mysqldump](./db/scrumw_backup.sql). (the database-dump comes with some sample data)  
+Also, feel free to make the necessary changes [here](./backend/src/main/resources/application.yml).
 
 ### Running the backend
 Running the backend is very simple.  

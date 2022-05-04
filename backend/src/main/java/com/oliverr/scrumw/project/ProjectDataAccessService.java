@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,15 +62,16 @@ public class ProjectDataAccessService implements ProjectDao {
     @Override
     public void addProject(Project project) {
         var sql = """
-                INSERT INTO projects(username, name, description, public)
-                VALUES (?, ?, ?, ?);
+                INSERT INTO projects(username, name, description, public, created)
+                VALUES (?, ?, ?, ?, ?);
                 """;
         jdbcTemplate.update(
                 sql,
                 project.getUsername(),
                 project.getProjectName(),
                 project.getProjectDescription(),
-                project.getIsPublic() ? 1 : 0
+                project.getIsPublic() ? 1 : 0,
+                LocalDate.now()
         );
     }
 

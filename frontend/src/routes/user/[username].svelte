@@ -19,13 +19,22 @@
         });
         const projects = await pres.json();
 
+        const ires = await fetch(`http://localhost:8080/api/v1/issues/${params.username}/count`, {
+            method: 'GET',
+            headers: {
+                'token': session.token,
+            }
+        });
+        const issueCount = await ires.json();
+
         if(res.ok) {
             return {
                 props: { 
                     status: res.status,
                     user: user,
                     searchedUser: searchedUser,
-                    projects: projects
+                    projects: projects,
+                    issueCount: issueCount
                 }
             };
         }
@@ -37,7 +46,7 @@
 </script>
 
 <script>
-    import {  FolderMinusIcon, TrelloIcon, AlertCircleIcon } from 'svelte-feather-icons';
+    import {  TrelloIcon, AlertCircleIcon, EyeIcon } from 'svelte-feather-icons';
     import ProjectCard from '../../components/cards/ProjectCard.svelte';
     import { page } from '$app/stores';
 
@@ -46,6 +55,7 @@
     export let user;
     export let searchedUser;
     export let projects;
+    export let issueCount;
 </script>
 
 <svelte:head>
@@ -63,33 +73,35 @@
         
         <div class="inforations">
             <div class="information-div">
-                <FolderMinusIcon size="16" /> <span class="bold">0</span> projects
+                <EyeIcon size="16" /> <span class="bold">0</span> profile views
             </div>
             <div class="information-div">
                 <TrelloIcon size="16" /> <span class="bold">0</span> scrums
             </div>
             <div class="information-div">
-                <AlertCircleIcon size="16" /> <span class="bold">0</span> issues
+                <AlertCircleIcon size="16" /> <span class="bold">{issueCount.count}</span> issues
             </div>
         </div>
 
-        <div class="divider"></div>
-
-        {#if user.username == searchedUser.username}
-            <button class="btn btn-primary">Edit Profile</button>
-        {:else}
-            <button class="btn btn-primary">Send Friend Request</button>
+        
+        {#if user.username != searchedUser.username}
+            <div class="divider"></div>
+            <button class="btn btn-primary">Message</button>
         {/if}
     </div>
 
     <div class="right-section">
-        <div class="rs-subtitle">Projects</div>
+        <div class="rs-subtitle">
+            <span>Projects</span>
+            <div class="project-count">{projects.length}</div>
+        </div>
         {#each projects as project}
             <ProjectCard 
                 owner={project.username}
                 name={project.projectName}
                 description={project.projectDescription}
                 isPublic={project.isPublic}
+                created={project.created}
             />
         {/each}
     </div>
@@ -150,5 +162,16 @@
     }
     .rs-subtitle {
         font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+    }
+    .project-count {
+        font-size: 1rem;
+        padding: .25rem 1rem;
+        border-radius: .4rem;
+        line-height: 1;
+        border: 1px solid var(--border-color);
+        color: var(--text-color-secondary);
     }
 </style>

@@ -108,14 +108,16 @@ If the user is authenticated, it will return all of the projects.
             "username": "test",
             "projectName": "project-1",
             "projectDescription": "This is a cool project.",
-            "isPublic": true
+            "isPublic": true,
+            "created": "2022-05-04"
         },
         {
             "id": 2,
             "username": "test",
             "projectName": "project-2",
             "projectDescription": "This is a cool project 2.",
-            "isPublic": false
+            "isPublic": false,
+            "created": "2022-05-04"
         }
     ]
     ```
@@ -132,7 +134,8 @@ Returns the lates three project the user has.
             "username": "test",
             "projectName": "project-1",
             "projectDescription": "This is a cool project.",
-            "isPublic": true
+            "isPublic": true,
+            "created": "2022-05-04"
         },
         ...
     ]
@@ -148,7 +151,8 @@ Adds a project to the database.
         "username": "test",
         "projectName": "project-1",
         "projectDescription": "This is a cool project.",
-        "isPublic": true
+        "isPublic": true,
+        "created": "2022-05-04"
     }
     ```
 - **Response:** -
@@ -179,7 +183,8 @@ Only the owner of the project can do it.
         "username": "test",
         "projectName": "project-1",
         "projectDescription": "This is a cool project.",
-        "isPublic": true
+        "isPublic": true,
+        "created": "2022-05-04"
     }
     ```
 - **Response:** -
@@ -195,7 +200,8 @@ If the project is public, then authenticaion is not required. Else it is.
         "username": "test",
         "projectName": "project-1",
         "projectDescription": "This is a cool project.",
-        "isPublic": true
+        "isPublic": true,
+        "created": "2022-05-04"
     }
     ```
 

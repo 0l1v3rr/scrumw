@@ -116,12 +116,6 @@
                 <AlertCircleIcon size="16" /> <span class="bold">{issueCount.count}</span> issues
             </div>
         </div>
-
-        
-        {#if user.username != searchedUser.username}
-            <div class="divider"></div>
-            <button class="btn btn-primary">Message</button>
-        {/if}
     </div>
 
     <div class="right-section">

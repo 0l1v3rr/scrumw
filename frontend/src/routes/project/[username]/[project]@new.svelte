@@ -56,7 +56,11 @@
     let isOpenSelected = true;
     let isClosedSelected = false;
     let isDeletePopupOpen = false;
+    let isNewIssueOpen = false;
     let isUpdateModeOn = false;
+
+    let newIssueTitle;
+    let newIssueDesc;
 
     const getCurrentIssues = () => {
         if(isOpenSelected && isClosedSelected) {
@@ -77,6 +81,10 @@
         currentIssues = [];
     };
     getCurrentIssues();
+
+    const formatDate = (date) => {
+        return `${date.getFullYear()}-${date.getMonth().toString().length == 1 ? '0'+date.getMonth() : date.getMonth()}-${date.getDate().toString().length == 1 ? '0'+date.getDate() : date.getDate()}`;
+    }
 
     const handleOpenClick = () => {
         isOpenSelected = !isOpenSelected;
@@ -119,6 +127,40 @@
             body: JSON.stringify(givenProject)
         });
     };
+
+    const createIssue = async () => {
+        isNewIssueOpen = false;
+        const date = new Date();
+
+        const newIssue = {
+            projectOwner: username,
+            projectName: project,
+            issueTitle: newIssueTitle,
+            issueDescription: newIssueDesc,
+            isOpen: true,
+            openedBy: user.username,
+            opened: formatDate(date),
+            closedBy: null,
+            closed: null
+        };
+
+        await fetch(`http://localhost:8080/api/v1/issues`, {
+            method: 'POST',
+            headers: {
+                'token': user.token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newIssue)
+        });
+
+        issues.push(newIssue);
+        openIssues++;
+
+        getCurrentIssues();
+
+        newIssueTitle = "";
+        newIssueDesc = "";
+    };
 </script>
 
 <svelte:head>
@@ -137,7 +179,28 @@
         </div>
     {/if}
 
-    <div class="project {isDeletePopupOpen ? 'blur' : ''}">
+    {#if isNewIssueOpen}
+        <div class="popup">
+            <div class="popup-title">Open a new issue - {username}/{project}</div>
+            <div class="popup-desc">
+                <div class="add-collab">
+                    <label for="issue-title">Issue Title</label>
+                    <input type="text" id="issue-title" placeholder="This is an issue" bind:value={newIssueTitle}>
+                </div>
+                <div class="divider" style="margin-top: 1rem; margin-bottom: .5rem;"></div>
+                <div class="add-collab">
+                    <label for="issue-desc">Issue Description</label>
+                    <input type="text" id="issue-desc" placeholder="This is an issue" bind:value={newIssueDesc}>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="btn btn-primary" on:click={() => isNewIssueOpen = false}>Cancel</button>
+                <button class="btn btn-success" on:click={createIssue}>Create Issue</button>
+            </div>
+        </div>
+    {/if}
+
+    <div class="project {isDeletePopupOpen || isNewIssueOpen ? 'blur' : ''}">
         {#if status == 200}
             <div class="project-header">
                 <FolderMinusIcon size="24" />
@@ -230,7 +293,7 @@
                 <div class="issues">
                     <div class="subtitle">
                         <div>Issues</div>
-                        <a href="/new/issue" class="btn btn-primary">New Issue</a>
+                        <button class="btn btn-primary" on:click={() => isNewIssueOpen = true}>New Issue</button>
                     </div>
                     <div class="issues-d-flex">
                         <div on:click={handleOpenClick} class="issues-section-header open {isOpenSelected ? 'active' : ''}">
@@ -431,6 +494,8 @@
         margin-bottom: .25rem;
         display: block;
     }
+    #issue-desc,
+    #issue-title,
     .edit-input,
     #add-collab {
         padding: .4rem .5rem;
@@ -440,9 +505,13 @@
         border: 1px solid var(--border-color);
         font-size: .95rem;
     }
+    #issue-desc,
+    #issue-title,
     .edit-input {
         width: 100%;
     }
+    #issue-desc:focus,
+    #issue-title:focus,
     .edit-input:focus,
     #add-collab:focus {
         border-color: var(--color-primary);

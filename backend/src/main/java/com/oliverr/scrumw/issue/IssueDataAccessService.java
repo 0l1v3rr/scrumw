@@ -18,7 +18,7 @@ public class IssueDataAccessService implements IssueDao {
         var sql = """
                 SELECT *
                 FROM issues
-                WHERE project_owner = ?
+                WHERE opened_by = ?
                 ORDER BY id DESC;
                 """;
         return jdbcTemplate.query(sql, new IssueRowMapper(), username);
@@ -29,7 +29,7 @@ public class IssueDataAccessService implements IssueDao {
         var sql = """
                 SELECT *
                 FROM issues
-                WHERE project_owner = ?
+                WHERE opened_by = ?
                 ORDER BY opened DESC
                 LIMIT 3;
                 """;

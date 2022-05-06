@@ -91,8 +91,8 @@ public class IssueDataAccessService implements IssueDao {
     @Override
     public void closeIssue(int id, String closedBy) {
         var sql = """
-                UPDATE projects 
-                SET is_open = NOT is_open, closed_by = ?, closed = ? 
+                UPDATE issues 
+                SET is_open = 0, closed_by = ?, closed = ? 
                 WHERE id = ?;
                 """;
         jdbcTemplate.update(sql, closedBy, LocalDate.now(), id);

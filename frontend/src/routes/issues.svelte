@@ -98,6 +98,7 @@
                 {#each currentIssues.filter(i => i.isOpen) as issue}
                     {#if issue.closedBy}
                         <IssueCard 
+                            id={issue.id}
                             projectOwner={issue.projectOwner}
                             projectName={issue.projectName}
                             issueTitle={issue.issueTitle}
@@ -110,6 +111,7 @@
                         />
                     {:else}
                         <IssueCard 
+                            id={issue.id}
                             projectOwner={issue.projectOwner}
                             projectName={issue.projectName}
                             issueTitle={issue.issueTitle}
@@ -135,6 +137,7 @@
                 {#each currentIssues.filter(i => !i.isOpen) as issue}
                     {#if issue.closedBy}
                         <IssueCard 
+                            id={issue.id}
                             projectOwner={issue.projectOwner}
                             projectName={issue.projectName}
                             issueTitle={issue.issueTitle}
@@ -147,6 +150,7 @@
                         />
                     {:else}
                         <IssueCard 
+                            id={issue.id}
                             projectOwner={issue.projectOwner}
                             projectName={issue.projectName}
                             issueTitle={issue.issueTitle}

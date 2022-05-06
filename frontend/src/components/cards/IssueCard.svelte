@@ -1,6 +1,7 @@
 <script>
     import { FolderMinusIcon } from 'svelte-feather-icons';
 
+    export let id;
     export let projectOwner;
     export let projectName;
     export let issueTitle;
@@ -24,7 +25,7 @@
         { /if }
     </div>
     <div class="df">
-        <a href="/issues/{projectOwner}/{projectName}" class="issue-main-title">{issueTitle}</a>
+        <a href="/issue/{id}" class="issue-main-title">{issueTitle}</a>
         <div class="issue-status-card">
             { #if isOpen }
                 <span class="text-color-danger">Open</span>

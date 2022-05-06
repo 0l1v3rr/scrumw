@@ -9,6 +9,7 @@ public interface IssueDao {
     List<Issue> getIssuesByProject(String username, String projectName);
     void addIssue(Issue issue);
     void deleteIssue(int id);
+    void closeIssue(int id, String closedBy);
     Optional<Issue> getIssueByIssueTitle(String username, String projectName, String issueTitle);
     Optional<Issue> getIssueById(int id);
     int getUsernameIssueCount(String username);

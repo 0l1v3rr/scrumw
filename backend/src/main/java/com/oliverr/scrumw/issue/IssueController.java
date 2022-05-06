@@ -6,15 +6,7 @@ import com.oliverr.scrumw.util.Count;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -169,6 +161,32 @@ public class IssueController {
         }
 
         issueDataAccessService.deleteIssue(Integer.parseInt(id));
+    }
+
+    @PatchMapping("{id}")
+    @CrossOrigin(origins = "*", methods = RequestMethod.PATCH)
+    public void closeIssue(@PathVariable("id") String id, HttpEntity<byte[]> requestEntity) {
+        String token = requestEntity.getHeaders().getFirst("token");
+        if(token == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+        }
+
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
+
+        int nId = Integer.parseInt(id);
+        var issue = issueDataAccessService
+                .getIssueById(nId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Issue with this ID does not exist.", new RuntimeException()));
+
+        if(!issue.getIsOpen()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This issue is already closed.", new RuntimeException());
+        }
+
+        if(userByToken.getUsername().equalsIgnoreCase(issue.getProjectOwner()) || userByToken.getUsername().equalsIgnoreCase(issue.getOpenedBy())) {
+            issueDataAccessService.closeIssue(nId, userByToken.getUsername());
+        }
     }
 
     @GetMapping("{username}/count")

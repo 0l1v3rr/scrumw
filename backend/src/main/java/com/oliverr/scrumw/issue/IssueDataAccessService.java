@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,6 +86,16 @@ public class IssueDataAccessService implements IssueDao {
                 WHERE id = ?;
                 """;
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public void closeIssue(int id, String closedBy) {
+        var sql = """
+                UPDATE projects 
+                SET is_open = NOT is_open, closed_by = ?, closed = ? 
+                WHERE id = ?;
+                """;
+        jdbcTemplate.update(sql, closedBy, LocalDate.now(), id);
     }
 
     @Override

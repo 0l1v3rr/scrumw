@@ -22,6 +22,7 @@
     - [/api/v1/issues/{username}/{projectName}](#apiv1issuesusernameprojectname)
     - [/api/v1/issues/{id} (Get)](#apiv1issuesid-get)
     - [/api/v1/issues/{id} (Delete)](#apiv1issuesid-delete)
+    - [/api/v1/issues/{id} (Patch)](#apiv1issuesid-patch)
     - [/api/v1/issues](#apiv1issues)
     - [/api/v1/issues/{username}/count](#apiv1issuesusernamecount)
     - [/api/v1/issues/{username}/count/closed](#apiv1issuesusernamecountclosed)
@@ -346,6 +347,13 @@ If the project the issue belongs to is private, auth is needed.
 ### /api/v1/issues/{id} (Delete)
 Deletes an issue from the database.
 - **Method:** DELETE
+- **Auth:** Yes
+- **Response:** -
+
+### /api/v1/issues/{id} (Patch)
+Closes an open issue.  
+Only the project owner or the creator of the issue can close the issue.
+- **Method:** PATCH
 - **Auth:** Yes
 - **Response:** -
 

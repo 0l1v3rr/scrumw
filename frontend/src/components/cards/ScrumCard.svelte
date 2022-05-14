@@ -1,28 +1,23 @@
 <script>
-    export let project;
+    export let projectOwner;
+    export let projectName;
     export let title;
     export let description;
-    export let approvedBy = "";
-    export let assignedBy = "";
+    export let createdBy;
+    export let updated;
 </script>
 
 <div class="scrum-card">
-    <a href="/{project}" class="scrum-card-project">{ project }</a>
+    <a href="/project/{projectOwner}/{projectName}" class="scrum-card-project">{projectOwner}/{projectName}</a>
     <div class="scrum-card-title">{ title }</div>
     <div class="scrum-card-description">{ description }</div>
 
-    { #if assignedBy != "" || approvedBy != "" }
     <div class="scrum-card-footer">
         <div class="footer-text">
-            { #if assignedBy != "" }
-                <div>Sent by <a href="/{assignedBy}" class="footer-text-bold">{ assignedBy }</a>.</div>
-            { /if }
-            { #if approvedBy != "" }
-                <div>Approved by <a href="/{approvedBy}" class="footer-text-bold">{ approvedBy }</a>.</div>
-            { /if }
+            <div>Created by <a href="/user/{createdBy}" class="footer-text-bold">{createdBy}</a>.</div>
+            <div style="margin-top: .5rem;">Updated <span class="footer-text-bold">{updated}</span></div>
         </div>
     </div>
-    { /if }
     
 </div>
 

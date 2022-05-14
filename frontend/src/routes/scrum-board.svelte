@@ -55,10 +55,12 @@
             </div>
 
             <ScrumCard 
-                project="0l1v3rr/test"
+                projectOwner="test"
+                projectName="project-1"
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
                 title="Test scrum"
-                assignedBy="j0hn"
+                createdBy="j0hn"
+                updated="2022/05/10"
             />
 
         </div>
@@ -70,10 +72,12 @@
             </div>
 
             <ScrumCard 
-                project="0l1v3rr/test"
+                projectOwner="test"
+                projectName="project-1"
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
                 title="Test scrum"
-                assignedBy="j0hn"
+                createdBy="j0hn"
+                updated="2022/05/10"
             />
         </div>
 
@@ -84,11 +88,12 @@
             </div>
 
             <ScrumCard 
-                project="0l1v3rr/test"
+                projectOwner="test"
+                projectName="project-1"
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
                 title="Test scrum"
-                assignedBy="fr3dd1e"
-                approvedBy="thomas"
+                createdBy="fr3dd1e"
+                updated="2022/05/10"
             />
         </div>
 

@@ -28,3 +28,14 @@ CREATE TABLE issues(
     opened DATE NOT NULL,
     closed DATE
 );
+
+CREATE TABLE scrums(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    project_owner VARCHAR(32) NOT NULL,
+    project_name VARCHAR(64) NOT NULL,
+    title VARCHAR(32) NOT NULL,
+    description VARCHAR(128) NOT NULL,
+    status VARCHAR(16) DEFAULT "to-do",
+    created_by VARCHAR(32) NOT NULL,
+    updated DATE
+);

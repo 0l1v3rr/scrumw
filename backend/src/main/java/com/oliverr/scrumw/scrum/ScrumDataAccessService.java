@@ -3,6 +3,7 @@ package com.oliverr.scrumw.scrum;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,10 +76,11 @@ public class ScrumDataAccessService implements ScrumDao {
 
         var query = """
                 UPDATE scrums
-                SET status = ?;
+                SET status = ?
+                WHERE id = ?;
                 """;
 
-        jdbcTemplate.update(query, statusStr);
+        jdbcTemplate.update(query, statusStr, id);
     }
 
     @Override
@@ -90,4 +92,16 @@ public class ScrumDataAccessService implements ScrumDao {
                 """;
         return jdbcTemplate.query(query, new ScrumRowMapper(), id).stream().findFirst();
     }
+
+    @Override
+    public void updateScrum(int id) {
+        LocalDate date = LocalDate.now();
+        var query = """
+                UPDATE scrums
+                SET updated = ?
+                WHERE id = ?;
+                """;
+        jdbcTemplate.update(query, date, id);
+    }
+
 }

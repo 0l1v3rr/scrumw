@@ -2,11 +2,13 @@ package com.oliverr.scrumw.scrum;
 
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 @AllArgsConstructor
 public class ScrumDataAccessService implements ScrumDao {
 
@@ -80,6 +82,7 @@ public class ScrumDataAccessService implements ScrumDao {
                 WHERE id = ?;
                 """;
 
+        updateScrum(id);
         jdbcTemplate.update(query, statusStr, id);
     }
 

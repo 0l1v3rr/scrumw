@@ -117,4 +117,32 @@ public class ScrumController {
         scrumDataAccessService.deleteScrum(id);
     }
 
+    @PatchMapping("{id}/{status}")
+    @CrossOrigin(origins = "*", methods = RequestMethod.PATCH)
+    public void changeScrumStatus(@PathVariable("id") String sid, @PathVariable("status") String status, HttpEntity<byte[]> requestEntity) {
+        String token = requestEntity.getHeaders().getFirst("token");
+        if(token == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+        }
+
+        var userByToken = userDataAccessService
+                .getUserByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
+
+        int id = Integer.parseInt(sid);
+        var scrum = scrumDataAccessService
+                .getScrumById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Scrum with this id does not exist."));
+
+        if(!userByToken.getUsername().equalsIgnoreCase(scrum.getCreatedBy())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
+        }
+
+        ScrumStatus statusE = ScrumStatus.TO_DO;
+        if(status.equalsIgnoreCase("in_progress")) statusE = ScrumStatus.IN_PROGRESS;
+        else if(status.equalsIgnoreCase("done")) statusE = ScrumStatus.DONE;
+
+        scrumDataAccessService.changeScrumStatus(id, statusE);
+    }
+
 }

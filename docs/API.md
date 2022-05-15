@@ -27,6 +27,12 @@
     - [/api/v1/issues/{username}/count](#apiv1issuesusernamecount)
     - [/api/v1/issues/{username}/count/closed](#apiv1issuesusernamecountclosed)
     - [/api/v1/issues/{username}/count/open](#apiv1issuesusernamecountopen)
+  - [Scrums](#scrums)
+    - [/api/v1/scrum/{username}](#apiv1scrumusername)
+    - [/api/v1/scrum/{projectOwner}/{projectName}](#apiv1scrumprojectownerprojectname)
+    - [/api/v1/scrum](#apiv1scrum)
+    - [/api/v1/scrum/{id}](#apiv1scrumid)
+    - [/api/v1/scrum/{id}/{status}](#apiv1scrumidstatus)
 
 <hr>
 
@@ -410,3 +416,92 @@ Returns the amount of open issues the user has.
         "count": 4,
     }
     ```
+
+<hr>
+
+## Scrums
+
+### /api/v1/scrum/{username}
+Returns all the scrums the given user has.
+- **Method:** GET
+- **Auth:** Yes
+- **Response:** Array of scrum objects
+  - ```json
+    [
+      {
+          "id": 4,
+          "projectOwner": "test",
+          "projectName": "project-1",
+          "title": "Test scrum",
+          "description": "This is a new scrum",
+          "status": "DONE",
+          "createdBy": "test",
+          "updated": "2022-05-15"
+      },
+      {
+          "id": 1,
+          "projectOwner": "test",
+          "projectName": "project-1",
+          "title": "Test scrum",
+          "description": "This is a scrum",
+          "status": "TO_DO",
+          "createdBy": "test",
+          "updated": "2022-05-14"
+      }
+    ]
+    ```
+
+### /api/v1/scrum/{projectOwner}/{projectName}
+Returns all the scrums the given project has.
+- **Method:** GET
+- **Auth:** If the project is public, auth is needed
+- **Response:** Array of scrum objects
+  - ```json
+    [
+      {
+          "id": 4,
+          "projectOwner": "test",
+          "projectName": "project-1",
+          "title": "Test scrum",
+          "description": "This is a new scrum",
+          "status": "DONE",
+          "createdBy": "test",
+          "updated": "2022-05-15"
+      },
+      {
+          "id": 1,
+          "projectOwner": "test",
+          "projectName": "project-1",
+          "title": "Test scrum",
+          "description": "This is a scrum",
+          "status": "TO_DO",
+          "createdBy": "test",
+          "updated": "2022-05-14"
+      }
+    ]
+    ```
+
+### /api/v1/scrum
+Adds a scrum
+- **Method:** POST
+- **Auth:** If the project is public, auth is needed
+- **Request body:** A scrum object
+  - ```json
+    {
+        "projectOwner": "test",
+        "projectName": "project-1",
+        "title": "Test scrum",
+        "description": "This is a new scrum",
+        "createdBy": "test",
+    }
+    ```
+
+### /api/v1/scrum/{id}
+Deletes a scrum
+- **Method:** DELETE
+- **Auth:** Yes, only the user who created the scrum can delete it
+
+### /api/v1/scrum/{id}/{status}
+Changes the status of the scrum
+- **Method:** PATCH
+- **Auth:** Yes, only the user who created the scrum can do it

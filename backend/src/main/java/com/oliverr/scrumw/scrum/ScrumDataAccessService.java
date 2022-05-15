@@ -56,7 +56,7 @@ public class ScrumDataAccessService implements ScrumDao {
                 scrum.getDescription(),
                 status,
                 scrum.getCreatedBy(),
-                scrum.getUpdated()
+                LocalDate.now()
         );
     }
 
@@ -71,11 +71,6 @@ public class ScrumDataAccessService implements ScrumDao {
 
     @Override
     public void changeScrumStatus(int id, ScrumStatus status) {
-        String statusStr = "";
-        if(status == ScrumStatus.IN_PROGRESS) statusStr = "in-progress";
-        else if(status == ScrumStatus.DONE) statusStr = "done";
-        else statusStr = "to-do";
-
         var query = """
                 UPDATE scrums
                 SET status = ?
@@ -83,7 +78,7 @@ public class ScrumDataAccessService implements ScrumDao {
                 """;
 
         updateScrum(id);
-        jdbcTemplate.update(query, statusStr, id);
+        jdbcTemplate.update(query, status.toString().toLowerCase(), id);
     }
 
     @Override

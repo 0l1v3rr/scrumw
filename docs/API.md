@@ -339,16 +339,18 @@ If the project the issue belongs to is private, auth is needed.
 - **Response:** The requested issue
   - ```json
     {
-        "id": 1,
+        "id": 2,
         "projectOwner": "test",
         "projectName": "test",
         "issueTitle": "Test issue",
         "issueDescription": "Issue description",
-        "isOpen": true,
+        "isOpen": false,
         "openedBy": "test",
-        "opened": "2022-02-02"
+        "closedBy": "john",
+        "opened": "2022-02-02",
+        "closed": "2022-02-03"
     }
-  ```
+    ```
 
 ### /api/v1/issues/{id} (Delete)
 Deletes an issue from the database.

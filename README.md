@@ -1,6 +1,6 @@
 - [What is scrumw?](#what-is-scrumw)
 - [Tech stack](#tech-stack)
-- [Features](#features)
+- [Some of the main features](#some-of-the-main-features)
 - [Building from source](#building-from-source)
   - [Requirements](#requirements)
   - [Cloning the project](#cloning-the-project)
@@ -12,8 +12,6 @@
 <hr>
 
 ## What is scrumw?
-Warning! This project is currently under development, the major features may not work.  
-  
 Scrumw is a free, open-source, self-hosted scrum & project management system.  
 It helps you manage projects, track bugs and issues, and create scrum boards while collaborating with others.  
 You can create private projects, if you only want to work with yourself, as well as you can create public projects, to work with others.
@@ -27,10 +25,10 @@ You can create private projects, if you only want to work with yourself, as well
 - **Frontend:** Svelte, SvelteKit, TypeScript
 - **Testing:** JUnit
 
-## Features
+## Some of the main features
 - Create public or private projects
 - Track and maange bugs, issues and scrums
-- Create scrum-boards
+- Create and manage scrum-boards per project
 - Ability to collaborate with others
 - Easy-to-use, modern UI
 - CRUD projects, issues & scrums
@@ -62,9 +60,16 @@ If it's done, import the [tables](./db/tables.sql), or load the [mysqldump](./db
 Also, feel free to make the necessary changes [here](./backend/src/main/resources/application.yml).
 
 ### Running the backend
-Running the backend is very simple.  
-Open the `./backend` folder in your favorite IDE (IntelliJ, Eclipse), and run the project. This may take a few secs.  
-The backend should start running on port :8080.
+If you have successfully cloned the project, make it active in your command prompt or terminal. (e.g.: `$ cd Desktop/scrumw`)  
+Now enter these commands: 
+```sh
+cd backend/
+mvn clean install
+java -jar scrumw-0.0.1-SNAPSHOT.jar
+```
+The backend should start running on port `:8080`.  
+  
+You can find the API documentation [here](./docs/API.md).
 
 ### Running the frontend
 If you have successfully cloned the project, make it active in your command prompt or terminal. (e.g.: `$ cd Desktop/scrumw`)  

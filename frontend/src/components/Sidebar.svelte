@@ -36,12 +36,7 @@
         <div class="sidebar-item-hover">Issues</div>
     </a>
 
-    <a href="/settings" class="sidebar-item settings-icon {$page.url.toString().endsWith('/settings') ? 'active' : ''}">
-        <SettingsIcon size="24" />
-        <div class="sidebar-item-hover">Settings</div>
-    </a>
-
-    <span class="sidebar-item" on:click={handleLogoutClick}>
+    <span class="sidebar-item settings-icon" on:click={handleLogoutClick}>
         <LogOutIcon size="24" />
         <div class="sidebar-item-hover">Log Out</div>
     </span>

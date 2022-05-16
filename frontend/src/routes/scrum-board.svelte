@@ -11,9 +11,18 @@
         });
         const projects = await res.json();
 
+        const scrumsRes = await fetch(`http://localhost:8080/api/v1/scrum/${user.username}`, {
+            method: 'GET',
+            headers: {
+                "token": session.token
+            }
+        });
+        const scrums = await scrumsRes.json();
+
         return {
             props: { 
-                projects
+                projects: projects,
+                scrums: scrums
             }
         };
     }
@@ -23,6 +32,7 @@
     import ScrumCard from "../components/cards/ScrumCard.svelte";
 
     export let projects;
+    export let scrums;
 </script>
 
 <svelte:head>
@@ -50,51 +60,56 @@
         
         <div class="scrum-section">
             <div class="scrum-section-header tasks">
-                <div class="header-title">Tasks</div>
-                <div class="header-count">2</div>
+                <div class="header-title">To Do</div>
+                <div class="header-count">{scrums.filter(s => s.status.toLowerCase() === "to_do").length}</div>
             </div>
 
-            <ScrumCard 
-                projectOwner="test"
-                projectName="project-1"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
-                title="Test scrum"
-                createdBy="j0hn"
-                updated="2022/05/10"
-            />
-
+            {#each scrums.filter(s => s.status.toLowerCase() === "to_do") as scrum}
+                <ScrumCard 
+                    projectOwner={scrum.projectOwner}
+                    projectName={scrum.projectName}
+                    description={scrum.description}
+                    title={scrum.title}
+                    createdBy={scrum.createdBy}
+                    updated={scrum.updated}
+                />
+            {/each}
         </div>
 
         <div class="scrum-section in-progress-section">
             <div class="scrum-section-header in-progress">
                 <div class="header-title">In Progress</div>
-                <div class="header-count">2</div>
+                <div class="header-count">{scrums.filter(s => s.status.toLowerCase() === "in_progress").length}</div>
             </div>
 
-            <ScrumCard 
-                projectOwner="test"
-                projectName="project-1"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
-                title="Test scrum"
-                createdBy="j0hn"
-                updated="2022/05/10"
-            />
+            {#each scrums.filter(s => s.status.toLowerCase() === "in_progress") as scrum}
+                <ScrumCard 
+                    projectOwner={scrum.projectOwner}
+                    projectName={scrum.projectName}
+                    description={scrum.description}
+                    title={scrum.title}
+                    createdBy={scrum.createdBy}
+                    updated={scrum.updated}
+                />
+            {/each}
         </div>
 
         <div class="scrum-section">
             <div class="scrum-section-header done">
                 <div class="header-title">Done</div>
-                <div class="header-count">2</div>
+                <div class="header-count">{scrums.filter(s => s.status.toLowerCase() === "done").length}</div>
             </div>
 
-            <ScrumCard 
-                projectOwner="test"
-                projectName="project-1"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, cumque!"
-                title="Test scrum"
-                createdBy="fr3dd1e"
-                updated="2022/05/10"
-            />
+            {#each scrums.filter(s => s.status.toLowerCase() === "done") as scrum}
+                <ScrumCard 
+                    projectOwner={scrum.projectOwner}
+                    projectName={scrum.projectName}
+                    description={scrum.description}
+                    title={scrum.title}
+                    createdBy={scrum.createdBy}
+                    updated={scrum.updated}
+                />
+            {/each}
         </div>
 
     </div>

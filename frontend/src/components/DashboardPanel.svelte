@@ -1,43 +1,10 @@
 <script>
     import {  FolderMinusIcon, TrelloIcon, AlertCircleIcon } from 'svelte-feather-icons';
 
-    export let user;
-
-    const getProjectCount = async () => {
-        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}/count`);
-        const json = await res.json();
-        return json.count;
-    };
-
-    const getPrivateProjectCount = async () => {
-        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}/count/private`);
-        const json = await res.json();
-        return json.count;
-    };
-
-    const getTotalIssues = async () => {
-        const res = await fetch(`http://localhost:8080/api/v1/issues/${user.username}/count`);
-        const json = await res.json();
-        return json.count;
-    };
-
-    const getOpenIssues = async () => {
-        const res = await fetch(`http://localhost:8080/api/v1/issues/${user.username}/count/open`);
-        const json = await res.json();
-        return json.count;
-    };
-
-    let projectCount;
-    let privateProjectCount;
-    let totalIssues;
-    let openIssues;
-    (async () => {
-        projectCount = await getProjectCount();
-        privateProjectCount = await getPrivateProjectCount();
-        totalIssues = await getTotalIssues();
-        openIssues = await getOpenIssues();
-    })();
-
+    // export let user;
+    export let projects;
+    export let issues;
+    export let scrums;
 </script>
 
 <div class="dashboard-panel">
@@ -47,8 +14,8 @@
             <div class="dashboard-title-text">Projects</div>
         </div>
         <div class="dashboard-content">
-            <div class="content-number">{projectCount ? projectCount : 0}</div>
-            <div class="content-subtitle"><span class="content-subnumber">{privateProjectCount ? privateProjectCount : 0}</span> private</div>
+            <div class="content-number">{projects ? projects.length : 0}</div>
+            <div class="content-subtitle"><span class="content-subnumber">{projects.filter(p => !p.isPublic) ? projects.filter(p => !p.isPublic).length : 0}</span> private</div>
         </div>
     </div>
 
@@ -58,8 +25,8 @@
             <div class="dashboard-title-text">Total Issues</div>
         </div>
         <div class="dashboard-content">
-            <div class="content-number">{totalIssues ? totalIssues : 0}</div>
-            <div class="content-subtitle"><span class="content-subnumber">{openIssues ? openIssues : 0}</span> open</div>
+            <div class="content-number">{issues ? issues.length : 0}</div>
+            <div class="content-subtitle"><span class="content-subnumber">{issues.filter(x => x.isOpen) ? issues.filter(x => x.isOpen).length : 0}</span> open</div>
         </div>
     </div>
 
@@ -69,8 +36,8 @@
             <div class="dashboard-title-text">Total Scrums</div>
         </div>
         <div class="dashboard-content">
-            <div class="content-number">2</div>
-            <div class="content-subtitle"><span class="content-subnumber">7</span> completed</div>
+            <div class="content-number">{scrums ? scrums.length : 0}</div>
+            <div class="content-subtitle"><span class="content-subnumber">{scrums.filter(s => s.status.toLowerCase() === "done") ? scrums.filter(s => s.status.toLowerCase() === "done").length : 0}</span> completed</div>
         </div>
     </div>
 

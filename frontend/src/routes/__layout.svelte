@@ -10,17 +10,30 @@
             }
         });
         const projects = await res.json();
-        if(res.ok) {
-            return {
-                props: { 
-                    projects: projects,
-                    user: user
-                }
-            };
-        }
+
+        const issueRes = await fetch(`http://localhost:8080/api/v1/issues/user/${user.username}`, {
+            method: 'GET',
+            headers: {
+                'token': session.token,
+            }
+        });
+        const issues = await issueRes.json();
+
+        const scrumsRes = await fetch(`http://localhost:8080/api/v1/scrum/${user.username}`, {
+            method: 'GET',
+            headers: {
+                "token": session.token
+            }
+        });
+        const scrums = await scrumsRes.json();
 
         return {
-            status: res.status
+            props: { 
+                projects: projects,
+                user: user,
+                issues: issues,
+                scrums: scrums,
+            }
         };
     }
 </script>
@@ -33,13 +46,15 @@
 
     export let projects;
     export let user;
+    export let issues;
+    export let scrums;
 </script>
 
 <Sidebar />
 <Header user={user} />
 <div class="wrapper">
     <div class="slot">
-        <DashboardPanel user={user} />
+        <DashboardPanel user={user} projects={projects} issues={issues} scrums={scrums} />
         <slot></slot>
     </div>
     <RightSidebar projects={projects} user={user} />

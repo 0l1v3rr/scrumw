@@ -62,6 +62,12 @@
     let newIssueTitle;
     let newIssueDesc;
 
+    
+    let collaborators = [];
+    collaborators.push(username);
+    collaborators.push("jani");
+    let collaboratorStr = collaborators.join(', ');
+
     const getCurrentIssues = () => {
         if(isOpenSelected && isClosedSelected) {
             currentIssues = [...issues];
@@ -262,18 +268,9 @@
                                 <div>Collaborators</div>
                             </div>
                             <div class="collaborator-list">
-                                <a href="/user/{username}" class="collaborator">{username},</a>
+                                {collaboratorStr}
                             </div>
                         </div>
-                        {#if username == user.username}
-                            <div class="add-collab">
-                                <label for="add-collab">Add Collaborator</label>
-                                <div class="d-flex-collab">
-                                    <input type="text" id="add-collab" placeholder="Username">
-                                    <button class="btn btn-success">Add</button>
-                                </div>
-                            </div>
-                        {/if}
                     </div>
 
                     {#if username == user.username}
@@ -475,16 +472,8 @@
     .collaborator-list {
         display: flex;
         gap: .4rem;
-    }
-    .collaborator {
         color: var(--text-color-secondary);
-        font-size: 1rem;
-        transition: .3s ease-in-out;
-        cursor: pointer;
-    }
-    .collaborator:hover {
-        color: var(--link-color);
-        text-decoration: underline;
+        margin-top: .4rem;
     }
     .d-flex-collab {
         display: flex;
@@ -498,8 +487,7 @@
     }
     #issue-desc,
     #issue-title,
-    .edit-input,
-    #add-collab {
+    .edit-input {
         padding: .4rem .5rem;
         background-color: var(--background-primary);
         color: var(--text-color-secondary);
@@ -514,12 +502,8 @@
     }
     #issue-desc:focus,
     #issue-title:focus,
-    .edit-input:focus,
-    #add-collab:focus {
+    .edit-input:focus {
         border-color: var(--color-primary);
-    }
-    .d-flex-collab > button {
-        font-size: .9rem;
     }
     .danger-zone {
         display: flex;

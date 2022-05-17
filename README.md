@@ -27,7 +27,7 @@ You can create private projects, if you only want to work with yourself, as well
 
 ## Some of the main features
 - Create public or private projects
-- Track and maange bugs, issues and scrums
+- Track and manage bugs, issues and scrums
 - Create and manage scrum-boards per project
 - Ability to collaborate with others
 - Easy-to-use, modern UI

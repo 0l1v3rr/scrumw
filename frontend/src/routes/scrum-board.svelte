@@ -3,14 +3,6 @@
         const userRes = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
         const user = await userRes.json();
 
-        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}`, {
-            method: 'GET',
-            headers: {
-                'token': session.token,
-            }
-        });
-        const projects = await res.json();
-
         const scrumsRes = await fetch(`http://localhost:8080/api/v1/scrum/${user.username}`, {
             method: 'GET',
             headers: {
@@ -21,7 +13,6 @@
 
         return {
             props: { 
-                projects: projects,
                 scrums: scrums
             }
         };
@@ -30,9 +21,38 @@
 
 <script>
     import ScrumCard from "../components/cards/ScrumCard.svelte";
+    import NotFound from "../components/cards/NotFound.svelte";
 
-    export let projects;
+    let projects = [];
+    let projectStore = [];
     export let scrums;
+    let currentScrums = [...scrums];
+
+    let selectedValue;
+
+    for(const i of scrums) {
+        const project = {
+            username: i.projectOwner,
+            projectName: i.projectName
+        };
+
+        const currentProject = `${i.projectOwner}/${i.projectName}`;
+        
+        if(!projectStore.includes(currentProject)) {
+            projectStore.push(currentProject);
+            projects.push(project);
+        }
+    }
+
+    const handleSelectChange = () => {
+        if(selectedValue == "all") {
+            currentScrums = [...scrums];
+            return;
+        }
+
+        const splitted = selectedValue.split('/');
+        currentScrums = [...scrums].filter(s => s.projectOwner === splitted[0] && s.projectName === splitted[1]);
+    };
 </script>
 
 <svelte:head>
@@ -45,7 +65,7 @@
         <form class="header-form">
             <div class="select">
                 <label for="select-project">Project: </label>
-                <select id="select-project">
+                <select id="select-project" bind:value={selectedValue} on:change={handleSelectChange}>
                     <option value="all" selected>All</option>
                     {#each projects as project}
                         <option value={project.username+"/"+project.projectName}>{project.username}/{project.projectName}</option>
@@ -60,55 +80,73 @@
         <div class="scrum-section">
             <div class="scrum-section-header tasks">
                 <div class="header-title">To Do</div>
-                <div class="header-count">{scrums.filter(s => s.status.toLowerCase() === "to_do").length}</div>
+                <div class="header-count">{currentScrums.filter(s => s.status.toLowerCase() === "to_do").length}</div>
             </div>
 
-            {#each scrums.filter(s => s.status.toLowerCase() === "to_do") as scrum}
-                <ScrumCard 
-                    projectOwner={scrum.projectOwner}
-                    projectName={scrum.projectName}
-                    description={scrum.description}
-                    title={scrum.title}
-                    createdBy={scrum.createdBy}
-                    updated={scrum.updated}
-                />
-            {/each}
+            {#if currentScrums.filter(s => s.status.toLowerCase() === "to_do").length === 0}
+                <div style="margin-top: 1rem;">
+                    <NotFound searchQuery="todo scrums" />
+                </div>
+            {:else}
+                {#each currentScrums.filter(s => s.status.toLowerCase() === "to_do") as scrum}
+                    <ScrumCard 
+                        projectOwner={scrum.projectOwner}
+                        projectName={scrum.projectName}
+                        description={scrum.description}
+                        title={scrum.title}
+                        createdBy={scrum.createdBy}
+                        updated={scrum.updated}
+                    />
+                {/each}
+            {/if}
         </div>
 
         <div class="scrum-section in-progress-section">
             <div class="scrum-section-header in-progress">
                 <div class="header-title">In Progress</div>
-                <div class="header-count">{scrums.filter(s => s.status.toLowerCase() === "in_progress").length}</div>
+                <div class="header-count">{currentScrums.filter(s => s.status.toLowerCase() === "in_progress").length}</div>
             </div>
 
-            {#each scrums.filter(s => s.status.toLowerCase() === "in_progress") as scrum}
-                <ScrumCard 
-                    projectOwner={scrum.projectOwner}
-                    projectName={scrum.projectName}
-                    description={scrum.description}
-                    title={scrum.title}
-                    createdBy={scrum.createdBy}
-                    updated={scrum.updated}
-                />
-            {/each}
+            {#if currentScrums.filter(s => s.status.toLowerCase() === "in_progress").length === 0}
+                <div style="margin-top: 1rem;">
+                    <NotFound searchQuery="in progress scrums" />
+                </div>
+            {:else}
+                {#each currentScrums.filter(s => s.status.toLowerCase() === "in_progress") as scrum}
+                    <ScrumCard 
+                        projectOwner={scrum.projectOwner}
+                        projectName={scrum.projectName}
+                        description={scrum.description}
+                        title={scrum.title}
+                        createdBy={scrum.createdBy}
+                        updated={scrum.updated}
+                    />
+                {/each}
+            {/if}
         </div>
 
         <div class="scrum-section">
             <div class="scrum-section-header done">
                 <div class="header-title">Done</div>
-                <div class="header-count">{scrums.filter(s => s.status.toLowerCase() === "done").length}</div>
+                <div class="header-count">{currentScrums.filter(s => s.status.toLowerCase() === "done").length}</div>
             </div>
 
-            {#each scrums.filter(s => s.status.toLowerCase() === "done") as scrum}
-                <ScrumCard 
-                    projectOwner={scrum.projectOwner}
-                    projectName={scrum.projectName}
-                    description={scrum.description}
-                    title={scrum.title}
-                    createdBy={scrum.createdBy}
-                    updated={scrum.updated}
-                />
-            {/each}
+            {#if currentScrums.filter(s => s.status.toLowerCase() === "done").length === 0}
+                <div style="margin-top: 1rem;">
+                    <NotFound searchQuery="done scrums" />
+                </div>
+            {:else}
+                {#each currentScrums.filter(s => s.status.toLowerCase() === "done") as scrum}
+                    <ScrumCard 
+                        projectOwner={scrum.projectOwner}
+                        projectName={scrum.projectName}
+                        description={scrum.description}
+                        title={scrum.title}
+                        createdBy={scrum.createdBy}
+                        updated={scrum.updated}
+                    />
+                {/each}
+            {/if}
         </div>
 
     </div>

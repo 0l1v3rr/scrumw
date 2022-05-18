@@ -1,4 +1,6 @@
-CREATE TABLE users(
+CREATE DATABASE IF NOT EXISTS scrumw CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE TABLE IF NOT EXISTS users(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(32) NOT NULL,
     email VARCHAR(100) NOT NULL,
@@ -7,7 +9,7 @@ CREATE TABLE users(
     reg_date DATE
 );
 
-CREATE TABLE projects(
+CREATE TABLE IF NOT EXISTS projects(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(32) NOT NULL,
     name VARCHAR(128) NOT NULL,
@@ -16,7 +18,7 @@ CREATE TABLE projects(
     created DATE NOT NULL
 );
 
-CREATE TABLE issues(
+CREATE TABLE IF NOT EXISTS issues(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     project_owner VARCHAR(32) NOT NULL,
     project_name VARCHAR(64) NOT NULL,
@@ -29,7 +31,7 @@ CREATE TABLE issues(
     closed DATE
 );
 
-CREATE TABLE scrums(
+CREATE TABLE IF NOT EXISTS scrums(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     project_owner VARCHAR(32) NOT NULL,
     project_name VARCHAR(64) NOT NULL,

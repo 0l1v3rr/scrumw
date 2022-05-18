@@ -55,9 +55,7 @@ When it comes to cloning the project, you have 2 options:
     ```
 
 ### Creating the database
-First, create a database named `scrumw`. [(for example here)](./db/database.sql)  
-If it's done, import the [tables](./db/tables.sql), or load the [mysqldump](./db/scrumw_backup.sql). (the database-dump comes with some sample data)  
-Also, feel free to make the necessary changes [here](./backend/src/main/resources/application.yml).
+Using [this](./db/init.sql) queries, set up a database, or load the [mysqldump](./db/scrumw_backup.sql). (the database-dump comes with some sample data)  
 
 ### Running the backend
 If you have successfully cloned the project, make it active in your command prompt or terminal. (e.g.: `$ cd Desktop/scrumw`)  
@@ -65,7 +63,7 @@ Now enter these commands:
 ```sh
 cd backend/
 mvn clean install
-java -jar scrumw-0.0.1-SNAPSHOT.jar
+java -jar scrumw.jar
 ```
 The backend should start running on port `:8080`.  
   

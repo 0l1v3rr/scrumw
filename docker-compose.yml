@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 services:
   mysqldb:
     image: mysql:5.7
@@ -10,6 +10,9 @@ services:
       - 3306:3306
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/10-init.sql
+    networks:
+      - scrumw
+
   springboot:
     depends_on:
       - mysqldb
@@ -21,7 +24,17 @@ services:
         "spring.datasource.url"  : "jdbc:mysql://mysqldb:3306/scrumw?useSSL=false",
         "spring.datasource.username" : "root",
         "spring.datasource.password" : "root" }'
-    stdin_open: true
-    tty: true
     volumes:
       - .m2:/root/.m2
+    networks:
+      - scrumw
+
+  svelte-app:
+    build: ./frontend
+    stdin_open: true
+    ports:
+      - 3000:3000
+    networks:
+      - scrumw
+networks:
+  scrumw:

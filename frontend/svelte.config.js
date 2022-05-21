@@ -11,6 +11,19 @@ const config = {
 		adapter: adapter()
 	},
 	
+	vite: {
+		server: {
+			fs: {
+				allow: ["."]
+			}
+		},
+		hmr: {
+			protocol: 'ws',
+			host: '0.0.0.0',
+			port: '24678'
+		}
+	}
+
 };
 
 export default config;

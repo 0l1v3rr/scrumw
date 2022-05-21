@@ -1,6 +1,7 @@
 - [What is scrumw?](#what-is-scrumw)
 - [Tech stack](#tech-stack)
 - [Some of the main features](#some-of-the-main-features)
+- [Running with Docker](#running-with-docker)
 - [Building from source](#building-from-source)
   - [Requirements](#requirements)
   - [Cloning the project](#cloning-the-project)
@@ -25,6 +26,8 @@ You can create private projects, if you only want to work with yourself, as well
 - **Frontend:** Svelte, SvelteKit, TypeScript
 - **Testing:** JUnit
 
+<hr>
+
 ## Some of the main features
 - Create public or private projects
 - Track and manage bugs, issues and scrums
@@ -36,6 +39,21 @@ You can create private projects, if you only want to work with yourself, as well
 - Dark mode
 - Notifications
 - Responsive Web Design
+
+<hr>
+
+## Running with Docker
+First, download and install Docker  
+Then, clone the project:
+- You can [download the zip](https://github.com/0l1v3rr/scrumw/archive/refs/heads/master.zip)
+- You can clone it in your command prompt or terminal:
+  - ```
+    git clone https://github.com/0l1v3rr/scrumw.git
+    ```
+After cloning it, open the project's root folder in the terminal, and enter this command:
+```sh
+docker-compose up
+```
 
 <hr>
 
@@ -55,7 +73,7 @@ When it comes to cloning the project, you have 2 options:
     ```
 
 ### Creating the database
-Using [this](./db/init.sql) queries, set up a database, or load the [mysqldump](./db/scrumw_backup.sql). (the database-dump comes with some sample data)  
+Using [these](./db/init.sql) queries, set up a database, or load the [mysqldump](./db/scrumw_backup.sql). (the database-dump comes with some sample data)  
 
 ### Running the backend
 If you have successfully cloned the project, make it active in your command prompt or terminal. (e.g.: `$ cd Desktop/scrumw`)  
@@ -80,6 +98,8 @@ npm i
 
 npm run dev
 ```
+
+<hr>
 
 ## License
 This project is licensed under the [Apache-2.0 License](./LICENSE).

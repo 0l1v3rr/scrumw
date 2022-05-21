@@ -28,3 +28,4 @@ build/
 
 ### Docker ###
 .m2
+.data

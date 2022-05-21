@@ -65,7 +65,6 @@
     
     let collaborators = [];
     collaborators.push(username);
-    collaborators.push("jani");
     let collaboratorStr = collaborators.join(', ');
 
     const getCurrentIssues = () => {

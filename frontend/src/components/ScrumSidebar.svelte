@@ -1,5 +1,33 @@
 <script>
     export let projects;
+    export let user;
+
+    let optionValue;
+    let scrumTitle;
+    let scrumDescription;
+
+    const handleFormSubmit = async () => {
+        let splitted = optionValue.split("/");
+
+        let newScrum = {
+            projectOwner: splitted[0],
+            projectName: splitted[1],
+            title: scrumTitle,
+            description: scrumDescription,
+            createdBy: user.username
+        }
+
+        await fetch(`http://localhost:8080/api/v1/scrum`, {
+            method: 'POST',
+            headers: {
+                'token': user.token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newScrum)
+        });
+
+        // TODO: redirect to the created scrum
+    };
 </script>
 
 <div>
@@ -8,10 +36,10 @@
         <a href="/scrum-board" class="scrum-subheader">View all</a>
     </div>
     <div class="scrum-form">
-        <form>
+        <form on:submit|preventDefault={handleFormSubmit}>
             <div class="scrum-form-section">
                 <label for="project-select">Project</label>
-                <select id="project-select">
+                <select id="project-select" bind:value={optionValue}>
                     {#each projects as project}
                         <option value="{project.username}/{project.projectName}" selected>{project.username}/{project.projectName}</option>
                     {/each}
@@ -19,11 +47,11 @@
             </div>
             <div class="scrum-form-section">
                 <label for="title">Scrum Title</label>
-                <input type="text" id="title" placeholder="Implement JDBC" required>
+                <input type="text" id="title" placeholder="Implement JDBC" bind:value={scrumTitle} required>
             </div>
             <div class="scrum-form-section">
                 <label for="description">Description</label>
-                <textarea id="description" rows="5" placeholder="Implementing JDBC template to communicate with our MySql database." required></textarea>
+                <textarea id="description" rows="5" placeholder="Implementing JDBC template to communicate with our MySql database." bind:innerHTML={scrumDescription} contenteditable required></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Create!</button>
         </form>

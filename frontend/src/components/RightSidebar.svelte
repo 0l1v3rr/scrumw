@@ -37,7 +37,7 @@
     <div class="sidebar-divider"></div>
 
     <div class="todo">
-        <ScrumSidebar projects={projects} />
+        <ScrumSidebar projects={projects} user={user} />
     </div>
 
 </section>

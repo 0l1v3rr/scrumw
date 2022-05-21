@@ -71,7 +71,7 @@
 		});
 		
         if(res.status == 200) {
-			window.location.replace("/projects");
+			window.location.replace(`/project/${user.username}/${projectName}`);
             return;
 		}
 

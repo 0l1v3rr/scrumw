@@ -1,4 +1,6 @@
 <script>
+    import { FolderMinusIcon } from 'svelte-feather-icons';
+
     export let projectOwner;
     export let projectName;
     export let title;
@@ -8,7 +10,11 @@
 </script>
 
 <div class="scrum-card">
-    <a href="/project/{projectOwner}/{projectName}" class="scrum-card-project">{projectOwner}/{projectName}</a>
+    <div class="issue-header">
+        <FolderMinusIcon size="20" />
+        <a href="/project/{projectOwner}/{projectName}" class="issue-title">{projectOwner}<span class="text-muted">/</span>{projectName}</a>
+    </div>
+
     <div class="scrum-card-title">{ title }</div>
     <div class="scrum-card-description">{ description }</div>
 
@@ -29,14 +35,19 @@
         border-radius: .5rem;
         border: 1px solid var(--border-color);
     }
-    .scrum-card-project {
-        margin-bottom: .5rem;
+    .issue-title {
         color: var(--link-color);
         font-size: 1rem;
         transition: .3s ease-in-out;
-        display: block;
+        font-weight: bold;
     }
-    .scrum-card-project:hover {
+    .issue-header {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        color: var(--text-color-secondary);
+    }
+    .issue-title:hover {
         color: var(--color-primary-light);
     }
     .scrum-card-title {
@@ -44,6 +55,7 @@
         font-size: 1rem;
         font-weight: bold;
         margin-bottom: .5rem;
+        margin-top: .75rem;
     }
     .scrum-card-description {
         color: var(--text-color-secondary);

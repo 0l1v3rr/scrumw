@@ -51,7 +51,7 @@
             </div>
             <div class="scrum-form-section">
                 <label for="description">Description</label>
-                <textarea id="description" rows="5" placeholder="Implementing JDBC template to communicate with our MySql database." bind:innerHTML={scrumDescription} contenteditable required></textarea>
+                <textarea id="description" rows="5" placeholder="Implementing JDBC template to communicate with our MySql database." bind:value={scrumDescription} contenteditable required></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Create!</button>
         </form>

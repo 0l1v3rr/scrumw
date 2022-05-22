@@ -1,6 +1,8 @@
-<img src="https://img.shields.io/github/languages/count/0l1v3rr/scrumw" alt="">
-<img src="https://img.shields.io/github/license/0l1v3rr/scrumw" alt="">
-<img src="https://img.shields.io/github/last-commit/0l1v3rr/scrumw" alt="">
+<p>
+  <img src="https://img.shields.io/github/languages/count/0l1v3rr/scrumw" alt="">
+  <img src="https://img.shields.io/github/license/0l1v3rr/scrumw" alt="">
+  <img src="https://img.shields.io/github/last-commit/0l1v3rr/scrumw" alt="">
+</p>
 
 <hr>
 

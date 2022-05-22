@@ -1,8 +1,9 @@
 package com.oliverr.scrumw.user;
 
+import com.oliverr.scrumw.error.ApiError;
 import com.oliverr.scrumw.security.PasswordEncoder;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,64 +12,94 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/v1/users")
-@AllArgsConstructor
-public class UserController {
-
-    private final UserDataAccessService userDataAccessService;
-    private final PasswordEncoder encoder;
+public record UserController(UserDataAccessService userDataAccessService, PasswordEncoder encoder) {
 
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping(path = "new")
-    public void registerUser(@RequestBody User user) {
-        if(userDataAccessService.findUserByUsername(user.getUsername()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "This username is already taken.", new RuntimeException());
+    public ResponseEntity<Object> registerUser(@RequestBody User user) {
+        if (userDataAccessService.findUserByUsername(user.getUsername()).isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new ApiError("This username is already taken."));
         }
 
-        if(userDataAccessService.findUserByEmail(user.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "This email is already taken.", new RuntimeException());
+        if (userDataAccessService.findUserByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new ApiError("This email is already taken."));
         }
 
         userDataAccessService.insertUser(user);
+        User createdUser = userDataAccessService.findUserByEmail(user.getEmail()).get();
+        createdUser.setPassword(null);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdUser);
     }
 
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping(path = "login")
-    public UserToken loginUser(@RequestBody User user) {
-        if(userDataAccessService.findUserByUsername(user.getUsername()).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member with this username does not exist.", new RuntimeException());
+    public ResponseEntity<Object> loginUser(@RequestBody User user) {
+        if (userDataAccessService.findUserByUsername(user.getUsername()).isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("User with this username does not exist."));
         }
 
-        if(userDataAccessService.findUserByUsernameAndPassword(user.getUsername(), user.getPassword()).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong password.", new RuntimeException());
+        if (userDataAccessService
+                .findUserByUsernameAndPassword(user.getUsername(), user.getPassword())
+                .isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Wrong password."));
         }
 
-        return new UserToken(
-                user.getUsername(),
-                userDataAccessService.getTokenByUsername(user.getUsername()).orElse("")
-        );
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new UserToken(
+                        user.getUsername(),
+                        userDataAccessService.getTokenByUsername(user.getUsername()).get()
+                ));
     }
 
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping(path = "token/{token}")
-    public User getUserByToken(@PathVariable("token") String token) {
-        return userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with this token does not exist.", new RuntimeException()));
+    public ResponseEntity<Object> getUserByToken(@PathVariable("token") String token) {
+        Optional<User> user = userDataAccessService.getUserByToken(token);
+
+        return user.<ResponseEntity<Object>>map(value -> ResponseEntity
+                .status(HttpStatus.OK)
+                .body(value))
+                .orElseGet(() -> ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ApiError("User with this token does not exist."))
+        );
     }
 
     @GetMapping(path = "{username}")
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
-    public User getUserByUsername(@PathVariable("username") String username) {
-        var user = userDataAccessService
-                .findUserByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with this token does not exist.", new RuntimeException()));
-        user.setPassword(null);
-        user.setToken(null);
-        return user;
+    public ResponseEntity<Object> getUserByUsername(@PathVariable("username") String username) {
+        Optional<User> user = userDataAccessService.findUserByUsername(username);
+
+        if(user.isPresent()) {
+            User presentUser = user.get();
+            presentUser.setPassword(null);
+            presentUser.setToken(null);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(presentUser);
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ApiError("User with this username does not exist."));
     }
 
 }

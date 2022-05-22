@@ -47,7 +47,7 @@
             return;
 		}
 
-        handleError(resJson.message);
+        handleError(resJson.error);
     };
 </script>
 

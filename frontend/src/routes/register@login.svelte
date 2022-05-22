@@ -63,7 +63,7 @@
 		}
 
         const resJson = await res.json();
-		handleError(resJson.message);
+		handleError(resJson.error);
     };
 </script>
 

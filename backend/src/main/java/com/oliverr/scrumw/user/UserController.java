@@ -77,8 +77,9 @@ public record UserController(UserDataAccessService userDataAccessService, Passwo
                 .status(HttpStatus.OK)
                 .body(value))
                 .orElseGet(() -> ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(new ApiError("User with this token does not exist."))
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new ApiError("User with this token does not exist.")
+                )
         );
     }
 

@@ -1,193 +1,207 @@
 package com.oliverr.scrumw.project;
 
+import com.oliverr.scrumw.error.ApiError;
+import com.oliverr.scrumw.security.AuthenticateUser;
 import com.oliverr.scrumw.user.UserDataAccessService;
 import com.oliverr.scrumw.util.Count;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/v1/projects")
-@AllArgsConstructor
-public class ProjectController {
-
-    private final ProjectDataAccessService projectDataAccessService;
-    private final UserDataAccessService userDataAccessService;
+public record ProjectController(ProjectDataAccessService projectDataAccessService, UserDataAccessService userDataAccessService, AuthenticateUser authenticateUser) {
 
     @GetMapping(path = "{username}")
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
-    public List<Project> getProjectsByUsername(@PathVariable("username") String username, HttpEntity<byte[]> requestEntity) {
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            return projectDataAccessService.getPublicProjectsByUsername(username);
+    public ResponseEntity<Object> getProjectsByUsername(@PathVariable("username") String username, HttpEntity<byte[]> request) {
+        String token = request.getHeaders().getFirst("token");
+        if (token == null) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(projectDataAccessService.getPublicProjectsByUsername(username));
         }
 
         var userByToken = userDataAccessService.getUserByToken(token);
-        if(userByToken.isEmpty()) {
-            return projectDataAccessService.getPublicProjectsByUsername(username);
+        if (userByToken.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(projectDataAccessService.getPublicProjectsByUsername(username));
         }
 
-        if(!userByToken.get().getUsername().equalsIgnoreCase(username)) {
-            return projectDataAccessService.getPublicProjectsByUsername(username);
+        if (!userByToken.get().getUsername().equalsIgnoreCase(username)) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(projectDataAccessService.getPublicProjectsByUsername(username));
         }
 
-        return projectDataAccessService.getProjectsByUsername(username);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(projectDataAccessService.getProjectsByUsername(username));
     }
 
     @GetMapping(path = "{username}/latest")
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
-    public List<Project> getLatestThreeProjects(@PathVariable("username") String username, HttpEntity<byte[]> requestEntity) {
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
+    public ResponseEntity<Object> getLatestThreeProjects(@PathVariable("username") String username, HttpEntity<byte[]> request) {
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), username)) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
-
-        if(!userByToken.getUsername().equalsIgnoreCase(username)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
-        }
-
-        return projectDataAccessService.getLatestThreeProject(username);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(projectDataAccessService.getLatestThreeProject(username));
     }
 
     @PostMapping
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
-    public void addProject(@RequestBody Project project, HttpEntity<byte[]> requestEntity) {
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+    public ResponseEntity<Object> addProject(@RequestBody Project project, HttpEntity<byte[]> request) {
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), project.getUsername())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
-
-        if(!project.getUsername().equalsIgnoreCase(userByToken.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
-        }
-
-        var currentProject = projectDataAccessService
+        Optional<Project> currentProject = projectDataAccessService
                 .getProjectByUsernameAndProjectName(project.getUsername(), project.getProjectName());
-        if(currentProject.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Project with this name already exists.", new RuntimeException());
+
+        if (currentProject.isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new ApiError("Project with this name already exist."));
         }
 
         projectDataAccessService.addProject(project);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(project);
     }
 
     @DeleteMapping(value = "{id}")
     @CrossOrigin(origins = "*", methods = RequestMethod.DELETE)
-    public void deleteProject(@PathVariable("id") String id, HttpEntity<byte[]> requestEntity) {
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+    public ResponseEntity<Object> deleteProject(@PathVariable("id") Integer id, HttpEntity<byte[]> request) {
+        Optional<Project> project = projectDataAccessService.getProjectById(id);
+
+        if(project.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("Project with this ID does not exist."));
         }
 
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
-
-        var project = projectDataAccessService
-                .getProjectById(Integer.parseInt(id))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project with this id does not exist.", new RuntimeException()));
-
-        if(!project.getUsername().equalsIgnoreCase(userByToken.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), project.get().getUsername())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
-        projectDataAccessService.deleteProject(Integer.parseInt(id));
+        projectDataAccessService.deleteProject(id);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(null);
     }
 
     @PatchMapping(value = "{id}")
     @CrossOrigin(origins = "*", methods = RequestMethod.PATCH)
-    public void changeProjectVisibility(@PathVariable("id") String id, HttpEntity<byte[]> requestEntity) {
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+    public ResponseEntity<ApiError> changeProjectVisibility(@PathVariable("id") Integer id, HttpEntity<byte[]> request) {
+        Optional<Project> project = projectDataAccessService.getProjectById(id);
+
+        if(project.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("Project with this ID does not exist."));
         }
 
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
-
-        var project = projectDataAccessService
-                .getProjectById(Integer.parseInt(id))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project with this id does not exist.", new RuntimeException()));
-
-        if(!project.getUsername().equalsIgnoreCase(userByToken.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), project.get().getUsername())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
-        projectDataAccessService.changeVisibility(Integer.parseInt(id));
+        projectDataAccessService.changeVisibility(id);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(null);
     }
 
     @PutMapping(value = "{id}")
     @CrossOrigin(origins = "*", methods = RequestMethod.PUT)
-    public void updateProject(@PathVariable("id") String id, @RequestBody Project project, HttpEntity<byte[]> requestEntity) {
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+    public ResponseEntity<Object> updateProject(@PathVariable("id") Integer id, @RequestBody Project newProject, HttpEntity<byte[]> request) {
+        Optional<Project> project = projectDataAccessService.getProjectById(id);
+
+        if(project.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("Project with this ID does not exist."));
         }
 
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
-
-        var foundProject = projectDataAccessService
-                .getProjectById(Integer.parseInt(id))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project with this id does not exist.", new RuntimeException()));
-
-        if(!foundProject.getUsername().equalsIgnoreCase(userByToken.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), project.get().getUsername())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
-        projectDataAccessService.updateProject(project, Integer.parseInt(id));
+        projectDataAccessService.updateProject(newProject, id);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(newProject);
     }
 
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping(value = "{username}/{projectName}")
-    public Project getProjectByUsernameAndProjectName(@PathVariable("username") String username, @PathVariable("projectName") String projectName, HttpEntity<byte[]> requestEntity) {
-        var project = projectDataAccessService
-                .getProjectByUsernameAndProjectName(username, projectName)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This project does not exist.", new RuntimeException()));
+    public ResponseEntity<Object> getProjectByUsernameAndProjectName(@PathVariable("username") String username, @PathVariable("projectName") String projectName, HttpEntity<byte[]> request) {
+        Optional<Project> project = projectDataAccessService.getProjectByUsernameAndProjectName(username, projectName);
 
-        if(project.getIsPublic()) {
-            return project;
+        if(project.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("Project with this ID does not exist."));
         }
 
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You did not provide any token.", new RuntimeException());
+        if (project.get().getIsPublic()) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(project.get());
         }
 
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException()));
-
-        if(!userByToken.getUsername().equalsIgnoreCase(username)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token.", new RuntimeException());
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), project.get().getUsername())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
-        return project;
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(project.get());
     }
 
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping(value = "{username}/count")
-    public Count getProjectCountByUsername(@PathVariable("username") String username) {
-        return new Count(projectDataAccessService.getProjectCount(username));
+    public ResponseEntity<Object> getProjectCountByUsername(@PathVariable("username") String username) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Count(projectDataAccessService.getProjectCount(username)));
     }
 
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping(value = "{username}/count/private")
-    public Count getPrivateProjectCountByUsername(@PathVariable("username") String username) {
-        return new Count(projectDataAccessService.getPrivateProjectCount(username));
+    public ResponseEntity<Object> getPrivateProjectCountByUsername(@PathVariable("username") String username) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Count(projectDataAccessService.getPrivateProjectCount(username)));
     }
 
 }

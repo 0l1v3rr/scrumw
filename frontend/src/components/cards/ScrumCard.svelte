@@ -21,7 +21,7 @@
     <div class="scrum-card-footer">
         <div class="footer-text">
             <div>Created by <a href="/user/{createdBy}" class="footer-text-bold">{createdBy}</a>.</div>
-            <div style="margin-top: .5rem;">Updated <span class="footer-text-bold">{updated}</span></div>
+            <div style="margin-top: .5rem;">Updated <span class="footer-text-bold-2">{updated}</span></div>
         </div>
     </div>
     
@@ -77,6 +77,11 @@
     .footer-text-bold {
         font-weight: bold;
         color: var(--text-color-secondary);
+    }
+    .footer-text-bold-2 {
+        font-weight: bold;
+        color: var(--text-color-secondary);
+        text-decoration: none;
     }
     .footer-text-bold:hover {
         text-decoration: underline;

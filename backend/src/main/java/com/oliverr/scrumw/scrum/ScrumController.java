@@ -1,148 +1,153 @@
 package com.oliverr.scrumw.scrum;
 
+import com.oliverr.scrumw.error.ApiError;
+import com.oliverr.scrumw.project.Project;
 import com.oliverr.scrumw.project.ProjectDataAccessService;
+import com.oliverr.scrumw.security.AuthenticateUser;
 import com.oliverr.scrumw.user.UserDataAccessService;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/scrum")
-@AllArgsConstructor
-public class ScrumController {
-
-    private UserDataAccessService userDataAccessService;
-    private ScrumDataAccessService scrumDataAccessService;
-    private ProjectDataAccessService projectDataAccessService;
+public record ScrumController(UserDataAccessService userDataAccessService, ScrumDataAccessService scrumDataAccessService, ProjectDataAccessService projectDataAccessService, AuthenticateUser authenticateUser) {
 
     @GetMapping("{username}")
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
-    public List<Scrum> getScrumsByUsername(@PathVariable("username") String username, HttpEntity<byte[]> requestEntity) {
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+    public ResponseEntity<Object> getScrumsByUsername(@PathVariable("username") String username, HttpEntity<byte[]> request) {
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), username)) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
-
-        if(!userByToken.getUsername().equalsIgnoreCase(username)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
-        }
-
-        return scrumDataAccessService.getScrumsByUsername(username);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(scrumDataAccessService.getScrumsByUsername(username));
     }
 
     @GetMapping("{projectOwner}/{projectName}")
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
-    public List<Scrum> getScrumsByProject(@PathVariable("projectOwner") String projectOwner, @PathVariable("projectName") String projectName, HttpEntity<byte[]> requestEntity) {
-        var project = projectDataAccessService
-                .getProjectByUsernameAndProjectName(projectOwner, projectName)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This project does not exist.", new RuntimeException()));
+    public ResponseEntity<Object> getScrumsByProject(@PathVariable("projectOwner") String projectOwner, @PathVariable("projectName") String projectName, HttpEntity<byte[]> request) {
+        Optional<Project> project = projectDataAccessService
+                .getProjectByUsernameAndProjectName(projectOwner, projectName);
 
-        if(project.getIsPublic()) {
-            return scrumDataAccessService.getScrumsByProject(projectOwner, projectName);
+        if(project.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("This project does not exist."));
         }
 
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+        if (project.get().getIsPublic()) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(scrumDataAccessService.getScrumsByProject(projectOwner, projectName));
         }
 
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
-
-        if(!userByToken.getUsername().equalsIgnoreCase(projectOwner)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), projectOwner)) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
-        return scrumDataAccessService.getScrumsByProject(projectOwner, projectOwner);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(scrumDataAccessService.getScrumsByProject(projectOwner, projectName));
     }
 
     @PostMapping
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
-    public void addScrum(@RequestBody Scrum scrum, HttpEntity<byte[]> requestEntity) {
-        var project = projectDataAccessService
-                .getProjectByUsernameAndProjectName(scrum.getProjectOwner(), scrum.getProjectName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This project does not exist.", new RuntimeException()));
+    public ResponseEntity<Object> addScrum(@RequestBody Scrum scrum, HttpEntity<byte[]> request) {
+        Optional<Project> project = projectDataAccessService
+                .getProjectByUsernameAndProjectName(scrum.getProjectOwner(), scrum.getProjectName());
 
-        if(project.getIsPublic()) {
+        if(project.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("This project does not exist."));
+        }
+
+        if (project.get().getIsPublic()) {
             scrumDataAccessService.addScrum(scrum);
-            return;
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(scrum);
         }
 
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
-        }
-
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
-
-        if(!userByToken.getUsername().equalsIgnoreCase(scrum.getProjectOwner())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), scrum.getProjectOwner())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
         scrumDataAccessService.addScrum(scrum);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(scrum);
     }
 
     @DeleteMapping("{id}")
     @CrossOrigin(origins = "*", methods = RequestMethod.DELETE)
-    public void deleteScrum(@PathVariable("id") String sid, HttpEntity<byte[]> requestEntity) {
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+    public ResponseEntity<Object> deleteScrum(@PathVariable("id") Integer id, HttpEntity<byte[]> request) {
+        Optional<Scrum> scrum = scrumDataAccessService.getScrumById(id);
+        if(scrum.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("Scrum with this id does not exist."));
         }
 
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
-
-        int id = Integer.parseInt(sid);
-        var scrum = scrumDataAccessService
-                .getScrumById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Scrum with this id does not exist."));
-
-        if(!userByToken.getUsername().equalsIgnoreCase(scrum.getCreatedBy())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), scrum.get().getCreatedBy())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
         scrumDataAccessService.deleteScrum(id);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(null);
     }
 
     @PatchMapping("{id}/{status}")
     @CrossOrigin(origins = "*", methods = RequestMethod.PATCH)
-    public void changeScrumStatus(@PathVariable("id") String sid, @PathVariable("status") String status, HttpEntity<byte[]> requestEntity) {
-        String token = requestEntity.getHeaders().getFirst("token");
-        if(token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You did not provide any token.", new RuntimeException());
+    public ResponseEntity<Object> changeScrumStatus(@PathVariable("id") Integer id, @PathVariable("status") String status, HttpEntity<byte[]> request) {
+        Optional<Scrum> scrum = scrumDataAccessService.getScrumById(id);
+        if(scrum.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("Scrum with this id does not exist."));
         }
 
-        var userByToken = userDataAccessService
-                .getUserByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException()));
-
-        int id = Integer.parseInt(sid);
-        var scrum = scrumDataAccessService
-                .getScrumById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Scrum with this id does not exist."));
-
-        if(!userByToken.getUsername().equalsIgnoreCase(scrum.getCreatedBy())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token.", new RuntimeException());
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), scrum.get().getCreatedBy())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
         }
 
         ScrumStatus statusE = ScrumStatus.TO_DO;
-        if(status.equalsIgnoreCase("in_progress")) statusE = ScrumStatus.IN_PROGRESS;
-        else if(status.equalsIgnoreCase("done")) statusE = ScrumStatus.DONE;
+        if (status.equalsIgnoreCase("in_progress") || status.equalsIgnoreCase("in-progress")) statusE = ScrumStatus.IN_PROGRESS;
+        else if (status.equalsIgnoreCase("done")) statusE = ScrumStatus.DONE;
 
         scrumDataAccessService.changeScrumStatus(id, statusE);
+
+        Scrum res = scrum.get();
+        res.setStatus(statusE);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(res);
     }
 
 }

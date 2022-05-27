@@ -68,6 +68,44 @@ public record ScrumController(UserDataAccessService userDataAccessService, Scrum
                 .body(scrumDataAccessService.getScrumsByProject(projectOwner, projectName));
     }
 
+    @GetMapping("{id}")
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    public ResponseEntity<Object> getScrumsByProject(@PathVariable("id") Integer id, HttpEntity<byte[]> request) {
+        Optional<Scrum> scrum = scrumDataAccessService
+                .getScrumById(id);
+
+        if(scrum.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("Scrum with this ID does not exist."));
+        }
+
+        Optional<Project> project = projectDataAccessService
+                .getProjectByUsernameAndProjectName(scrum.get().getProjectOwner(), scrum.get().getProjectName());
+
+        if(project.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("This project does not exist."));
+        }
+
+        if (project.get().getIsPublic()) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(scrum.get());
+        }
+
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), scrum.get().getProjectOwner())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(scrum.get());
+    }
+
     @PostMapping
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     public ResponseEntity<Object> addScrum(@RequestBody Scrum scrum, HttpEntity<byte[]> request) {

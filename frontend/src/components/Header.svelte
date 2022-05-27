@@ -15,6 +15,7 @@
     });
 
     const handleLogoutClick = () => {
+        isActive = false;
         window.location.replace("/login");
         document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/`;
     };
@@ -40,7 +41,7 @@
             </button>
 
             <div class="profile-dropdown {isActive ? 'active' : ''}">
-                <a href="/user/{user.username}" class="profile-dropdown-item">
+                <a href="/user/{user.username}" class="profile-dropdown-item" on:click={isActive = false}>
                     <UserIcon size="16" />
                     Profile
                 </a>
@@ -99,10 +100,10 @@
         position: absolute;
         width: .4rem;
         height: .4rem;
-        background-color: var(--color-primary);
         top: 15%;
         left: 70%;
         border-radius: 50%;
+        animation: notificationDotAnim 1.5s ease-in-out infinite;
     }
     .profile {   
         border: 1px solid var(--border-color);
@@ -206,6 +207,14 @@
     }
     .profile-dropdown-item:last-child {
         border-bottom: 0;
+    }
+
+    @keyframes notificationDotAnim {
+        0% { background-color: var(--color-danger-dark) }
+        40% { background-color: var(--color-danger-dark) }
+        50% { background-color: var(--color-danger-light) }
+        90% { background-color: var(--color-danger-light) }
+        100% { background-color: var(--color-danger-dark) }
     }
 
     @media screen and (max-width: 922px) {

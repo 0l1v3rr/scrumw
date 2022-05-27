@@ -90,6 +90,7 @@
             {:else}
                 {#each currentScrums.filter(s => s.status.toLowerCase() === "to_do") as scrum}
                     <ScrumCard 
+                        id={scrum.id}
                         projectOwner={scrum.projectOwner}
                         projectName={scrum.projectName}
                         description={scrum.description}
@@ -114,6 +115,7 @@
             {:else}
                 {#each currentScrums.filter(s => s.status.toLowerCase() === "in_progress") as scrum}
                     <ScrumCard 
+                        id={scrum.id}
                         projectOwner={scrum.projectOwner}
                         projectName={scrum.projectName}
                         description={scrum.description}
@@ -138,6 +140,7 @@
             {:else}
                 {#each currentScrums.filter(s => s.status.toLowerCase() === "done") as scrum}
                     <ScrumCard 
+                        id={scrum.id}
                         projectOwner={scrum.projectOwner}
                         projectName={scrum.projectName}
                         description={scrum.description}

@@ -68,7 +68,7 @@ public record ScrumController(UserDataAccessService userDataAccessService, Scrum
                 .body(scrumDataAccessService.getScrumsByProject(projectOwner, projectName));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("id/{id}")
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     public ResponseEntity<Object> getScrumsByProject(@PathVariable("id") Integer id, HttpEntity<byte[]> request) {
         Optional<Scrum> scrum = scrumDataAccessService

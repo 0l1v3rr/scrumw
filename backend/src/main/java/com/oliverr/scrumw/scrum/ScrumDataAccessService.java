@@ -78,7 +78,7 @@ public class ScrumDataAccessService implements ScrumDao {
                 """;
 
         updateScrum(id);
-        jdbcTemplate.update(query, status.toString().toLowerCase(), id);
+        jdbcTemplate.update(query, status.toString().replaceAll("_", "-").toLowerCase(), id);
     }
 
     @Override

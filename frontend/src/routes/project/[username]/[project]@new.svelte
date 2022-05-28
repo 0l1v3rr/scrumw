@@ -173,37 +173,32 @@
 </svelte:head>
 
 <div style="position: relative;">
-    {#if isDeletePopupOpen}
-        <div class="popup">
-            <div class="popup-title">{username}/{project}</div>
-            <div class="popup-desc">Are sure you want to delete this project?</div>
-            <div class="popup-footer">
-                <button class="btn btn-primary" on:click={() => isDeletePopupOpen = false}>Cancel</button>
-                <button class="btn btn-danger" on:click={deleteProject}>Delete</button>
-            </div>
+    <div class="popup {isDeletePopupOpen ? 'active' : ''}">
+        <div class="popup-title">{username}/{project}</div>
+        <div class="popup-desc">Are sure you want to delete this project?</div>
+        <div class="popup-footer">
+            <button class="btn btn-primary" on:click={() => isDeletePopupOpen = false}>Cancel</button>
+            <button class="btn btn-danger" on:click={deleteProject}>Delete</button>
         </div>
-    {/if}
+    </div>
 
-    {#if isNewIssueOpen}
-        <div class="popup">
-            <div class="popup-title">Open a new issue - {username}/{project}</div>
-            <div class="popup-desc">
-                <div class="add-collab">
-                    <label for="issue-title">Issue Title</label>
-                    <input type="text" id="issue-title" placeholder="This is an issue" bind:value={newIssueTitle}>
-                </div>
-                <div class="divider" style="margin-top: 1rem; margin-bottom: .5rem;"></div>
-                <div class="add-collab">
-                    <label for="issue-desc">Issue Description</label>
-                    <input type="text" id="issue-desc" placeholder="This is an issue" bind:value={newIssueDesc}>
-                </div>
+    <div class="popup {isNewIssueOpen ? 'active' : ''}">
+        <div class="popup-title">Open a new issue - {username}/{project}</div>
+        <div class="popup-desc">
+            <div class="add-collab">
+                <label for="issue-title">Issue Title</label>
+                <input type="text" id="issue-title" placeholder="This is an issue" bind:value={newIssueTitle}>
             </div>
-            <div class="popup-footer">
-                <button class="btn btn-primary" on:click={() => isNewIssueOpen = false}>Cancel</button>
-                <button class="btn btn-success" on:click={createIssue}>Create Issue</button>
+            <div class="add-collab" style="margin-top: 1rem;">
+                <label for="issue-desc">Issue Description</label>
+                <input type="text" id="issue-desc" placeholder="This is an issue" bind:value={newIssueDesc}>
             </div>
         </div>
-    {/if}
+        <div class="popup-footer">
+            <button class="btn btn-primary" on:click={() => isNewIssueOpen = false}>Cancel</button>
+            <button class="btn btn-success" on:click={createIssue}>Create Issue</button>
+        </div>
+    </div>
 
     <div class="project {isDeletePopupOpen || isNewIssueOpen ? 'blur' : ''}">
         {#if status == 200}
@@ -345,14 +340,17 @@
 
 <style>
     .blur {
-        filter: blur(.35rem);
+        filter: blur(.4rem);
         user-select: none;
         pointer-events: none;
         transition: .2s ease-in-out;
     }
     .popup {
+        opacity: 0;
+        pointer-events: none;
+        user-select: none;
         position: absolute;
-        top: 50%;
+        top: 0%;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 5;
@@ -361,6 +359,12 @@
         border-radius: .4rem;
         box-shadow: 0 0 1.25rem rgba(0,0,0,.7);
         transition: .2s ease-in-out;
+    }
+    .popup.active {
+        top: 50%;
+        opacity: 1;
+        pointer-events: inherit;
+        user-select: inherit;
     }
     .popup-title {
         padding: 1rem;

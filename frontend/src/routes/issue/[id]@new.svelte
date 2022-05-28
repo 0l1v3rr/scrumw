@@ -70,16 +70,14 @@
 </svelte:head>
 
 <div style="position: relative;">
-    {#if isDeletePopupOpen}
-        <div class="popup">
-            <div class="popup-title">{issue.issueTitle}</div>
-            <div class="popup-desc">Are sure you want to delete this issue?</div>
-            <div class="popup-footer">
-                <button class="btn btn-primary" on:click={() => isDeletePopupOpen = false}>Cancel</button>
-                <button class="btn btn-danger" on:click={deleteIssue}>Delete</button>
-            </div>
+    <div class="popup {isDeletePopupOpen ? 'active' : ''}">
+        <div class="popup-title">{issue.issueTitle}</div>
+        <div class="popup-desc">Are sure you want to delete this issue?</div>
+        <div class="popup-footer">
+            <button class="btn btn-primary" on:click={() => isDeletePopupOpen = false}>Cancel</button>
+            <button class="btn btn-danger" on:click={deleteIssue}>Delete</button>
         </div>
-    {/if}
+    </div>
     
     <div class="issue {isDeletePopupOpen ? 'blur' : ''}">
         <div class="bordered">
@@ -133,6 +131,7 @@
     .issue {
         padding: 1.5rem;
         min-height: 80vh;
+        transition: .2s ease-in-out;
     }
     .bordered {
         border: 1px solid var(--border-color);
@@ -201,14 +200,17 @@
         color: var(--text-color-secondary);
     }
     .blur {
-        filter: blur(.35rem);
+        filter: blur(.4rem);
         user-select: none;
         pointer-events: none;
         transition: .2s ease-in-out;
     }
     .popup {
+        opacity: 0;
+        pointer-events: none;
+        user-select: none;
         position: absolute;
-        top: 50%;
+        top: 0%;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 5;
@@ -217,6 +219,12 @@
         border-radius: .4rem;
         box-shadow: 0 0 1.25rem rgba(0,0,0,.7);
         transition: .2s ease-in-out;
+    }
+    .popup.active {
+        top: 50%;
+        opacity: 1;
+        pointer-events: inherit;
+        user-select: inherit;
     }
     .popup-title {
         padding: 1rem;

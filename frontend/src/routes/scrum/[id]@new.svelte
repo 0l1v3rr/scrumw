@@ -37,12 +37,54 @@
 
     let isDeletePopupOpen = false;
 
-    /*const formatDate = (date) => {
+    const formatDate = (date) => {
         return `${date.getFullYear()}-${date.getMonth().toString().length == 1 ? '0'+date.getMonth() : date.getMonth()}-${date.getDate().toString().length == 1 ? '0'+date.getDate() : date.getDate()}`;
-    }*/
+    }
 
     const deleteScrum = async () => {
+        await fetch(`http://localhost:8080/api/v1/scrum/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'token': user.token,
+            }
+        });
+        window.location.replace(`/project/${scrum.projectOwner}/${scrum.projectName}`);
+    };
 
+    const markAsToDo = async () => {
+        scrum.updated = formatDate(new Date());
+        scrum.status = "to_do";
+
+        await fetch(`http://localhost:8080/api/v1/scrum/${id}/to_do`, {
+            method: 'PATCH',
+            headers: {
+                'token': user.token,
+            }
+        });
+    };
+
+    const markAsInProgress = async () => {
+        scrum.updated = formatDate(new Date());
+        scrum.status = "in_progress";
+
+        await fetch(`http://localhost:8080/api/v1/scrum/${id}/in_progress`, {
+            method: 'PATCH',
+            headers: {
+                'token': user.token,
+            }
+        });
+    };
+
+    const markAsDone = async () => {
+        scrum.updated = formatDate(new Date());
+        scrum.status = "done";
+
+        await fetch(`http://localhost:8080/api/v1/scrum/${id}/done`, {
+            method: 'PATCH',
+            headers: {
+                'token': user.token,
+            }
+        });
     };
 </script>
 
@@ -51,16 +93,14 @@
 </svelte:head>
 
 <div style="position: relative;">
-    {#if isDeletePopupOpen}
-        <div class="popup">
-            <div class="popup-title">{scrum.title}</div>
-            <div class="popup-desc">Are sure you want to delete this scrum?</div>
-            <div class="popup-footer">
-                <button class="btn btn-primary" on:click={() => isDeletePopupOpen = false}>Cancel</button>
-                <button class="btn btn-danger" on:click={deleteScrum}>Delete</button>
-            </div>
+    <div class="popup {isDeletePopupOpen ? 'active' : ''}">
+        <div class="popup-title">{scrum.title}</div>
+        <div class="popup-desc">Are sure you want to delete this scrum?</div>
+        <div class="popup-footer">
+            <button class="btn btn-primary" on:click={() => isDeletePopupOpen = false}>Cancel</button>
+            <button class="btn btn-danger" on:click={deleteScrum}>Delete</button>
         </div>
-    {/if}
+    </div>
     
     <div class="scrum {isDeletePopupOpen ? 'blur' : ''}">
         <div class="bordered">
@@ -92,6 +132,21 @@
     
         {#if scrum.projectOwner == user.username || scrum.openedBy == user.username}
             <div class="df">
+                {#if scrum.status.toLowerCase() == "to_do" || scrum.status.toLowerCase() == "to-do"}
+                    <button class="btn btn-warning" on:click={markAsInProgress}>Mark as In-Progress</button>
+                    <button class="btn btn-success" on:click={markAsDone}>Mark as Done</button>
+                {:else if scrum.status.toLowerCase() == "in_progress" || scrum.status.toLowerCase() == "in-progress"}
+                    <button class="btn btn-primary" on:click={markAsToDo}>Mark as To-Do</button>    
+                    <button class="btn btn-success" on:click={markAsDone}>Mark as Done</button>
+                {:else if scrum.status.toLowerCase() == "done"}
+                    <button class="btn btn-primary" on:click={markAsToDo}>Mark as To-Do</button>    
+                    <button class="btn btn-warning" on:click={markAsInProgress}>Mark as In-Progress</button>
+                {/if}
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="df">
                 <button class="btn btn-danger" on:click={() => isDeletePopupOpen = true}>Delete scrum</button>
             </div>
         {/if}
@@ -111,6 +166,7 @@
     .scrum {
         padding: 1.5rem;
         min-height: 80vh;
+        transition: .2s ease-in-out;
     }
     .bordered {
         border: 1px solid var(--border-color);
@@ -182,14 +238,17 @@
         color: var(--text-color-secondary);
     }
     .blur {
-        filter: blur(.35rem);
+        filter: blur(.4rem);
         user-select: none;
         pointer-events: none;
         transition: .2s ease-in-out;
     }
     .popup {
+        opacity: 0;
+        pointer-events: none;
+        user-select: none;
         position: absolute;
-        top: 50%;
+        top: 0%;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 5;
@@ -198,6 +257,12 @@
         border-radius: .4rem;
         box-shadow: 0 0 1.25rem rgba(0,0,0,.7);
         transition: .2s ease-in-out;
+    }
+    .popup.active {
+        top: 50%;
+        opacity: 1;
+        pointer-events: inherit;
+        user-select: inherit;
     }
     .popup-title {
         padding: 1rem;
@@ -217,5 +282,12 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+    .divider {
+        width: 100%;
+        height: 1px;
+        background-color: var(--border-color);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
     }
 </style>

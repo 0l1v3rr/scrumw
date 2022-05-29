@@ -29,7 +29,9 @@
 Scrumw is a free, open-source, self-hosted scrum & project management system.  
 It helps you manage projects, track bugs and issues, and create scrum boards while collaborating with others.  
 You can create private projects, if you only want to work with yourself, as well as you can create public projects, to work with others.
-<img src="./img/screenshot1.jpg" alt="">
+<img src="./img/screenshot3.jpg" alt="">
+<br>
+<img src="./img/screenshot2.jpg" alt="">
 
 <hr>
 

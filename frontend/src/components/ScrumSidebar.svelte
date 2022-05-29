@@ -26,7 +26,8 @@
             body: JSON.stringify(newScrum)
         });
 
-        // TODO: redirect to the created scrum
+        scrumTitle = "";
+        scrumDescription = "";
     };
 </script>
 

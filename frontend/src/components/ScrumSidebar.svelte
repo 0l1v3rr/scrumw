@@ -1,4 +1,6 @@
 <script>
+    import { variables } from '../lib/env.js';
+    
     export let projects;
     export let user;
 
@@ -17,7 +19,7 @@
             createdBy: user.username
         }
 
-        await fetch(`http://localhost:8080/api/v1/scrum`, {
+        await fetch(`${variables.apiURL}/api/v1/scrum`, {
             method: 'POST',
             headers: {
                 'token': user.token,

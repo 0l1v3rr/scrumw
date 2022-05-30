@@ -1,9 +1,9 @@
 <script context="module">
     export async function load({ fetch, session }) {
-        const userRes = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
+        const userRes = await fetch(`${session.apiURL}/api/v1/users/token/${session.token}`);
         const user = await userRes.json();
 
-        const res = await fetch(`http://localhost:8080/api/v1/projects/${user.username}`, {
+        const res = await fetch(`${session.apiURL}/api/v1/projects/${user.username}`, {
             method: 'GET',
             headers: {
                 'token': session.token,
@@ -11,7 +11,7 @@
         });
         const projects = await res.json();
 
-        const issueRes = await fetch(`http://localhost:8080/api/v1/issues/user/${user.username}`, {
+        const issueRes = await fetch(`${session.apiURL}/api/v1/issues/user/${user.username}`, {
             method: 'GET',
             headers: {
                 'token': session.token,
@@ -19,7 +19,7 @@
         });
         const issues = await issueRes.json();
 
-        const scrumsRes = await fetch(`http://localhost:8080/api/v1/scrum/${user.username}`, {
+        const scrumsRes = await fetch(`${session.apiURL}/api/v1/scrum/${user.username}`, {
             method: 'GET',
             headers: {
                 "token": session.token

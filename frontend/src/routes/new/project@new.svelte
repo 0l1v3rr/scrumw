@@ -1,6 +1,6 @@
 <script context="module">
     export async function load({ fetch, session }) {
-        const res = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
+        const res = await fetch(`${session.apiURL}/api/v1/users/token/${session.token}`);
         const user = await res.json();
 
         if(res.ok) {
@@ -16,6 +16,8 @@
 </script>
 
 <script>
+    import { variables } from "../../lib/env.js";
+
     export let user;
     let isError = false;
     let errorMsg;
@@ -61,7 +63,7 @@
             isPublic: true
         };
 
-        const res = await fetch('http://localhost:8080/api/v1/projects', {
+        const res = await fetch(`${variables.apiURL}/api/v1/projects`, {
 			method: 'POST',
 			body: JSON.stringify(newProject),
 			headers: {

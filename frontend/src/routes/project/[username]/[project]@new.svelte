@@ -1,9 +1,9 @@
 <script context="module">
     export async function load({ fetch, session, params }) {
-        const userRes = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
+        const userRes = await fetch(`${session.apiURL}/api/v1/users/token/${session.token}`);
         const user = await userRes.json();
 
-        const res = await fetch(`http://localhost:8080/api/v1/projects/${params.username}/${params.project}`, {
+        const res = await fetch(`${session.apiURL}/api/v1/projects/${params.username}/${params.project}`, {
             method: 'GET',
             headers: {
                 'token': session.token,
@@ -11,7 +11,7 @@
         });
 
         if(res.ok) {
-            const issuesRes = await fetch(`http://localhost:8080/api/v1/issues/${params.username}/${params.project}`, {
+            const issuesRes = await fetch(`${session.apiURL}/api/v1/issues/${params.username}/${params.project}`, {
                 method: 'GET',
                 headers: {
                     'token': session.token,
@@ -37,6 +37,7 @@
 </script>
 
 <script>
+    import { variables } from "../../../lib/env.js";
     import { FolderMinusIcon, AlertCircleIcon, TrelloIcon } from 'svelte-feather-icons';
     import IssueCard from "../../../components/cards/IssueCard.svelte";
     import NotFound from "../../../components/cards/NotFound.svelte";
@@ -102,7 +103,7 @@
     };
 
     const deleteProject = async () => {
-        await fetch(`http://localhost:8080/api/v1/projects/${givenProject.id}`, {
+        await fetch(`${variables.apiURL}/api/v1/projects/${givenProject.id}`, {
             method: 'DELETE',
             headers: {
                 'token': user.token,
@@ -113,7 +114,7 @@
 
     const handleChangeVisibility = async () => {
         givenProject.isPublic = !givenProject.isPublic;
-        await fetch(`http://localhost:8080/api/v1/projects/${givenProject.id}`, {
+        await fetch(`${variables.apiURL}/api/v1/projects/${givenProject.id}`, {
             method: 'PATCH',
             headers: {
                 'token': user.token,
@@ -123,7 +124,7 @@
 
     const handleSave = async () => {
         isUpdateModeOn = false;
-        await fetch(`http://localhost:8080/api/v1/projects/${givenProject.id}`, {
+        await fetch(`${variables.apiURL}/api/v1/projects/${givenProject.id}`, {
             method: 'PUT',
             headers: {
                 'token': user.token,
@@ -149,7 +150,7 @@
             closed: null
         };
 
-        await fetch(`http://localhost:8080/api/v1/issues`, {
+        await fetch(`${variables.apiURL}/api/v1/issues`, {
             method: 'POST',
             headers: {
                 'token': user.token,

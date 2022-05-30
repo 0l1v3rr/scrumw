@@ -1,9 +1,9 @@
 <script context="module">
     export async function load({ fetch, session, params }) {
-        const userRes = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
+        const userRes = await fetch(`${session.apiURL}/api/v1/users/token/${session.token}`);
         const user = await userRes.json();
 
-        const res = await fetch(`http://localhost:8080/api/v1/issues/${params.id}`, {
+        const res = await fetch(`${session.apiURL}/api/v1/issues/${params.id}`, {
             method: 'GET',
             headers: {
                 'token': session.token,
@@ -28,6 +28,7 @@
 </script>
 
 <script>
+    import { variables } from "../../lib/env.js";
     import { FolderMinusIcon } from 'svelte-feather-icons';
     import { page } from '$app/stores';
     const { id } = $page.params;
@@ -46,7 +47,7 @@
         issue.closed = formatDate(new Date());
         issue.closedBy = user.username;
 
-        await fetch(`http://localhost:8080/api/v1/issues/${issue.id}`, {
+        await fetch(`${variables.apiURL}/api/v1/issues/${issue.id}`, {
             method: 'PATCH',
             headers: {
                 'token': user.token,
@@ -55,7 +56,7 @@
     };
 
     const deleteIssue = async () => {
-        await fetch(`http://localhost:8080/api/v1/issues/${issue.id}`, {
+        await fetch(`${variables.apiURL}/api/v1/issues/${issue.id}`, {
             method: 'DELETE',
             headers: {
                 'token': user.token,

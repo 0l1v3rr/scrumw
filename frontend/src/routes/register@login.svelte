@@ -1,4 +1,6 @@
 <script>
+    import { variables } from "../lib/env.js";
+
     let isError = false;
     let errorMsg;
 
@@ -49,7 +51,7 @@
 			password: password
 		};
 
-		const res = await fetch('http://localhost:8080/api/v1/users/new', {
+		const res = await fetch(`${variables.apiURL}/api/v1/users/new`, {
 			method: 'POST',
 			body: JSON.stringify(newUser),
 			headers: {

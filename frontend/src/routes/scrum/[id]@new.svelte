@@ -1,9 +1,9 @@
 <script context="module">
     export async function load({ fetch, session, params }) {
-        const userRes = await fetch(`http://localhost:8080/api/v1/users/token/${session.token}`);
+        const userRes = await fetch(`${session.apiURL}/api/v1/users/token/${session.token}`);
         const user = await userRes.json();
 
-        const res = await fetch(`http://localhost:8080/api/v1/scrum/id/${params.id}`, {
+        const res = await fetch(`${session.apiURL}/api/v1/scrum/id/${params.id}`, {
             method: 'GET',
             headers: {
                 'token': session.token,
@@ -28,6 +28,7 @@
 </script>
 
 <script>
+    import { variables } from "../../lib/env.js";
     import { FolderMinusIcon } from 'svelte-feather-icons';
     import { page } from '$app/stores';
     const { id } = $page.params;
@@ -42,7 +43,7 @@
     }
 
     const deleteScrum = async () => {
-        await fetch(`http://localhost:8080/api/v1/scrum/${id}`, {
+        await fetch(`${variables.apiURL}/api/v1/scrum/${id}`, {
             method: 'DELETE',
             headers: {
                 'token': user.token,
@@ -55,7 +56,7 @@
         scrum.updated = formatDate(new Date());
         scrum.status = "to_do";
 
-        await fetch(`http://localhost:8080/api/v1/scrum/${id}/to_do`, {
+        await fetch(`${variables.apiURL}/api/v1/scrum/${id}/to_do`, {
             method: 'PATCH',
             headers: {
                 'token': user.token,
@@ -67,7 +68,7 @@
         scrum.updated = formatDate(new Date());
         scrum.status = "in_progress";
 
-        await fetch(`http://localhost:8080/api/v1/scrum/${id}/in_progress`, {
+        await fetch(`${variables.apiURL}/api/v1/scrum/${id}/in_progress`, {
             method: 'PATCH',
             headers: {
                 'token': user.token,
@@ -79,7 +80,7 @@
         scrum.updated = formatDate(new Date());
         scrum.status = "done";
 
-        await fetch(`http://localhost:8080/api/v1/scrum/${id}/done`, {
+        await fetch(`${variables.apiURL}/api/v1/scrum/${id}/done`, {
             method: 'PATCH',
             headers: {
                 'token': user.token,

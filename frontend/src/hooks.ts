@@ -1,4 +1,5 @@
 import { parse } from "cookie";
+import { variables } from './lib/env.js';
 
 export async function handle({ event, resolve }) {
     const cookies = parse(event.request.headers.get('cookie') || '');
@@ -31,7 +32,10 @@ export async function handle({ event, resolve }) {
 
 export async function getSession(event) {
     const cookies = parse(event.request.headers.get('cookie') || '');
-    return { token: cookies['token'] };
+    return { 
+        token: cookies['token'],
+        apiURL: variables.apiURL
+    };
 }
 
 function getNewUrl(origin, pathname) {

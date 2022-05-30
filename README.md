@@ -14,6 +14,7 @@
   - [What is scrumw?](#what-is-scrumw)
   - [Tech stack](#tech-stack)
   - [Some of the main features](#some-of-the-main-features)
+  - [Important step](#important-step)
   - [Running with Docker](#running-with-docker)
   - [Building from source](#building-from-source)
     - [Requirements](#requirements)
@@ -54,6 +55,18 @@ You can create private projects, if you only want to work with yourself, as well
 - Dark mode
 - Notifications
 - Responsive Web Design
+
+<hr>
+
+## Important step
+Before you build or run the application, there's an important step you need to take, 
+it doesn't matter if you use [Docker](#running-with-docker) or [build it from the source](#building-from-source).  
+In the root folder of the frontend (`~/scrumw/frontend`), create a `.env` file.  
+In this file, you need to add the backend's URL.  
+For example, if you run it on localhost, it should look like this:
+```env
+VITE_API_URL=http://localhost:8080
+```
 
 <hr>
 

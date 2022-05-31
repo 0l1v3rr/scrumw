@@ -56,6 +56,7 @@
 
     let isOpenSelected = true;
     let isClosedSelected = false;
+
     let isDeletePopupOpen = false;
     let isNewIssueOpen = false;
     let isUpdateModeOn = false;
@@ -63,7 +64,19 @@
     let newIssueTitle;
     let newIssueDesc;
 
-    
+    let issueValue = $page.url.searchParams.get('issues');
+
+    if(issueValue == "closed") {
+        isClosedSelected = true;
+        isOpenSelected = false;
+    } else if(issueValue == "all") {
+        isClosedSelected = true;
+        isOpenSelected = true;
+    } else {
+        isOpenSelected = true;
+        isClosedSelected = false;
+    }
+
     let collaborators = [];
     collaborators.push(username);
     let collaboratorStr = collaborators.join(', ');
@@ -238,14 +251,18 @@
                     <div class="fdc">
                         <div class="about-d-flex">
                             <div class="about-icon"><AlertCircleIcon size="18" /></div>
-                            <span>Open Issues: </span>
-                            <b>{openIssues}</b>
+                            <a class="project-link" href="?issues=open">
+                                <span>Open Issues: </span>
+                                <b>{openIssues}</b>
+                            </a>
                         </div>
 
                         <div class="about-d-flex">
                             <div class="about-icon"><AlertCircleIcon size="18" /></div>
-                            <span>Closed Issues: </span>
-                            <b>{closedIssues}</b>
+                            <a class="project-link" href="?issues=closed">
+                                <span>Closed Issues: </span>
+                                <b>{closedIssues}</b>
+                            </a>
                         </div>
 
                         <div class="about-d-flex">
@@ -558,6 +575,16 @@
         align-items: flex-start;
         justify-content: start;
         margin-top: 1rem;
+    }
+    .project-link {
+        display: flex;
+        gap: .5rem;
+        color: var(--text-color-secondary);
+        transition: .2s ease-in-out;
+    }
+    .project-link:hover {
+        color: var(--link-color);
+        transform: scale(101%);
     }
 
     @media screen and (max-width: 768px) {

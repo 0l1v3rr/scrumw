@@ -62,7 +62,7 @@ You can create private projects, if you only want to work with yourself, as well
 Before you build or run the application, there's an important step you need to take, 
 it doesn't matter if you use [Docker](#running-with-docker) or [build it from the source](#building-from-source).  
 In the root folder of the frontend (`~/scrumw/frontend`), create a `.env` file.  
-In this file, you need to add the backend's URL.  
+In this file, you need to specify the backend's URL.  
 For example, if you run it on localhost, it should look like this:
 ```env
 VITE_API_URL=http://localhost:8080

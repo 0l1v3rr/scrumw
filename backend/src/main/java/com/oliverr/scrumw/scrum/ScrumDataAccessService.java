@@ -102,4 +102,9 @@ public class ScrumDataAccessService implements ScrumDao {
         jdbcTemplate.update(query, date, id);
     }
 
+    @Override
+    public int getScrumCountByProject(String projectOwner, String projectName) {
+        return Integer.parseInt(getScrumsByProject(projectOwner, projectName).stream().count() + "");
+    }
+
 }

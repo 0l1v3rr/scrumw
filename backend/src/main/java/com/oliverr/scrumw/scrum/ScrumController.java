@@ -5,6 +5,7 @@ import com.oliverr.scrumw.project.Project;
 import com.oliverr.scrumw.project.ProjectDataAccessService;
 import com.oliverr.scrumw.security.AuthenticateUser;
 import com.oliverr.scrumw.user.UserDataAccessService;
+import com.oliverr.scrumw.util.Count;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -186,6 +187,35 @@ public record ScrumController(UserDataAccessService userDataAccessService, Scrum
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .body(res);
+    }
+
+    @GetMapping("{projectOwner}/{projectName}/count")
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    public ResponseEntity<Object> getScrumCountByProject(@PathVariable("projectOwner") String projectOwner, @PathVariable("projectName") String projectName, HttpEntity<byte[]> request) {
+        Optional<Project> project = projectDataAccessService
+                .getProjectByUsernameAndProjectName(projectOwner, projectName);
+
+        if(project.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiError("This project does not exist."));
+        }
+
+        if (project.get().getIsPublic()) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new Count(scrumDataAccessService.getScrumCountByProject(projectOwner, projectName)));
+        }
+
+        if (!authenticateUser.withToken(request.getHeaders().getFirst("token"), projectOwner)) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiError("Invalid token."));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Count(scrumDataAccessService.getScrumCountByProject(projectOwner, projectName)));
     }
 
 }

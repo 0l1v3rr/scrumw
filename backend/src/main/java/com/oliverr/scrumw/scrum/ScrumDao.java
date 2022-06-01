@@ -11,4 +11,5 @@ public interface ScrumDao {
     void changeScrumStatus(int id, ScrumStatus status);
     Optional<Scrum> getScrumById(int id);
     void updateScrum(int id);
+    int getScrumCountByProject(String projectOwner, String projectName);
 }

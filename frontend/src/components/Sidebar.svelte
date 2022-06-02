@@ -23,7 +23,7 @@
 
     <a href="/projects" class="sidebar-item {$page.url.toString().endsWith('/projects') ? 'active' : ''}">
         <FolderMinusIcon size="24" />
-        <div class="sidebar-item-hover">Projects</div>
+        <div class="sidebar-item-hover">Your Projects</div>
     </a>
 
     <a href="/scrum-board" class="sidebar-item {$page.url.toString().endsWith('/scrum-board') ? 'active' : ''}">
@@ -33,7 +33,7 @@
     
     <a href="/issues" class="sidebar-item {$page.url.toString().endsWith('/issues') ? 'active' : ''}">
         <AlertCircleIcon size="24" />
-        <div class="sidebar-item-hover">Issues</div>
+        <div class="sidebar-item-hover">Your Issues</div>
     </a>
 
     <span class="sidebar-item settings-icon" on:click={handleLogoutClick}>

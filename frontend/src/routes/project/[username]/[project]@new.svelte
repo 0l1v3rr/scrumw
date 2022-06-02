@@ -20,12 +20,22 @@
 
             const project = await res.json();
             const issues = await issuesRes.json();
+
+            const scrumCountRes = await fetch(`${session.apiURL}/api/v1/scrum/${params.username}/${params.project}/count`, {
+                method: 'GET',
+                headers: {
+                    'token': session.token,
+                }
+            });
+            const scrumCount = await scrumCountRes.json();
+
             return {
                 props: { 
                     givenProject: project, 
                     issues: issues, 
                     status: res.status,
-                    user: user
+                    user: user,
+                    scrumCount: scrumCount
                 }
             };
         }
@@ -49,6 +59,7 @@
     export let issues;
     export let user;
     export let status;
+    export let scrumCount;
 
     let currentIssues;
     let openIssues = issues.filter(i => i.isOpen).length;
@@ -267,8 +278,10 @@
 
                         <div class="about-d-flex">
                             <div class="about-icon"><TrelloIcon size="18" /></div>
-                            <span>Scrums: </span>
-                            <b>0</b>
+                            <a href="/scrums/{username}/{project}" class="project-link">
+                                <span>Scrums: </span>
+                                <b>{scrumCount.count}</b>
+                            </a>
                         </div>
                     </div>
 

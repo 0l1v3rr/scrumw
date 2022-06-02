@@ -218,4 +218,12 @@ public record ScrumController(UserDataAccessService userDataAccessService, Scrum
                 .body(new Count(scrumDataAccessService.getScrumCountByProject(projectOwner, projectName)));
     }
 
+    @GetMapping("{username}/count/all")
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    public ResponseEntity<Object> getScrumCountByUsername(@PathVariable("username") String username) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Count(scrumDataAccessService.getScrumCountByUser(username)));
+    }
+
 }

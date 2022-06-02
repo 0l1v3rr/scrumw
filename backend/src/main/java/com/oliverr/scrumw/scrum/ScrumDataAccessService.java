@@ -107,4 +107,9 @@ public class ScrumDataAccessService implements ScrumDao {
         return Integer.parseInt(getScrumsByProject(projectOwner, projectName).stream().count() + "");
     }
 
+    @Override
+    public int getScrumCountByUser(String username) {
+        return Integer.parseInt(getScrumsByUsername(username).stream().count() + "");
+    }
+
 }

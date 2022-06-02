@@ -27,6 +27,14 @@
         });
         const issueCount = await ires.json();
 
+        const sres = await fetch(`${session.apiURL}/api/v1/scrum/${params.username}/count/all`, {
+            method: 'GET',
+            headers: {
+                'token': session.token,
+            }
+        });
+        const scrumCount = await sres.json();
+
         if(res.ok) {
             return {
                 props: { 
@@ -34,7 +42,8 @@
                     user: user,
                     searchedUser: searchedUser,
                     projects: projects,
-                    issueCount: issueCount
+                    issueCount: issueCount,
+                    scrumCount: scrumCount
                 }
             };
         }
@@ -57,6 +66,7 @@
     export let searchedUser;
     export let projects;
     export let issueCount;
+    export let scrumCount;
 
     let currentProjects = [...projects].sort((a,b) => (a.created < b.created) ? 1 : ((b.created < a.created) ? -1 : 0));
 
@@ -110,7 +120,7 @@
                 <EyeIcon size="16" /> <span class="bold">0</span> profile views
             </div>
             <div class="information-div">
-                <TrelloIcon size="16" /> <span class="bold">0</span> scrums
+                <TrelloIcon size="16" /> <span class="bold">{scrumCount.count}</span> scrums
             </div>
             <div class="information-div">
                 <AlertCircleIcon size="16" /> <span class="bold">{issueCount.count}</span> issues

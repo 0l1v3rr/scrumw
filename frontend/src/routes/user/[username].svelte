@@ -55,7 +55,7 @@
 </script>
 
 <script>
-    import {  TrelloIcon, AlertCircleIcon, EyeIcon } from 'svelte-feather-icons';
+    import {  TrelloIcon, AlertCircleIcon } from 'svelte-feather-icons';
     import ProjectCard from '../../components/cards/ProjectCard.svelte';
     import NotFound from '../../components/cards/NotFound.svelte';
     import { page } from '$app/stores';
@@ -116,9 +116,6 @@
         <div class="divider"></div>
         
         <div class="inforations">
-            <div class="information-div">
-                <EyeIcon size="16" /> <span class="bold">0</span> profile views
-            </div>
             <div class="information-div">
                 <TrelloIcon size="16" /> <span class="bold">{scrumCount.count}</span> scrums
             </div>

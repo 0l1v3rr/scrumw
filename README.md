@@ -22,6 +22,7 @@
     - [Creating the database](#creating-the-database)
     - [Running the backend](#running-the-backend)
     - [Running the frontend](#running-the-frontend)
+  - [Contributing](#contributing)
   - [License](#license)
 
 <hr>
@@ -41,6 +42,7 @@ You can create private projects, if you only want to work with yourself, as well
 - **Backend:** Java, Spring, Spring Boot, Spring Security, Lombok
 - **Frontend:** Svelte, SvelteKit, TypeScript
 - **Testing:** JUnit
+- **Containerization:** Docker
 
 <hr>
 
@@ -126,6 +128,11 @@ npm i
 
 npm run dev
 ```
+
+<hr>
+
+## Contributing
+See the [contributing guideline](CONTRIBUTING.md).
 
 <hr>
 

@@ -1,5 +1,8 @@
 package com.oliverr.backend;
 
+import com.oliverr.backend.model.Role;
+import com.oliverr.backend.service.RoleService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +19,13 @@ public class ScrumwApplication {
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	CommandLineRunner run(RoleService roleService) {
+		return args -> {
+			roleService.saveRole(new Role(null, "ROLE_USER"));
+		};
 	}
 
 }

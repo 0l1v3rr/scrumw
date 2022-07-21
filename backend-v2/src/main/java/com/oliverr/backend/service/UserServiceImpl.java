@@ -2,6 +2,7 @@ package com.oliverr.backend.service;
 
 import com.oliverr.backend.exception.ConflictException;
 import com.oliverr.backend.exception.NotFoundException;
+import com.oliverr.backend.model.Role;
 import com.oliverr.backend.model.User;
 import com.oliverr.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -47,18 +49,29 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User saveUser(User user) {
+        System.out.println(user.toString());
+
         Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
         if(foundUser.isPresent()) {
             throw new ConflictException("User with this username already exists.");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRoles().add(roleService.findRole("ROLE_USER"));
+        user.setRegistrationDate(LocalDateTime.now());
+        user.setImgUrl("");
+
+        Collection<Role> roles = user.getRoles();
+        roles.add(roleService.findRole("ROLE_USER"));
+        user.setRoles(roles);
+
+        System.out.println(user.toString());
+
         return userRepository.save(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("Username: "+username);
         User user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User with this username doesn't exist."));

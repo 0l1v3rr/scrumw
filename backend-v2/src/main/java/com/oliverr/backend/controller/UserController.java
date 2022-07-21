@@ -19,7 +19,10 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> saveUser(@RequestBody User user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(user));
+        User saved = userService.saveUser(user);
+        user.setPassword(null);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
 }

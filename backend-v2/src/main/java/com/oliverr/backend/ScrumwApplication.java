@@ -1,7 +1,9 @@
 package com.oliverr.backend;
 
+import com.oliverr.backend.model.Project;
 import com.oliverr.backend.model.Role;
 import com.oliverr.backend.model.User;
+import com.oliverr.backend.service.ProjectService;
 import com.oliverr.backend.service.RoleService;
 import com.oliverr.backend.service.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -11,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @SpringBootApplication
@@ -26,7 +29,7 @@ public class ScrumwApplication {
 	}
 
 	@Bean
-	CommandLineRunner init(RoleService roleService, UserService userService) {
+	CommandLineRunner init(RoleService roleService, UserService userService, ProjectService projectService) {
 		return args -> {
 			roleService.saveRole(new Role(null, "ROLE_USER"));
 
@@ -38,6 +41,24 @@ public class ScrumwApplication {
 					null,
 					null,
 					new ArrayList<>()
+			));
+
+			projectService.saveProject(new Project(
+				null,
+				"john",
+				"Project One",
+				"This is the very first project.",
+				true,
+				LocalDateTime.now()
+			));
+
+			projectService.saveProject(new Project(
+					null,
+					"john",
+					"Project Two",
+					"This is John's second project.",
+					false,
+					LocalDateTime.now()
 			));
 		};
 	}

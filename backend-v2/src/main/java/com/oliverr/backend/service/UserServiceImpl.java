@@ -49,8 +49,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User saveUser(User user) {
-        System.out.println(user.toString());
-
         Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
         if(foundUser.isPresent()) {
             throw new ConflictException("User with this username already exists.");
@@ -64,14 +62,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         roles.add(roleService.findRole("ROLE_USER"));
         user.setRoles(roles);
 
-        System.out.println(user.toString());
-
         return userRepository.save(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("Username: "+username);
         User user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User with this username doesn't exist."));

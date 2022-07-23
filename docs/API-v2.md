@@ -6,6 +6,7 @@
     - [Project](#project)
   - [Endpoints](#endpoints)
     - [Users](#users)
+      - [GET: /api/v2/users/{username}](#get-apiv2usersusername)
       - [POST: /api/v2/users](#post-apiv2users)
       - [POST: /api/v2/login](#post-apiv2login)
     - [Projects](#projects)
@@ -46,6 +47,12 @@
 ## Endpoints
 
 ### Users
+
+#### GET: /api/v2/users/{username}
+- Method: `GET`
+- Description: `Returns the found user with the given username.`
+- Auth needed: `false`
+- Response: `The found user`
 
 #### POST: /api/v2/users
 - Method: `POST`

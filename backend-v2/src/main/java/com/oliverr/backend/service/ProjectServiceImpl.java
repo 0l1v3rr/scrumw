@@ -29,6 +29,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<Project> getPublicProjectsByUsername(String username) {
+        userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User with this username doesn't exist."));
+
+        return projectRepository.findPublicProjectsByUsername(username);
+    }
+
+    @Override
     public List<Project> getLatestProjectsByUsername(String username, Integer limit) {
         userRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User with this username doesn't exist."));

@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface ProjectService {
     List<Project> getProjectsByUsername(String username);
+    List<Project> getPublicProjectsByUsername(String username);
     List<Project> getLatestProjectsByUsername(String username, Integer limit);
     Project saveProject(Project project);
     Project updateProject(Project project, int projectId);

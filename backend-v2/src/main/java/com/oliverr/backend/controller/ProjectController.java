@@ -28,7 +28,9 @@ public class ProjectController {
     public ResponseEntity<List<Project>> getAllProjectsByUsername(@PathVariable("username") String username,
                                                                   Principal principal) {
         if(!username.equalsIgnoreCase(principal.getName())) {
-            throw new ForbiddenException();
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(projectService.getPublicProjectsByUsername(username));
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(projectService.getProjectsByUsername(username));

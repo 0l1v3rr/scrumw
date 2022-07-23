@@ -43,11 +43,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
     public User saveUser(User user) {
         Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
         if(foundUser.isPresent()) {

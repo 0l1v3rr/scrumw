@@ -10,9 +10,12 @@
       - [POST: /api/v2/users](#post-apiv2users)
       - [POST: /api/v2/login](#post-apiv2login)
     - [Projects](#projects)
-      - [POST: /api/v2/projects](#post-apiv2projects)
       - [GET: /api/v2/projects/{username}](#get-apiv2projectsusername)
       - [GET: /api/v2/projects/{username}/latest](#get-apiv2projectsusernamelatest)
+      - [POST: /api/v2/projects](#post-apiv2projects)
+      - [PUT: /api/v2/projects/{projectId}](#put-apiv2projectsprojectid)
+      - [PATCH: /api/v2/projects/{projectId}](#patch-apiv2projectsprojectid)
+      - [DELETE: /api/v2/projects/{projectId}](#delete-apiv2projectsprojectid)
 
 <hr>
 
@@ -70,13 +73,6 @@
 
 ### Projects
 
-#### POST: /api/v2/projects
-- Method: `POST`
-- Description: `Creates a new project`
-- Auth needed: `true`
-- Request: `Project object`
-- Response: `The created project`
-
 #### GET: /api/v2/projects/{username}
 - Method: `GET`
 - Description: `Returns all the projects the user has.`
@@ -89,3 +85,28 @@
 - Auth needed: `true`
 - Query param: `'limit': number, optional, default is 3`
 - Response: `An array of the projects`
+
+#### POST: /api/v2/projects
+- Method: `POST`
+- Description: `Creates a new project`
+- Auth needed: `true`
+- Request: `Project object`
+- Response: `The created project`
+
+#### PUT: /api/v2/projects/{projectId}
+- Method: `PUT`
+- Description: `Updates a new project`
+- Auth needed: `true`
+- Request: `Project object (only the fields you want to update)`
+- Response: `The updated project`
+
+#### PATCH: /api/v2/projects/{projectId}
+- Method: `PATCH`
+- Description: `Changes the visibility of the provided project to its opposite`
+- Auth needed: `true`
+- Response: `The updated project`
+
+#### DELETE: /api/v2/projects/{projectId}
+- Method: `DELETE`
+- Description: `Deletes the project with the given ID`
+- Auth needed: `true`

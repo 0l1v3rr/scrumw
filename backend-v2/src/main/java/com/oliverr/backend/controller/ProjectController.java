@@ -49,4 +49,31 @@ public class ProjectController {
                 .body(projectService.getLatestProjectsByUsername(username, limit));
     }
 
+    @PutMapping("{projectId}")
+    public ResponseEntity<Project> updateProject(@RequestBody Project project,
+                                                 @PathVariable("projectId") Long id,
+                                                 Principal principal) {
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(projectService.updateProject(project, id, principal.getName()));
+    }
+
+    @PatchMapping("{projectId}")
+    public ResponseEntity<Project> changeProjectVisibility(@PathVariable("projectId") Long id,
+                                                           Principal principal) {
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(projectService.changeVisibility(id, principal.getName()));
+    }
+
+    @DeleteMapping("{projectId}")
+    public ResponseEntity<?> deleteProject(@PathVariable("projectId") Long id,
+                                           Principal principal) {
+        projectService.deleteProject(id, principal.getName());
+
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .build();
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.oliverr.backend.service;
 
 import com.oliverr.backend.exception.BadRequestException;
+import com.oliverr.backend.exception.ForbiddenException;
 import com.oliverr.backend.exception.NotFoundException;
 import com.oliverr.backend.model.Project;
 import com.oliverr.backend.repository.ProjectRepository;
@@ -55,17 +56,64 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project updateProject(Project project, int projectId) {
-        return null;
+    public Project updateProject(Project project, Long projectId, String username) {
+        Project old = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException("Project with this ID doesn't exist."));
+
+        if(!old.getOwner().equalsIgnoreCase(username)) {
+            throw new ForbiddenException();
+        }
+
+        project.setId(projectId);
+        project.setOwner(username);
+
+        if(project.getIsPublic() == null) {
+            project.setIsPublic(old.getIsPublic());
+        }
+
+        if(project.getProjectName() == null) {
+            project.setProjectName(old.getProjectName());
+        }
+
+        if(project.getProjectDescription() == null) {
+            project.setProjectDescription(old.getProjectDescription());
+        }
+
+        if(project.getCreated() == null) {
+            project.setCreated(old.getCreated());
+        }
+
+        return projectRepository.save(project);
     }
 
     @Override
-    public void deleteProject(int projectId) {
+    public Project changeVisibility(Long projectId, String username) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException("Project with this ID doesn't exist."));
 
+        if(!project.getOwner().equalsIgnoreCase(username)) {
+            throw new ForbiddenException();
+        }
+
+        projectRepository.changeProjectVisibility(projectId);
+        project.setIsPublic(!project.getIsPublic());
+        return project;
     }
 
     @Override
-    public Project getProjectById(int projectId) {
+    public void deleteProject(Long projectId, String username) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException("Project with this ID doesn't exist."));
+
+        if(!project.getOwner().equalsIgnoreCase(username)) {
+            throw new ForbiddenException();
+        }
+
+        projectRepository.delete(project);
+    }
+
+    @Override
+    public Project getProjectById(Long projectId) {
         return null;
     }
 
@@ -81,11 +129,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Integer getUserPrivateProjectCount(String username) {
-        return null;
-    }
-
-    @Override
-    public Project changeVisibility(int projectId) {
         return null;
     }
 

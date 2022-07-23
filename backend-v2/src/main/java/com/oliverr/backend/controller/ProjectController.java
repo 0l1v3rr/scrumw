@@ -18,12 +18,6 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @PostMapping
-    public ResponseEntity<Project> saveProject(@RequestBody Project project, Principal principal) {
-        project.setOwner(principal.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.saveProject(project));
-    }
-
     @GetMapping("{username}")
     public ResponseEntity<List<Project>> getAllProjectsByUsername(@PathVariable("username") String username,
                                                                   Principal principal) {
@@ -47,6 +41,44 @@ public class ProjectController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(projectService.getLatestProjectsByUsername(username, limit));
+    }
+
+    @GetMapping("{username}/{projectName}")
+    public ResponseEntity<Project> getProjectByUsernameAndProjectName(@PathVariable("username") String username,
+                                                                      @PathVariable("projectName") String projectName,
+                                                                      Principal principal) {
+        Project project = projectService.getProjectByProjectName(username, projectName);
+
+        if(project.getIsPublic()) {
+            return ResponseEntity.status(HttpStatus.OK).body(project);
+        }
+
+        if(!project.getOwner().equalsIgnoreCase(principal.getName())) {
+            throw new ForbiddenException();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(project);
+    }
+
+    @GetMapping("id/{projectId}")
+    public ResponseEntity<Project> getProjectById(@PathVariable("projectId") Long id, Principal principal) {
+        Project project = projectService.getProjectById(id);
+
+        if(project.getIsPublic()) {
+            return ResponseEntity.status(HttpStatus.OK).body(project);
+        }
+
+        if(!project.getOwner().equalsIgnoreCase(principal.getName())) {
+            throw new ForbiddenException();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(project);
+    }
+
+    @PostMapping
+    public ResponseEntity<Project> saveProject(@RequestBody Project project, Principal principal) {
+        project.setOwner(principal.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.saveProject(project));
     }
 
     @PutMapping("{projectId}")

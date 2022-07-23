@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
@@ -22,4 +23,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Modifying
     @Query(value = "UPDATE projects SET is_public = NOT is_public WHERE id = ?1", nativeQuery = true)
     void changeProjectVisibility(Long id);
+
+    @Query(value = "SELECT * FROM projects WHERE owner = ?1 AND project_name = ?2", nativeQuery = true)
+    Optional<Project> findProjectByProjectName(String username, String projectName);
 }

@@ -114,12 +114,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project getProjectById(Long projectId) {
-        return null;
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException("Project with this ID does not exist."));
     }
 
     @Override
     public Project getProjectByProjectName(String ownerName, String projectName) {
-        return null;
+        return projectRepository.findProjectByProjectName(ownerName, projectName)
+                .orElseThrow(() -> new NotFoundException("Project with this name doesn't exist."));
     }
 
     @Override

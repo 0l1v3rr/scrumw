@@ -44,18 +44,18 @@ public class ScrumwApplication {
 			));
 
 			projectService.saveProject(new Project(
-				null,
-				"john",
-				"Project One",
-				"This is the very first project.",
-				true,
-				LocalDateTime.now()
+					null,
+					"john",
+					"project-one",
+					"This is the very first project.",
+					true,
+					LocalDateTime.now()
 			));
 
 			projectService.saveProject(new Project(
 					null,
 					"john",
-					"Project Two",
+					"project-two",
 					"This is John's second project.",
 					false,
 					LocalDateTime.now()

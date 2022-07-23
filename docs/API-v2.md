@@ -12,6 +12,8 @@
     - [Projects](#projects)
       - [GET: /api/v2/projects/{username}](#get-apiv2projectsusername)
       - [GET: /api/v2/projects/{username}/latest](#get-apiv2projectsusernamelatest)
+      - [GET: /api/v2/projects/{username}/{projectName}](#get-apiv2projectsusernameprojectname)
+      - [GET: /api/v2/projects/id/{projectId}](#get-apiv2projectsidprojectid)
       - [POST: /api/v2/projects](#post-apiv2projects)
       - [PUT: /api/v2/projects/{projectId}](#put-apiv2projectsprojectid)
       - [PATCH: /api/v2/projects/{projectId}](#patch-apiv2projectsprojectid)
@@ -85,6 +87,18 @@
 - Auth needed: `true`
 - Query param: `'limit': number, optional, default is 3`
 - Response: `An array of the projects`
+
+#### GET: /api/v2/projects/{username}/{projectName}
+- Method: `GET`
+- Description: `Returns the found project by the given username and projectName.`
+- Auth needed: `true`
+- Response: `The found project.`
+
+#### GET: /api/v2/projects/id/{projectId}
+- Method: `GET`
+- Description: `Returns the found project by the given id.`
+- Auth needed: `true`
+- Response: `The found project.`
 
 #### POST: /api/v2/projects
 - Method: `POST`
